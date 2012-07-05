@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<menu>
+    <link>
+        <name>Primary Categories</name>
+        <url>index.php?option=com_calendar&#38;view=categories</url>
+    </link>
+    <link>
+        <name>Secondary Categories</name>
+        <url>index.php?option=com_calendar&#38;view=secondcategories</url>
+    </link>
+    <link>
+        <name>Create a New Primary</name>
+        <url>index.php?option=com_calendar&#38;view=categories&#38;task=add</url>
+    </link>
+    <link>
+        <name>Create a New Secondary</name>
+        <url>index.php?option=com_calendar&#38;view=secondcategories&#38;task=add</url>
+    </link>
+</menu>

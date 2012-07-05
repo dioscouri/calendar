@@ -1,0 +1,1 @@
+Calendar is a Joomla events manager.  It was originally written for use on http://bmwguggenheimlab.org but has since been used on several others.  This project is for preparing Calendar for public release.

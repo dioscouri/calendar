@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="CALENDAR SEARCH DEFAULT LAYOUT">
+		<message>
+			<![CDATA[CALENDAR SEARCH DEFAULT LAYOUT DESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>CALENDAR SEARCH DEFAULT LAYOUT</name>
+		<description>CALENDAR SEARCH DEFAULT LAYOUT DESC</description>
+	</state>
+</metadata>

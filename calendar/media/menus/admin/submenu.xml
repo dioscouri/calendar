@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<menu>
+    <link>
+        <name>Events</name>
+        <url>index.php?option=com_calendar&#38;view=events</url>
+    </link>
+	<link>
+		<name>Series</name>
+		<url>index.php?option=com_calendar&#38;view=series</url>
+	</link>
+    <link>
+        <name>Calendars</name>
+        <url>index.php?option=com_calendar&#38;view=calendars</url>
+    </link>
+	<link>
+		<name>Tools</name>
+		<url>index.php?option=com_calendar&#38;view=tools</url>
+	</link>
+	<link>
+		<name>Configuration</name>
+		<url>index.php?option=com_calendar&#38;view=config</url>
+	</link>
+</menu>

@@ -1,0 +1,13 @@
+@CHARSET "UTF-8";
+
+td .minicalendar_day {
+	
+}
+
+td .minicalendar_day_current {
+	background-color: #FFFFCC;
+}
+
+td .minicalendar_day_next {
+	background-color: #D4D4CE;
+}

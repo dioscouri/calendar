@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="CALENDAR EVENTS VIEW LAYOUT" hidden="true">
+		<message>
+            <![CDATA[CALENDAR EVENTS VIEW LAYOUT DESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>CALENDAR EVENTS VIEW LAYOUT</name>
+		<description>CALENDAR EVENTS VIEW LAYOUT DESC</description>
+		<!-- <url addpath="/administrator/components/com_schools/elements"> <param 
+			name="id" type="schoolsschool" section="com_schools" default="" label="Select 
+			a School" description="A School ID" /> <param name="task" type="hidden" section="com_schools" 
+			default="view" /> </url> -->
+	</state>
+</metadata>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="component" version="1.5.0" method="upgrade">
+	<name>Calendar</name>
+	<version>1.0</version>
+	<creationDate>November 2011</creationDate>
+	<author>Dioscouri</author>
+	<authorEmail>info@dioscouri.com</authorEmail>
+	<authorUrl>http://www.dioscouri.com</authorUrl>
+	<copyright>2011 Dioscouri.com</copyright>
+	<copyrightHolder>Dioscouri.com</copyrightHolder>
+	<license>GNU General Public License v2</license>
+	<description>A Calendar extension for Joomla</description>
+
+	<!-- Application/site -->
+	<files folder="site">
+		<file>calendar.php</file>
+		<file>controller.php</file>
+		<file>router.php</file>
+		<file>index.html</file>
+		<folder>controllers</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+	</files>
+
+	<languages folder="languages/site">
+		<language tag="en-GB">en-GB.com_calendar.ini</language>
+	</languages>
+
+	<!-- Application/administrator -->
+	<administration>
+		<menu img="../media/com_calendar/images/calendar_16.png">COM_CALENDAR</menu>
+
+		<files folder="admin">
+			<file>calendar.php</file>
+			<file>controller.php</file>
+			<file>defines.php</file>
+			<file>index.html</file>
+			<folder>controllers</folder>
+			<folder>elements</folder>
+			<folder>helpers</folder>
+			<folder>install</folder>
+			<folder>library</folder>
+			<folder>models</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+		</files>
+
+		<languages folder="languages/admin">
+			<language tag="en-GB">en-GB.com_calendar.ini</language>
+            <language tag="en-GB">en-GB.com_calendar.sys.ini</language>
+            <language tag="en-GB">en-GB.com_calendar.menu.ini</language>
+		</languages>
+	</administration>
+
+	<!-- Installation -->
+    <install>
+        <sql>
+            <file>install.sql</file>
+        </sql>
+    </install>
+
+    <installfile>install.php</installfile>
+    <uninstallfile>uninstall.php</uninstallfile>
+
+	<!-- Media -->
+	<media destination="com_calendar" folder="media">
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>menus</folder>
+		<file>index.html</file>
+	</media>
+
+	<!-- Modules -->
+	<modules>
+        <module module="modules/mod_calendar_calendar" client="site" position="left" />
+        <module module="modules/mod_calendar_categories" client="site" position="left" />
+        <module module="modules/mod_calendar_eventinstances" client="site" position="left" />
+		<module module="modules/mod_calendar_search" client="site" position="left" />	
+	</modules>
+
+	<!-- Plugins -->
+	<plugins>
+		<!-- Sample: -->
+		<!-- Instructions: plugin="package_folder_containing_plugin_files" element="plugin_filename" -->
+		<!-- <plugin plugin="calendar_plugin_user" publish="false" group="user" element="calendar" /> -->
+        <plugin plugin="plugins/calendar_plugin_content_eventinstance" publish="true" group="content" element="calendar_eventinstance" />
+        <plugin plugin="plugins/calendar_plugin_search" publish="true" group="search" element="calendar" />
+	</plugins>
+</install>

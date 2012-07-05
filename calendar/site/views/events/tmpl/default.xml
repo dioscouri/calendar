@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="CALENDAR EVENTS DEFAULT LAYOUT">
+		<message>
+			<![CDATA[CALENDAR EVENTS DEFAULT LAYOUT DESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>CALENDAR EVENTS DEFAULT LAYOUT</name>
+		<description>CALENDAR EVENTS DEFAULT LAYOUT DESC</description>
+		<!-- <url addpath="/administrator/components/com_schools/elements"> <param 
+			name="filter_group" type="schoolsgroup" section="com_schools" default="" 
+			label="Select Group" description="A School Group" /> <param name="filter_district" 
+			type="schoolsdistrict" section="com_schools" default="" label="Select District" 
+			description="A School District" /> </url> -->
+	</state>
+</metadata>

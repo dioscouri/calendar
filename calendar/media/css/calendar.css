@@ -1,0 +1,877 @@
+@charset "utf-8";
+
+table.adminlist {
+	padding: 5px;
+	width: 100%;
+	margin: 5px 0px 10px 0px;
+	border-collapse: collapse;
+}
+
+table.adminlist th {
+	white-space: nowrap;
+	vertical-align: top;
+	padding: 5px;
+}
+
+table.adminlist thead th {
+	background-color: #e5e5e5;
+	text-align: center;
+}
+
+table.adminlist tbody th {
+	font-weight: bold;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+table.adminlist td {
+	border-bottom: 1px solid #e5e5e5;
+	padding: 5px;
+	vertical-align: middle;
+}
+
+/** filter lines **/
+tr.filter div.range {
+	width: 100%;
+	text-align: left;
+}
+
+tr.filter div.range div.rangeline {
+	width: 100%;
+	white-space: nowrap;
+	padding-bottom: 2px;
+	text-align: right;
+}
+
+tr.filter div.range div.rangeline span.label {
+	text-align: left;
+}
+
+tr.filter div.range div.rangeline .input {
+	text-align: left;
+}
+
+/** common **/
+span.href {
+	cursor: pointer;
+	color: blue;
+	text-decoration: none;
+	padding-left: 10px;
+	font-weight: bold;
+}
+
+span.href:hover {
+	cursor: pointer;
+	color: blue;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+/** notes **/
+.note_pink {
+	background-color: #FDE8FD;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	padding: 10px;
+	text-align: justify;
+	border: 1px solid #FFCCCC;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
+.note_green {
+	background-color: #EBF6DF;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	padding: 10px;
+	text-align: justify;
+	border: 1px solid #289728;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
+/*
+ * From previous version
+ *
+ */
+/** toolbar icons **/
+.icon-32-refresh {
+	background-image:
+		url(../../../../administrator/templates/khepri/images/toolbar/icon-32-refresh.png);
+}
+
+.icon-32-download {
+	background-image:
+		url(../../../../administrator/templates/khepri/images/toolbar/icon-32-download.png);
+}
+
+.icon-32-clear {
+	background-image:
+		url(../../../../administrator/templates/khepri/images/toolbar/icon-32-trash.png);
+}
+
+.icon-32-lock {
+	background-image:
+		url(../../../../administrator/templates/khepri/images/toolbar/icon-32-lock.png);
+}
+
+.icon-32-search {
+	background-image:
+		url(../../../../administrator/templates/khepri/images/toolbar/icon-32-search.png);
+}
+
+.icon-32-lock {
+	background-image: url(../../images/lock.png);
+}
+
+.icon-32-lock_off {
+	background-image: url(../../images/lock_off.png);
+}
+
+.icon-32-plugins {
+	background-image: url(../../images/plugins.png);
+}
+
+.icon-32-required {
+	background-image: url(../../images/required.png);
+}
+
+.icon-32-switch {
+	background-image: url(../../images/switch_f2.png);
+}
+
+.icon-48-ambrasubs {
+	background-image: url(../../images/ambrasubs.png);
+	padding-left: 175px !important;
+}
+
+/** AdminHeading Icons */
+table.adminheading th.ambrasubs {
+	background: url(../../images/ambrasubs.png) no-repeat left;
+	padding-left: 175px;
+}
+
+table.adminheading th.ambrasubs_addons {
+	background: url(../../images/addons.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_uploadfile {
+	background: url(../../images/uploadfile.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_config {
+	background: url(../../images/config.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_tools {
+	background: url(../../images/tools.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_extras {
+	background: url(../../images/extras.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_users {
+	background: url(../../images/users.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_subscriptions {
+	background: url(../../images/subscriptions.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_types {
+	background: url(../../images/types.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_payments {
+	background: url(../../images/payments.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_categories {
+	background: url(../../images/categories.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_files {
+	background: url(../../images/files.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+table.adminheading th.ambrasubs_logs {
+	background: url(../../images/logs.png) no-repeat left;
+	padding-left: 60px;
+	height: 50px;
+}
+
+/* tabs */
+dl#pane_event { 
+    width: 100%;
+    position: relative; 
+}
+
+div#tab_line { 
+    clear: none;
+    float: right;
+    width: 100%;
+    z-index: -1;
+    position: relative;
+    bottom: 0px;
+}
+
+dl.tabs {
+	float: left;
+	/*margin: 10px 0 -1px 0;*/
+	z-index: 50;
+}
+
+dl.tabs dt {
+	float: left;
+	/*
+	padding: 4px 10px;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	margin-left: 3px;
+	background: #f0f0f0;
+	color: #666;
+	*/
+	clear: none;
+    border-right: 1px solid #E7E9ED;
+    width: 82px;
+    background-color: #FFFFFF;
+}
+
+dl.tabs dt span {
+    /*background: url("../images/tabs_arrow.gif") no-repeat scroll center bottom transparent;
+    border-bottom: 1px solid #E7E9ED;
+    color: #00ABEA;
+    display: block;
+    height: 44px;
+    padding-top: 5px;
+    text-align: center;
+    text-decoration: underline;
+    */
+}
+
+dl.tabs dt.open span a {
+    background-image: none;
+    border-bottom-color: white;
+}
+
+dl.tabs dt.open {
+	/*background: #F9F9F9;
+	border-bottom: 1px solid #F9F9F9;
+	*/
+	z-index: 100;
+	/*color: #000;*/
+	clear: none;
+}
+
+div.current {
+	clear: both;
+	/*
+	border: 1px solid #ccc;
+	padding: 10px 10px;
+	*/
+    border-bottom: 1px solid #E7E9ED;
+    padding: 10px 0 16px 10px;
+}
+
+div.current dd {
+	padding: 0;
+	margin: 0;
+	float: none;
+}
+
+/** AdminList */
+table.adminlist th.title a,table.adminlist th.title a:hover {
+	/*color: #FFFFFF;*/
+	
+}
+
+table.adminheading {
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
+}
+
+table.adminheading th {
+	width: 80%;
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+
+span.href {
+	cursor: pointer;
+	color: #3F9273;
+	text-decoration: none;
+	padding-left: 10px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+span.href:hover {
+	cursor: pointer;
+	color: #3F9273;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+div.ambrasubs_paddedl {
+	padding-left: 10px;
+}
+
+td.ambrasubs_faded {
+	color: #999999;
+}
+
+#main_column {
+	vertical-align: top;
+	padding-left: 10px;
+	font-size: 12px;
+}
+
+#left_column {
+	width: 180px;
+	min-width: 180px;
+	vertical-align: top;
+	border-right: #FDB813 1px solid;
+	font-size: 12px;
+	text-align: left;
+}
+
+table.invisible {
+	width: 100%;
+}
+
+td.noborder {
+	border: none;
+}
+
+.notepi {
+	background-color: #FDE8FD;
+	margin: 5px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	padding: 10px;
+	font-size: 12px;
+	text-align: justify;
+	border: 1px solid #FFCCCC;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
+.noteg {
+	background-color: #EBF6DF;
+	margin: 5px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	padding: 10px;
+	font-size: 12px;
+	text-align: justify;
+	border: 1px solid #289728;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
+table.userlist td.inv_right {
+	text-align: right;
+	padding-left: 1px;
+}
+
+table.userlist td.top {
+	vertical-align: top;
+}
+
+table.userlist td.topnowrap {
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+table.userlist {
+	padding: 5px;
+	width: 100%;
+	margin-bottom: 10px;
+	border-collapse: collapse;
+}
+
+table.userlist th {
+	background-color: #e5e5e5;
+	white-space: nowrap;
+	vertical-align: top;
+	padding: 5px;
+}
+
+table.userlist th.title {
+	width: 20%;
+	text-align: left;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+table.userlist th.data {
+	width: 75%;
+	text-align: right;
+	vertical-align: middle;
+}
+
+table.userlist th.fee {
+	padding-right: 5px;
+	padding-left: 5px;
+	text-align: right;
+	vertical-align: middle;
+	white-space: nowrap;
+	width: 50px;
+}
+
+table.userlist th.amount {
+	padding-right: 5px;
+	padding-left: 5px;
+	text-align: right;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+table.userlist td {
+	border-bottom: 1px solid #e5e5e5;
+	padding: 5px;
+	vertical-align: top;
+}
+
+table.userlist td.title {
+	width: 20%;
+	text-align: left;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+table.userlist td.data {
+	width: 75%;
+	text-align: right;
+	vertical-align: middle;
+}
+
+table.userlist td.tooltip {
+	width: 5%;
+	text-align: right;
+	vertical-align: middle;
+}
+
+table.userlist td.headingnormal {
+	padding-right: 0px;
+	padding-left: 0px;
+	text-align: left;
+	vertical-align: middle;
+	white-space: nowrap;
+	font-weight: bold;
+	text-decoration: underline;
+	border: none;
+}
+
+table.userlist td.headingamount {
+	padding-right: 0px;
+	padding-left: 0px;
+	text-align: right;
+	vertical-align: middle;
+	white-space: nowrap;
+	font-weight: bold;
+	text-decoration: underline;
+	border: none;
+}
+
+table.userlist td.amount {
+	text-align: right;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+table.userlist td.noborder {
+	border: none;
+	padding: 2px;
+	padding-top: 10px;
+}
+
+/** cpanel settings **/
+#cpanel div.icon {
+	text-align: center;
+	margin-right: 5px;
+	float: left;
+	margin-bottom: 5px;
+}
+
+#cpanel div.icon a {
+	display: block;
+	float: left;
+	border: 1px solid #f0f0f0;
+	height: 97px;
+	width: 108px;
+	color: #666;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+#cpanel div.icon a:hover {
+	border-left: 1px solid #eee;
+	border-top: 1px solid #eee;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	background: #f9f9f9;
+	color: #0B55C4;
+}
+
+#cpanel img {
+	padding: 10px 0;
+	margin: 0 auto;
+}
+
+#cpanel span {
+	display: block;
+	text-align: center;
+}
+
+fieldset {
+	margin-bottom: 10px;
+	border: 1px #ccc solid;
+	padding: 5px;
+	text-align: left;
+}
+
+fieldset p {
+	margin: 10px 0px;
+}
+
+legend {
+	color: #0B55C4;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+fieldset.adminform {
+	border: 1px solid #ccc;
+	margin: 0 10px 10px 10px;
+}
+
+/** File Listings */
+div.item_wrapper {
+	width: 100%;
+	float: left;
+	padding: 5px 0px 5px 0px;
+	margin: 5px;
+	border-bottom: thin solid #e5e5e5;
+}
+
+div.item_downloadicon {
+	max-width: 75px;
+	padding: 10px;
+	float: right;
+}
+
+div.item_downloadicon img {
+	max-width: 48px;
+	max-height: 48px;
+}
+
+div.item_downloadicon a {
+	text-decoration: none;
+}
+
+div.item_article {
+	max-width: 75%;
+	float: left;
+}
+
+div.item_filetypeicon {
+	max-width: 75px;
+	padding: 10px;
+	float: left;
+}
+
+div.item_filetypeicon img {
+	max-width: 48px;
+	max-height: 48px;
+}
+
+div.item_filename {
+	padding: 5px;
+	font-size: large;
+}
+
+div.subcat_icon {
+	padding: 5px;
+}
+
+div.subcat_title {
+	padding-bottom: 10px;
+}
+
+.userlist .table_list {
+	margin: 0 0 0 3px;
+	padding: 0;
+	list-style: none;
+}
+
+.userlist .table_list li {
+	margin: 0 0 5px 0;
+}
+
+/** Site Calendar  */
+.events_calendar_month {
+	border-right: solid;
+	border-top: solid;
+}
+
+.weekdays {
+	text-align: center;
+	border-left: solid;
+	border-bottom: solid;
+}
+
+.day {
+	/*width: 115px;
+	height: 115px;
+	vertical-align: top;
+	*/
+}
+
+.day_number {
+	width: 115px;
+	text-align: right;
+}
+
+.day_value {
+	
+}
+
+.header_calendar_links {
+	float: left;
+}
+
+.header_link {
+	float: left;
+	margin-right: 15px;
+}
+
+.header_title {
+	float: right;
+}
+
+.calendar_dates {
+	
+}
+
+.events_calendar_week {
+	border-right: solid;
+	border-top: solid;
+	padding: 0 0 0 0;
+	border-spacing: 0;
+	width: 100%;
+}
+
+.calendar_week {
+	clear: both;
+}
+
+.week_day_header {
+	vertical-align: top;
+	border-left: solid;
+	border-bottom: solid;
+}
+
+.week_day_content {
+	vertical-align: top;
+	border-bottom: solid;
+}
+
+.week_non_working_day {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	text-align: justify;
+	border: 1px solid #DDDDBB;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	background-color: #E6E6D8;
+}
+
+.week_working_day {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	text-align: justify;
+	border: 1px solid #DDDDBB;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	background-color: #70B8FF;
+}
+
+.week_event {
+
+}
+
+.week_day_img {
+	float: left;
+	margin: 5px;
+	height: 150px;
+	width: 150px;
+}
+
+.calendar_three {
+	clear: both;
+}
+
+.events_calendar_three {
+	border: solid;
+	padding: 0 0 0 0;
+	border-spacing: 0;
+	width: 100%;
+}
+
+.three_header_days {
+	width: 30%;
+	align: center;
+}
+
+.three_hour_header {
+	width: 10%;
+}
+
+.three_non_working_day {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	text-align: center;
+	border: 1px solid #DDDDBB;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	background-color: #E6E6D8;
+}
+
+.three_working_day {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	text-align: center;
+	border: 1px solid #DDDDBB;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	background-color: #70B8FF;
+}
+
+.three_hours {
+	vertical-align: top;
+}
+
+.three_events {
+	vertical-align: top;
+}
+
+.events_calendar_day {
+	border-right: solid;
+	border-top: solid;
+	padding: 0 0 0 0;
+	border-spacing: 0;
+	width: 100%;
+}
+
+.calendar_day {
+	clear: both;
+}
+
+.day_non_working_day {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	text-align: center;
+	border: 1px solid #DDDDBB;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	background-color: #E6E6D8;
+}
+
+.day_working_day {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	text-align: center;
+	border: 1px solid #DDDDBB;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	background-color: #70B8FF;
+}
+
+.day_hours_header {
+	vertical-align: top;
+}
+
+.day_event {
+
+}
+
+.day_day_img {
+	float: left;
+	margin: 5px;
+	height: 150px;
+	width: 150px;
+}
+
+.event_item {
+	border-style: solid;
+	border-width: 1px;
+	height: 165px;
+}
+
+.event_img {
+	width: 300px;
+}
+
+.series {
+	height: 165px;
+}
+
+#calendar ol span.inactive {
+    color: #CCCCCC;
+    display: block;
+    height: 29px;
+    padding-top: 2px;
+}
+
+a#more_dates {
+    text-decoration: none;
+    font-size: 15px;
+}
+
+a#more_dates:hover {
+    color: #606060;
+    cursor: default;
+}
+
+.error {
+    background-color: #FDE8FD;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: justify;
+    border-spacing: 0px;
+    border-collapse: collapse;
+}

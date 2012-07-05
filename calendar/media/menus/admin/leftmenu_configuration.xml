@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<menu>
+	<link>
+		<name>Basic Configuration</name>
+		<url>index.php?option=com_calendar&#38;view=config</url>
+	</link>
+	<link>
+		<name>Action Buttons</name>
+		<url>index.php?option=com_calendar&#38;view=actionbuttons</url>
+	</link>
+    <link>
+        <name>Venues</name>
+        <url>index.php?option=com_calendar&#38;view=venues</url>
+    </link>
+    <link>
+        <name>Primary Categories</name>
+        <url>index.php?option=com_calendar&#38;view=categories</url>
+    </link>
+    <link>
+        <name>Secondary Categories</name>
+        <url>index.php?option=com_calendar&#38;view=secondcategories</url>
+    </link>
+    <link>
+        <name>Event Types</name>
+        <url>index.php?option=com_calendar&#38;view=types</url>
+    </link>
+    <link>
+        <name>New Primary Category</name>
+        <url>index.php?option=com_calendar&#38;view=categories&#38;task=add</url>
+    </link>
+    <link>
+        <name>New Secondary Category</name>
+        <url>index.php?option=com_calendar&#38;view=secondcategories&#38;task=add</url>
+    </link>
+</menu>

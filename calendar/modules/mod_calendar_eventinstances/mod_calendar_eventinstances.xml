@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0" method="upgrade" position="left">
+	<name>Calendar Event Instances</name>
+	<author>Dioscouri</author>
+	<authorEmail>info@dioscouri.com</authorEmail>
+	<authorUrl>http://www.dioscouri.com</authorUrl>
+	<version>1.0.0</version>
+	<creationDate>May 2011</creationDate>
+	<copyright>2011 Dioscouri.com</copyright>
+	<license>GNU General Public License</license>
+	<description>Displays one or more event instances in a module position</description>
+    
+	<files>
+		<filename module="mod_calendar_eventinstances">mod_calendar_eventinstances.php</filename>
+		<filename>index.html</filename>
+		<folder>tmpl</folder>
+        <folder>js</folder>
+	</files>
+    
+	<languages>
+		<language tag="en-GB">languages/en-GB.mod_calendar_eventinstances.ini
+		</language>
+	</languages>
+    
+	<params>
+        <param name="item_id" type="text" default="" label="Item ID" description="Default Item ID" />
+		<param name="ids" type="text" default="" label="Event Instance IDs" description="Event Instance ID Numbers, each one separated by a comma" />
+        <param name="use_upcoming" type="radio" default="0" label="Use Upcoming Events?" description="Use Items from the Upcoming Events Queue?">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </param>
+        <param name="limit" type="text" default="3" label="LIMIT" description="LIMIT DESC" />
+		<param name="layout" type="list" default="large" label="Layout" description="Choose a layout">
+			<option value="small">Small</option>
+			<option value="medium">Medium</option>
+			<option value="large">Large</option>
+		</param>
+        <param name="slideshow" type="radio" default="0" label="Slideshow" description="Slideshow?">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </param>
+		<param name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="PARAMMODULECLASSSUFFIX" />
+	</params>
+</install>

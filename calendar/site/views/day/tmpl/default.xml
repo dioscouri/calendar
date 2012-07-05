@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_CALENDAR_DAY_DEFAULT_LAYOUT">
+		<message>
+			<![CDATA[COM_CALENDAR_DAY_DEFAULT_LAYOUT_DESC]]>
+		</message>
+	</layout>
+
+    <!-- Joomla 1.6+ only -->
+    <fields name="request">
+        <fieldset name="request" addfieldpath="/administrator/components/com_calendar/elements">
+            <field name="reset" type="hidden" default="1" />
+            
+            <field name="calendar_id" type="calendarcalendar"
+                label="COM_CALENDAR_ELEMENT_SELECT_CALENDAR_LABEL"
+                required="true"
+                description="COM_CALENDAR_ELEMENT_SELECT_CALENDAR_DESC"
+            />
+
+        </fieldset>
+    </fields>
+    
+    <!-- Joomla 1.5 only -->
+    <state>
+        <name>COM_CALENDAR_DAY_DEFAULT_LAYOUT</name>
+        <description>COM_CALENDAR_DAY_DEFAULT_LAYOUT_DESC</description>
+        <url addpath="/administrator/components/com_calendar/elements" >
+            <param name="reset" type="hidden" default="1" />
+            <param name="calendar_id" type="calendarcalendar" section="com_calendar" default="" label="COM_CALENDAR_ELEMENT_SELECT_CALENDAR_LABEL" description="COM_CALENDAR_ELEMENT_SELECT_CALENDAR_DESC" />
+        </url>
+    </state>
+    
+</metadata>
