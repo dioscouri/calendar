@@ -16,7 +16,7 @@ jimport( 'joomla.filesystem.file' );
 
 class CalendarHelperCategory extends CalendarHelperBase
 {
-	static $categories = array( );
+	public $categories = array( );
 	
 	/**
 	 * Gets the list of available category layout files
@@ -141,7 +141,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 		}
 		else
 		{
-			$helper = &CalendarHelperBase::getInstance( 'Category' );
+			$helper = CalendarHelperBase::getInstance( 'Category' );
 		}
 		
 		if ( empty( $helper->categories[$category_id] ) )

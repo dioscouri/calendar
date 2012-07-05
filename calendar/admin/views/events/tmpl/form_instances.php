@@ -4,7 +4,7 @@
 <?php $row = @$this->row; ?>
 <?php $items = @$this->items; ?>
 <?php jimport('joomla.html.pane'); ?>
-<?php $tabs = &JPane::getInstance( 'tabs' ); ?>
+<?php $tabs = JPane::getInstance( 'tabs' ); ?>
 <?php JHTML::_('behavior.tooltip'); ?>
 
 <?php

@@ -79,7 +79,7 @@
                         <?php echo JText::_( 'Description' ); ?>:
                     </td>
                     <td>
-                        <?php $editor = &JFactory::getEditor( ); ?>
+                        <?php $editor = JFactory::getEditor( ); ?>
                         <?php echo $editor->display( 'series_description', @$row->series_description, '100%', '450', '100', '20' );
 						?>
                     </td>
@@ -89,7 +89,7 @@
                         <?php echo JText::_( 'Series Multimedia' ); ?>:
                     </td>
                     <td>
-                        <?php $editor = &JFactory::getEditor( ); ?>
+                        <?php $editor = JFactory::getEditor( ); ?>
                         <?php echo $editor->display( 'series_multimedia', @$row->series_multimedia, '100%', '450', '100', '20' );
 						?>
                     </td>

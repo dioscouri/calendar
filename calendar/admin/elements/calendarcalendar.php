@@ -50,7 +50,7 @@ class JFakeElementCalendarCalendar extends JFakeElementBase
 		$html = $model->fetchElement($name, $value, $control_name );
 		return $html;
 		
-		$doc 		=& JFactory::getDocument();
+		$doc 		= JFactory::getDocument();
 		$fieldName	= $control_name ? $control_name.'['.$name.']' : $name;
 		$title = JText::_('Select Calendar');
 		if ($value) {

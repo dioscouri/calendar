@@ -3,7 +3,7 @@
 <?php $form = @$this->form; ?>
 <?php $row = @$this->row; ?>
 <?php jimport('joomla.html.pane'); ?>
-<?php $tabs = &JPane::getInstance( 'tabs' ); ?>
+<?php $tabs = JPane::getInstance( 'tabs' ); ?>
 <?php JHTML::_('behavior.tooltip'); ?>
 <?php $categories_list = @$this->categories_list ?>
 <?php $config = Calendar::getInstance(); ?>

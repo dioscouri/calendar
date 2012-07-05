@@ -3,7 +3,7 @@
 <?php $form = @$this->form; ?>
 <?php $row = @$this->row; ?>
 <?php jimport('joomla.html.pane'); ?>
-<?php $tabs = &JPane::getInstance( 'tabs' ); ?>
+<?php $tabs = JPane::getInstance( 'tabs' ); ?>
 <?php JHTML::_('behavior.tooltip'); ?>
 
 <div id="validation_message"></div>
@@ -155,7 +155,7 @@ echo $tabs->startPanel( JText::_( 'Descriptions' ), "panel_descriptions");
                         <?php echo JText::_( 'Short Description' ); ?>:
                     </td>
                     <td>
-                        <?php $editor = &JFactory::getEditor( ); ?>
+                        <?php $editor = JFactory::getEditor( ); ?>
                         <?php echo $editor->display( 'dailyevent_short_description', @$row->dailyevent_short_description, '100%', '450', '100', '20' );
                         ?>
                     </td>
@@ -165,7 +165,7 @@ echo $tabs->startPanel( JText::_( 'Descriptions' ), "panel_descriptions");
                         <?php echo JText::_( 'Long Description' ); ?>:
                     </td>
                     <td>
-                        <?php $editor = &JFactory::getEditor( ); ?>
+                        <?php $editor = JFactory::getEditor( ); ?>
                         <?php echo $editor->display( 'dailyevent_long_description', @$row->dailyevent_long_description, '100%', '450', '100', '20' );
                         ?>
                     </td>

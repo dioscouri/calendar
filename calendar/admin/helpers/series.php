@@ -47,7 +47,7 @@ class CalendarHelperSeries extends CalendarHelperBase
 	 * @param int $series_id
 	 * @return string series name
 	 */
-	function getSeriesName( $series_id )
+	public static function getSeriesName( $series_id )
 	{
 		JModel::addIncludePath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_calendar' . DS . 'models' );
 		$model = JModel::getInstance( 'Series', 'CalendarModel' );

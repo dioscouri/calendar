@@ -160,8 +160,8 @@ class CalendarSelect extends JHTMLSelect
     {
     	$return = array( );
     	$model = JModel::getInstance( 'ElementArticle', 'CalendarModel' );
-    	$return['select'] = $model->_fetchElement( $name, $selected );
-    	$return['clear'] = $model->_clearElement( $name, '0' );
+    	$return['select'] = $model->fetchElement( $name, $selected );
+    	$return['clear'] = $model->clearElement( $name, '0' );
     	return $return;
     }
     
