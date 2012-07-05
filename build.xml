@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ An ant build file for joomla install packages
+ 
+ @author    Dioscouri Design
+ @link  http://www.dioscouri.com
+ @copyright Copyright (C) 2007 Dioscouri Design. All rights reserved.
+ @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+-->
+<project name="calendar" default="build" basedir=".">
+    <description>Ant Build File for Joomla</description>
+
+    <!-- load variables from config file -->
+    <property name="cfg.configFile" location="antconfig.txt" />
+    <loadproperties srcfile="${cfg.configFile}" />
+
+    <!--config file values
+    cfg.name=calendar
+    cfg.buildDir=packages
+    cfg.localhostRoot=c:/www
+    
+    ftp.server=
+    ftp.user=
+    ftp.password=
+    ftp.dir=    
+    -->
+
+    <!-- auto values but should be checked -->
+    <property name="cfg.comName" value="${cfg.name}" />
+    <property name="cfg.comDir" value="${basedir}/${cfg.comName}" />
+    <property name="cfg.buildVersionDir" value="${cfg.buildDir}" />
+    <property name="cfg.plgPrefix" value="calendar_plugin_" />
+    <property name="cfg.modPrefix" value="mod_calendar_" />
+    <property name="cfg.langPrefix" value="calendar_translation_" />
+    <property name="cfg.langDir" value="${basedir}/language_packages" />
+    <property name="cfg.adminFilesDir" location="${cfg.comDir}/admin" />
+    <property name="cfg.siteFilesDir" location="${cfg.comDir}/site" />
+    <property name="cfg.extensionsDir" location="${basedir}/extensions" />
+    <property name="cfg.mediaFilesDir" location="${cfg.comDir}/media" />
+    <property name="cfg.adminLangDir" location="${cfg.comDir}/languages/admin" />
+    <property name="cfg.siteLangDir" location="${cfg.comDir}/languages/site" />
+    
+    <!-- some settings that are currently unused -->
+    <property name="cfg.addversion" value="true" />
+    <property name="cfg.versionprefix" value="v" />
+    <property name="cfg.adddate" value="true" />
+    <property name="cfg.datefmt" value="yyyy-MM-dd" />
+    <property name="cfg.dateloc" value="en,UK" />
+
+    <target name="update_localhost" description="attemps to update files on localhost server with files from working directory">
+        <!-- MAIN COMPONENT -->
+        <copy todir="${cfg.localhostRoot}/administrator/components/com_${cfg.comName}" overwrite="true">
+            <fileset dir="${cfg.adminFilesDir}" />
+        </copy>
+        <copy todir="${cfg.localhostRoot}/components/com_${cfg.comName}" overwrite="true">
+            <fileset dir="${cfg.siteFilesDir}" />
+        </copy>
+        <copy todir="${cfg.localhostRoot}/administrator/components/com_${cfg.comName}" overwrite="true">
+            <fileset file="${cfg.comDir}/manifest.xml" />
+        </copy>     
+        <!-- MEDIA FILES -->
+        <copy todir="${cfg.localhostRoot}/media/com_${cfg.comName}" overwrite="true">
+            <fileset dir="${cfg.mediaFilesDir}" />
+        </copy>
+        <!-- LANGUAGE FILES -->
+        <copy todir="${cfg.localhostRoot}/administrator/language/en-GB" overwrite="true">
+            <fileset dir="${cfg.adminLangDir}" />
+        </copy>
+        <copy todir="${cfg.localhostRoot}/language/en-GB" overwrite="true">
+            <fileset dir="${cfg.siteLangDir}" />
+        </copy>
+    <!-- MODULES -->
+    	<!-- SEARCH -->
+    	<copy todir="${cfg.localhostRoot}/modules/mod_${cfg.comName}_search" overwrite="true">
+    		<fileset dir="${cfg.comDir}/mod_${cfg.comName}_search" />
+        </copy>
+    	<copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
+    	    <fileset dir="${cfg.comDir}/mod_${cfg.comName}_search/languages" />
+        </copy>
+    	<!-- CALENDAR -->
+    	<copy todir="${cfg.localhostRoot}/modules/mod_${cfg.comName}_calendar" overwrite="true">
+    		<fileset dir="${cfg.comDir}/mod_${cfg.comName}_calendar" />
+    	</copy>
+    	<copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
+    	    <fileset dir="${cfg.comDir}/mod_${cfg.comName}_calendar/languages" />
+    	</copy>
+    	<!-- CATEGORIES -->
+    	<copy todir="${cfg.localhostRoot}/modules/mod_${cfg.comName}_categories" overwrite="true">
+    		<fileset dir="${cfg.comDir}/mod_${cfg.comName}_categories" />
+    	</copy>
+    	<copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
+    	    <fileset dir="${cfg.comDir}/mod_${cfg.comName}_categories/languages" />
+    	</copy>
+        <!-- EVENT INSTANCES -->
+        <copy todir="${cfg.localhostRoot}/modules/mod_${cfg.comName}_eventinstances" overwrite="true">
+            <fileset dir="${cfg.comDir}/mod_${cfg.comName}_eventinstances" />
+        </copy>
+        <copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
+            <fileset dir="${cfg.comDir}/mod_${cfg.comName}_eventinstances/languages" />
+        </copy>
+    <!-- PLUGINS -->
+        <!-- SEARCH -->
+        <copy todir="${cfg.localhostRoot}/plugins/search" overwrite="true">
+            <fileset dir="${cfg.comDir}/calendar_plugin_search" />
+        </copy>
+        <copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
+            <fileset dir="${cfg.comDir}/calendar_plugin_search/languages" />
+        </copy>
+        <!-- CONTENT EVENTINSTANCE -->
+        <copy todir="${cfg.localhostRoot}/plugins/content" overwrite="true">
+            <fileset dir="${cfg.comDir}/calendar_plugin_content_eventinstance" />
+        </copy>
+        <copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
+            <fileset dir="${cfg.comDir}/calendar_plugin_content_eventinstance/languages" />
+        </copy>
+
+    </target>
+    
+    <target name="clean" description="Destroys all generated files and dirs">
+        <delete dir="${cfg.buildDir}/plugins" />
+        <delete dir="${cfg.buildDir}/modules" />
+        <delete dir="${cfg.buildDir}/components" />
+        <delete dir="${cfg.buildDir}/languages" />
+    </target>
+
+    <target name="init" description="creates necessary directory to build with">
+        <mkdir dir="${cfg.buildDir}" />
+        <mkdir dir="${cfg.buildDir}/plugins" />
+        <mkdir dir="${cfg.buildDir}/modules" />
+        <mkdir dir="${cfg.buildDir}/components" />
+        <mkdir dir="${cfg.buildDir}/languages" />
+    </target>
+
+    <target name="build" depends="build_packages" />
+    
+    <target name="build_packages" depends="clean, init, build_component, build_modules, build_plugins, build_languages" />
+    
+    <target name="build_component" depends="init" description="packages the final component file">
+        <zip destfile="${cfg.buildDir}/components/${cfg.name}.zip" basedir="${cfg.comDir}" />
+    </target>
+
+    <target name="build_plugins" description="packages any plugins">
+        <!-- add all plugin directories here -->
+        <!-- EX: <zip destfile="${cfg.buildDir}/plugins/${cfg.plgPrefix}report_ambrafields.zip" basedir="${cfg.comDir}/${cfg.plgPrefix}report_ambrafields" /> -->
+    	<zip destfile="${cfg.buildDir}/plugins/calendar_plugin_content_eventinstance.zip" basedir="${cfg.comDir}/calendar_plugin_content_eventinstance" />
+    	<zip destfile="${cfg.buildDir}/plugins/calendar_plugin_search.zip" basedir="${cfg.comDir}/calendar_plugin_search" />
+    </target>
+
+    <target name="build_modules" description="packages any modules">
+        <!-- add all module directories here -->
+    	<!-- EX: <zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}module.zip" basedir="${cfg.comDir}/${cfg.plgPrefix}module" /> -->
+    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}search.zip" basedir="${cfg.comDir}/${cfg.modPrefix}search" />
+    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}calendar.zip" basedir="${cfg.comDir}/${cfg.modPrefix}calendar" />
+    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}categories.zip" basedir="${cfg.comDir}/${cfg.modPrefix}categories" />
+    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}eventinstances.zip" basedir="${cfg.comDir}/${cfg.modPrefix}eventinstances" />
+    </target>
+    
+    <target name="build_languages" depends="init" description="packages any languages">
+    </target>   
+
+</project>
