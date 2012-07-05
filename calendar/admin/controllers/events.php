@@ -473,7 +473,7 @@ class CalendarControllerEvents extends CalendarController
 		return $upload;
 	}
 	
-	function edit()
+	function edit($cachable=false, $urlparams = false)
 	{
         $model = JModel::getInstance( 'EventInstances', 'CalendarModel' );
         $model->setState( 'filter_event', $model->getId() );
@@ -504,12 +504,12 @@ class CalendarControllerEvents extends CalendarController
 			}
 		}
         
-        $view   = $this->getView( 'events', 'html' );
+        $view   = $this->getView( $this->get('suffix'), 'html' );
         $view->set('items', $items);
 		$view->assign( 'secondary_categories', $secondary_categories );
 		$view->assign( 'categories_list', $categories_list );
         
-	    parent::edit();
+	    parent::edit($cachable, $urlparams);
 	}
 	
     /**

@@ -11,24 +11,12 @@
 /** ensure this file is being included by a parent file */
 defined('_JEXEC') or die('Restricted access');
 
-if ( !class_exists('Calendar') ) 
+if ( !class_exists('Calendar') ) { 
     JLoader::register( "Calendar", JPATH_ADMINISTRATOR.DS."components".DS."com_calendar".DS."defines.php" );
-
-Calendar::load( 'Calendar', 'defines' );
+}
 
 class CalendarHelperBase extends JObject
 {   
-	
-	/**
-	 * constructor
-	 * make it protected where necessary
-	 */
-	function __construct()
-	{
-		parent::__construct();
-	}
-	
-	
 	/**
 	 * Returns a reference to the a Helper object, only creating it if it doesn't already exist
 	 *
@@ -36,7 +24,7 @@ class CalendarHelperBase extends JObject
 	 * @param string 	$prefix	 A prefix for the helper class name. Optional.
 	 * @return helper The Helper Object	 
 	*/
-	function &getInstance( $type = 'Base', $prefix = 'CalendarHelper' )
+	public static function getInstance( $type = 'Base', $prefix = 'CalendarHelper' )
 	{
 		static $instances;
 

@@ -62,9 +62,9 @@ class CalendarModelTools extends CalendarModelBase
 		$query->where( "tbl.element LIKE 'tool_%'" );
 	}
 	
-	public function getList( )
+	public function getList( $refresh = false )
 	{
-		$list = parent::getList( );
+		$list = parent::getList( $refresh );
 		foreach ( $list as $item )
 		{
 			$item->link = 'index.php?option=com_calendar&view=tools&task=view&id=' . $item->id;

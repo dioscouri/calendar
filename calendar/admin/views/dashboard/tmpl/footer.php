@@ -1,11 +1,13 @@
 <?php defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 
 	<?php
+	$defines = Calendar::getInstance();
+	
 	$img_file = "dioscouri_logo_transparent.png";
 	$img_path = "../media/com_calendar/images";
 	
 	$url = "http://www.dioscouri.com/";
-	if ( $amigosid = Calendar::getInstance( )->get( 'amigosid', '' ) )
+	if ( $amigosid = $defines->get( 'amigosid', '' ) )
 	{
 		$url .= "?amigosid=" . $amigosid;
 	}
@@ -28,9 +30,9 @@
 			<?php echo JText::_( "Calendar" ); ?>: <?php echo JText::_( "Calendar Desc" );
 												   ?>
 			<br/>
-			<?php echo JText::_( "Copyright" ); ?>: <?php echo Calendar::getCopyrightYear( ); ?> &copy; <a href="<?php echo $url; ?>" target="_blank">Dioscouri Design</a>
+			<?php echo JText::_( "Copyright" ); ?>: <?php echo $defines->getCopyrightYear( ); ?> &copy; <a href="<?php echo $url; ?>" target="_blank">Dioscouri Design</a>
 			<br/>
-			<?php echo JText::_( "Version" ); ?>: <?php echo Calendar::getVersion( ); ?>
+			<?php echo JText::_( "Version" ); ?>: <?php echo $defines->getVersion( ); ?>
 		</td>
 		<td style="text-align: right; width: 33%;">
 			<a href="<?php echo $url; ?>" target="_blank"><img src="<?php echo $img_path . "/" . $img_file;

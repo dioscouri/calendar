@@ -123,7 +123,7 @@ class CalendarControllerCalendars extends CalendarController
 		$this->setRedirect( $redirect, $this->message, $this->messagetype );
 	}
 	
-	function edit()
+	function edit($cachable=false, $urlparams = false)
 	{
 		$model = $this->getModel( $this->get( 'suffix' ) );
 		$calendar = $model->getItem( $model->getId() );
@@ -174,7 +174,7 @@ class CalendarControllerCalendars extends CalendarController
 		$view->assign( 'filter_types', $filter_types );
 		$view->assign( 'tabbed_types', $tabbed_types );
         
-	    parent::edit();
+	    parent::edit($cachable, $urlparams);
 	}
 }
 

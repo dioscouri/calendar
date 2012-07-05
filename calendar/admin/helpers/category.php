@@ -36,7 +36,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 	 * @param array $options
 	 * @return array
 	 */
-	function getLayouts( $options = array( ) )
+	public static function getLayouts( $options = array( ) )
 	{
 		$layouts = array( );
 		// set the default exclusions array
@@ -110,7 +110,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 	 * @param int $category_id
 	 * @return unknown_type
 	 */
-	function getLayout( $category_id )
+	public static function getLayout( $category_id )
 	{
 		static $template;
 		
@@ -178,7 +178,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 	 * @param $url
 	 * @return unknown_type
 	 */
-	function getImage( $id, $by = 'id', $alt = '', $type = 'thumb', $url = false )
+	public static function getImage( $id, $by = 'id', $alt = '', $type = 'thumb', $url = false )
 	{
 		switch ( $type )
 		{
@@ -226,7 +226,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 	 * @param $format
 	 * @return unknown_type
 	 */
-	function getPathName( $id, $format = 'flat', $linkSelf = false )
+	public static function getPathName( $id, $format = 'flat', $linkSelf = false )
 	{
 		$name = '';
 		if ( empty( $id ) )
@@ -373,7 +373,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 	 * @param $id   event id
 	 * @return array( 'prev', 'next' )
 	 */
-	function getSurrounding( $id )
+	public static function getSurrounding( $id )
 	{
 		$return = array( );
 		
@@ -446,7 +446,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 	 * @return string category name
 	 * 
 	 */
-	function getCategoryName( $category_id )
+	public static function getCategoryName( $category_id )
 	{
 		JModel::addIncludePath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_calendar' . DS . 'models' );
 		$model = JModel::getInstance( 'Categories', 'CalendarModel' );
@@ -468,7 +468,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 	 * @return string $categories names
 	 * 
 	 */
-	function getCategoriesNames( $category_ids, $type='Categories' )
+	public static function getCategoriesNames( $category_ids, $type='Categories' )
 	{
 		$category_ids = explode( ',', $category_ids );
 		$categories_array = array();
@@ -495,7 +495,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 	 * @param $event_id;
 	 * @return array;
 	 */
-	function getSecondaryCategories( $event_id )
+	public static function getSecondaryCategories( $event_id )
 	{
 		JModel::addIncludePath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_calendar' . DS . 'models' );
 		$model = JModel::getInstance( 'Events', 'CalendarModel' );

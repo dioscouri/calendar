@@ -15,10 +15,8 @@ Calendar::load( 'CalendarModelBase', 'models._base' );
 
 class CalendarModelDashboard extends CalendarModelBase 
 {
-	function getTable()
+	function getTable($name='', $prefix=null, $options = array())
 	{
-		JTable::addIncludePath( JPATH_ADMINISTRATOR.DS.'components'.DS.'com_calendar'.DS.'tables' );
-		$table = JTable::getInstance( 'Config', 'CalendarTable' );
-		return $table;
+		return parent::getTable('Config');
 	}
 }

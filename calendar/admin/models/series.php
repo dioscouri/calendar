@@ -83,9 +83,9 @@ class CalendarModelSeries extends CalendarModelBase
 		}
 	}
 	
-	public function getList( )
+	public function getList( $refresh = false )
 	{
-		$list = parent::getList( );
+		$list = parent::getList( $refresh );
 		foreach ( $list as $item )
 		{
 			$item->link = 'index.php?option=com_calendar&view=series&task=edit&id=' . $item->series_id;

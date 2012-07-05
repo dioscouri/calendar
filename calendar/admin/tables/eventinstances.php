@@ -65,11 +65,11 @@ class CalendarTableEventinstances extends CalendarTable
 	 * @param object
 	 * @return boolean
 	 */
-	function store( )
+	function store( $updateNulls=false )
 	{
 		$date = JFactory::getDate( );
 		$this->eventinstance_modified_date = $date->toMysql( );
-		$store = parent::store( );
+		$store = parent::store( $updateNulls );
 		return $store;
 	}
 	

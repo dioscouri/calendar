@@ -59,9 +59,9 @@ class CalendarModelTypes extends CalendarModelBase
 		}
 	}
 	
-	public function getList( )
+	public function getList( $refresh = false )
 	{
-		$list = parent::getList( );
+		$list = parent::getList( $refresh );
 		foreach ( $list as $item )
 		{
 			$item->link = 'index.php?option=com_calendar&view=types&task=edit&id=' . $item->type_id;

@@ -201,7 +201,7 @@ class CalendarHelperImage extends CalendarHelperBase
 	 * @param $url
 	 * @return unknown_type
 	 */
-	function getImage( $object_name, $image, $alt = '', $type = 'thumb', $url = false )
+	public static function getImage( $object_name, $image, $alt = '', $type = 'thumb', $url = false )
 	{
 		switch ( $type )
 		{

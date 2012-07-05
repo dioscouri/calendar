@@ -78,7 +78,7 @@ class Calendar extends DSC
 	 * @param string	$type	The type of URL to return, default 'media'
 	 * @return 	string	URL
 	 */
-	public static function getURL( $type = 'media' )
+	public static function getURL( $type = 'media', $com='' )
 	{
 		$url = '';
 		
@@ -131,7 +131,7 @@ class Calendar extends DSC
 	 * @param 	string	$type	The type of path to return, default 'media'
 	 * @return 	string	Path
 	 */
-	public static function getPath( $type = 'media' )
+	public static function getPath( $type = 'media', $com='' )
 	{
 		$path = '';
 		
@@ -183,9 +183,9 @@ class Calendar extends DSC
 /**
 	 * Intelligently loads instances of classes in framework
 	 *
-	 * Usage: $object = Amigos::getClass( 'AmigosHelperCarts', 'helpers.carts' );
-	 * Usage: $suffix = Amigos::getClass( 'AmigosHelperCarts', 'helpers.carts' )->getSuffix();
-	 * Usage: $categories = Amigos::getClass( 'AmigosSelect', 'select' )->category( $selected );
+	 * Usage: $object = Calendar::getClass( 'CalendarHelperCarts', 'helpers.carts' );
+	 * Usage: $suffix = Calendar::getClass( 'CalendarHelperCarts', 'helpers.carts' )->getSuffix();
+	 * Usage: $categories = Calendar::getClass( 'CalendarSelect', 'select' )->category( $selected );
 	 *
 	 * @param string $classname   The class name
 	 * @param string $filepath    The filepath ( dot notation )

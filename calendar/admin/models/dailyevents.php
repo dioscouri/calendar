@@ -66,9 +66,9 @@ class CalendarModelDailyevents extends CalendarModelBase
 		}
 	}
 	
-	public function getList( )
+	public function getList( $refresh = false )
 	{
-		$list = parent::getList( );
+		$list = parent::getList( $refresh );
 		foreach ( $list as $item )
 		{
 			$item->link = 'index.php?option=com_calendar&view=dailyevents&task=edit&id=' . $item->dailyevent_id;
