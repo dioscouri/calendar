@@ -72,46 +72,46 @@
     <!-- MODULES -->
     	<!-- SEARCH -->
     	<copy todir="${cfg.localhostRoot}/modules/mod_${cfg.comName}_search" overwrite="true">
-    		<fileset dir="${cfg.comDir}/mod_${cfg.comName}_search" />
+    		<fileset dir="${cfg.comDir}/modules/mod_${cfg.comName}_search" />
         </copy>
     	<copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
-    	    <fileset dir="${cfg.comDir}/mod_${cfg.comName}_search/languages" />
+    	    <fileset dir="${cfg.comDir}/modules/mod_${cfg.comName}_search/languages" />
         </copy>
     	<!-- CALENDAR -->
     	<copy todir="${cfg.localhostRoot}/modules/mod_${cfg.comName}_calendar" overwrite="true">
-    		<fileset dir="${cfg.comDir}/mod_${cfg.comName}_calendar" />
+    		<fileset dir="${cfg.comDir}/modules/mod_${cfg.comName}_calendar" />
     	</copy>
     	<copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
-    	    <fileset dir="${cfg.comDir}/mod_${cfg.comName}_calendar/languages" />
+    	    <fileset dir="${cfg.comDir}/modules/mod_${cfg.comName}_calendar/languages" />
     	</copy>
     	<!-- CATEGORIES -->
     	<copy todir="${cfg.localhostRoot}/modules/mod_${cfg.comName}_categories" overwrite="true">
-    		<fileset dir="${cfg.comDir}/mod_${cfg.comName}_categories" />
+    		<fileset dir="${cfg.comDir}/modules/mod_${cfg.comName}_categories" />
     	</copy>
     	<copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
-    	    <fileset dir="${cfg.comDir}/mod_${cfg.comName}_categories/languages" />
+    	    <fileset dir="${cfg.comDir}/modules/mod_${cfg.comName}_categories/languages" />
     	</copy>
         <!-- EVENT INSTANCES -->
         <copy todir="${cfg.localhostRoot}/modules/mod_${cfg.comName}_eventinstances" overwrite="true">
-            <fileset dir="${cfg.comDir}/mod_${cfg.comName}_eventinstances" />
+            <fileset dir="${cfg.comDir}/modules/mod_${cfg.comName}_eventinstances" />
         </copy>
         <copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
-            <fileset dir="${cfg.comDir}/mod_${cfg.comName}_eventinstances/languages" />
+            <fileset dir="${cfg.comDir}/modules/mod_${cfg.comName}_eventinstances/languages" />
         </copy>
     <!-- PLUGINS -->
         <!-- SEARCH -->
         <copy todir="${cfg.localhostRoot}/plugins/search" overwrite="true">
-            <fileset dir="${cfg.comDir}/calendar_plugin_search" />
+            <fileset dir="${cfg.comDir}/plugins/calendar_plugin_search" />
         </copy>
         <copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
-            <fileset dir="${cfg.comDir}/calendar_plugin_search/languages" />
+            <fileset dir="${cfg.comDir}/plugins/calendar_plugin_search/languages" />
         </copy>
         <!-- CONTENT EVENTINSTANCE -->
         <copy todir="${cfg.localhostRoot}/plugins/content" overwrite="true">
-            <fileset dir="${cfg.comDir}/calendar_plugin_content_eventinstance" />
+            <fileset dir="${cfg.comDir}/plugins/calendar_plugin_content_eventinstance" />
         </copy>
         <copy todir="${cfg.localhostRoot}/language/en-GB" preservelastmodified="true" overwrite="true">
-            <fileset dir="${cfg.comDir}/calendar_plugin_content_eventinstance/languages" />
+            <fileset dir="${cfg.comDir}/plugins/calendar_plugin_content_eventinstance/languages" />
         </copy>
 
     </target>
