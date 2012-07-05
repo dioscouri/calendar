@@ -15,7 +15,7 @@ $hours = $date->hours;
 $datetime = $date->datetime;
 $nonworkingdays = $date->nonworkingdays;
 $header_title = JText::_( $date->startmonthname ) . ' ' . $date->startday . ' ' . $date->startyear . ' - ' . JText::_( $date->endmonthname ) . ' ' . $date->endday . ' ' . $date->endyear;
-$config = CalendarConfig::getInstance( );
+$config = Calendar::getInstance( );
 ?> 
 <div id="calendar_container" name="calendar_container">
 	

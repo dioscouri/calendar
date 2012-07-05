@@ -251,7 +251,7 @@ class CalendarTable extends DSCTable
 			return false;
 		}
 		
-		if( CalendarConfig::get('enable_reorder_table', '1') )
+		if( Calendar::get('enable_reorder_table', '1') )
 		{
 			$this->reorder();
 		}

@@ -58,7 +58,7 @@ class CalendarHelperEvent extends CalendarHelperBase
     	    // $state['type'] = int (can be null)
     	    
     	    $default_date = date('Y-m-01');
-    	    $config = CalendarConfig::getInstance();
+    	    $config = Calendar::getInstance();
     	    if ($config->get('default_date'))
     	    {
     	        $default_date = $config->get('default_date');

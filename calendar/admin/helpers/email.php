@@ -38,7 +38,7 @@ class CalendarHelperEmail extends CalendarHelperBase
         $done = array();
 
         // grab config settings for sender name and email
-        $config     = &CalendarConfig::getInstance();
+        $config     = &Calendar::getInstance();
         $mailfrom   = $config->get( 'emails_defaultemail', $mainframe->getCfg('mailfrom') );
         $fromname   = $config->get( 'emails_defaultname', $mainframe->getCfg('fromname') );
         $sitename   = $config->get( 'sitename', $mainframe->getCfg('sitename') );
@@ -152,7 +152,7 @@ class CalendarHelperEmail extends CalendarHelperBase
         $return->subject = '';
 
         // get config settings
-        $config = &CalendarConfig::getInstance();
+        $config = &Calendar::getInstance();
         $sitename = $config->get( 'sitename', $mainframe->getCfg('sitename') );
         $siteurl = $config->get( 'siteurl', JURI::root() );
         
@@ -368,7 +368,7 @@ class CalendarHelperEmail extends CalendarHelperBase
     function getPlaceholderDefaults()
     {
         $mainframe = JFactory::getApplication();
-        $config = &CalendarConfig::getInstance();
+        $config = &Calendar::getInstance();
         $site_name              = $config->get( 'sitename', $mainframe->getCfg('sitename') );
         $site_url               = $config->get( 'siteurl', JURI::root() );
         $link_my_subscriptions  = $config->get( 'link_my_subscriptions', JURI::root()."/index.php?option=com_calendar&view=subscriptions" );

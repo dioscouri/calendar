@@ -209,13 +209,6 @@ class Calendar extends DSC
 	{
 	    return parent::load( $classname, $filepath, $options  );
 	}
-   
-    
 	
-	
-
 }
-
-
-class CalendarConfig extends Calendar {}
 ?>

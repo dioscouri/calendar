@@ -32,7 +32,7 @@ class CalendarControllerConfig extends CalendarController
 		$error = false;
 		$errorMsg = "";
 		$model = $this->getModel( $this->get( 'suffix' ) );
-		$config = CalendarConfig::getInstance( );
+		$config = Calendar::getInstance( );
 		$properties = $config->getProperties( );
 		
 		foreach ( @$properties as $key => $value )

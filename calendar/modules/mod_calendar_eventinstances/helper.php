@@ -147,7 +147,7 @@ class modCalendarUpcomingHelper extends JObject
 	    if ( !class_exists( 'Calendar' ) ) {
 	        JLoader::register( "Calendar", JPATH_ADMINISTRATOR . DS . "components" . DS . "com_calendar" . DS . "defines.php" );
 	    }
-	    Calendar::load( 'CalendarConfig', 'defines' );
+	    Calendar::load( 'Calendar', 'defines' );
 	    JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
         JModel::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/models' );
 
@@ -173,7 +173,7 @@ class modCalendarUpcomingHelper extends JObject
 		if (empty($item->url))
         {
             $item->url = $row->link_view;
-            $item_id = CalendarConfig::getInstance()->get('item_id');
+            $item_id = Calendar::getInstance()->get('item_id');
             $item->url .= "&Itemid=" . $item_id;
             $item->url = JRoute::_( $item->url ); 
         }

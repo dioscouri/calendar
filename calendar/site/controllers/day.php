@@ -88,7 +88,7 @@ class CalendarControllerDay extends CalendarController
 		// affix the Closed Days to the end of the list array
 	    Calendar::load( 'CalendarHelperCalendar', 'helpers.calendar' );
 	    $helper = new CalendarHelperCalendar();
-		$config = CalendarConfig::getInstance();
+		$config = Calendar::getInstance();
 		$non_working_days = $config->get('non_working_days');
 		$closed_days = explode(',', $non_working_days);
 		$closed_days_array = array();

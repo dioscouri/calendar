@@ -367,7 +367,7 @@ class CalendarController extends JController
     function footer()
     {
         // show a generous linkback, TIA
-        $show_linkback = CalendarConfig::getInstance()->get('show_linkback', '1');
+        $show_linkback = Calendar::getInstance()->get('show_linkback', '1');
         $format = JRequest::getVar('format');
         if ($show_linkback == '1' && $format != 'raw') 
         {
@@ -667,7 +667,7 @@ class CalendarController extends JController
 	 */
 	function getNonWorkingDays( )
 	{
-		$config = CalendarConfig::getInstance( );
+		$config = Calendar::getInstance( );
 			
 		$str_days = $config->get( 'non_working_days' );
 
@@ -759,7 +759,7 @@ class CalendarController extends JController
 		// affix the Closed Days to the end of the list array
 	    Calendar::load( 'CalendarHelperCalendar', 'helpers.calendar' );
 	    $helper = CalendarHelperBase::getInstance( 'calendar' );
-		$config = CalendarConfig::getInstance();
+		$config = Calendar::getInstance();
 		$non_working_days = $config->get('non_working_days');
 		$closed_days = explode(',', $non_working_days);
 		$closed_days_array = array();

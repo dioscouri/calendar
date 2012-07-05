@@ -158,7 +158,7 @@ class CalendarControllerThree extends CalendarController
 	 */
 	function getNonWorkingDays( )
 	{
-		$config = CalendarConfig::getInstance( );
+		$config = Calendar::getInstance( );
 		
 		$str_days = $config->get( 'non_working_days' );
 		

@@ -8,7 +8,7 @@ $categories_list = CalendarHelperCategory::getSecondaryCategories( $this->instan
 $more_dates = count($this->instance->more_dates);
 $back_url = $this->back_url;
 $uri = JURI::getInstance();
-$config = CalendarConfig::getInstance();
+$config = Calendar::getInstance();
 
 $handler = "{handler: 'iframe', size: {x: 740, y: 510} }";
 ?>

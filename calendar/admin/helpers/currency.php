@@ -27,7 +27,7 @@ class CalendarHelperCurrency extends CalendarHelperBase
     function _($amount, $currency='', $options='')
     {
         // default to whatever is in config
-        $config = CalendarConfig::getInstance();
+        $config = Calendar::getInstance();
         $options = (array) $options;
 
         $default_currencyid = $config->get('default_currencyid', '1');
@@ -177,7 +177,7 @@ class CalendarHelperCurrency extends CalendarHelperBase
             if (!empty($tableFrom->currency_id))
             {
             	// Auto Update Enabled?
-            	if(CalendarConfig::getInstance()->get('currency_exchange_autoupdate', 1))
+            	if(Calendar::getInstance()->get('currency_exchange_autoupdate', 1))
             	{
 	                // refresh if it's too old or refresh forced
 	                if ($tableFrom->updated_date < $expire_datetime || $refresh)
@@ -206,7 +206,7 @@ class CalendarHelperCurrency extends CalendarHelperBase
         }
         
         // Auto Update Enabled?
-        if(CalendarConfig::getInstance()->get('currency_exchange_autoupdate', 1))
+        if(Calendar::getInstance()->get('currency_exchange_autoupdate', 1))
         {
         	$exchange_rate = CalendarHelperCurrency::getExchangeRateYahoo( $currencyFrom, $currencyTo );
         }
@@ -280,7 +280,7 @@ class CalendarHelperCurrency extends CalendarHelperBase
     function format($amount, $currency='', $options='')
     {
         // default to whatever is in config
-        $config = CalendarConfig::getInstance();
+        $config = Calendar::getInstance();
         $options = (array) $options;
             
         $num_decimals = isset($options['num_decimals']) ? $options['num_decimals'] : $config->get('currency_num_decimals', '2');

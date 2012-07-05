@@ -36,7 +36,7 @@ class plgSearchCalendar extends JPlugin
             $success = true;
             if ( !class_exists('Calendar') ) {
                 JLoader::register( "Calendar", JPATH_ADMINISTRATOR.DS."components".DS."com_calendar".DS."defines.php" );
-                JLoader::register( "CalendarConfig", JPATH_ADMINISTRATOR.DS."components".DS."com_calendar".DS."defines.php" );
+                JLoader::register( "Calendar", JPATH_ADMINISTRATOR.DS."components".DS."com_calendar".DS."defines.php" );
             }
         }
         return $success;
@@ -139,7 +139,7 @@ class plgSearchCalendar extends JPlugin
         //Calendar::load( 'CalendarHelperEvent', 'helpers.event' );
         //$helper = new CalendarHelperEvent();
         
-        $config = CalendarConfig::getInstance( );
+        $config = Calendar::getInstance( );
         $jdate = JFactory::getDate();
         $date = $jdate->toFormat('%Y-%m-%d');
         // format the items array according to what com_search expects

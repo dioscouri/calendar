@@ -25,7 +25,7 @@ class CalendarHelperICal extends CalendarHelperBase
 	function getFileURL( $eventinstance_date, $eventinstance_time, $eventinstance_end_time, $eventinstance_location )
 	{
 	    //date_default_timezone_set('UTC');
-		$config = CalendarConfig::getInstance( );
+		$config = Calendar::getInstance( );
 		list( $year, $month, $day ) = explode( '-', $eventinstance_date );
 		$config =& JFactory::getConfig();
 		$offset = $config->getValue('config.offset');
@@ -66,7 +66,7 @@ class CalendarHelperICal extends CalendarHelperBase
 			return $directory . '/' . $filename;
 		}
 		
-		$config = CalendarConfig::getInstance( );
+		$config = Calendar::getInstance( );
 		
 		$eventinstance_date = date( 'Y-n-j', strtotime($eventinstance_date) );
 		list( $year, $month, $day ) = explode( '-', $eventinstance_date );

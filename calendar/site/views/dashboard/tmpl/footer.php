@@ -1,7 +1,7 @@
 <?php defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 <?php
 $url = "http://www.dioscouri.com/";
-if ( $amigosid = CalendarConfig::getInstance( )->get( 'amigosid', '' ) )
+if ( $amigosid = Calendar::getInstance( )->get( 'amigosid', '' ) )
 {
 	$url .= "?amigosid=" . $amigosid;
 }

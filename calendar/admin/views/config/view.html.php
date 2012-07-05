@@ -43,7 +43,7 @@ class CalendarViewConfig extends CalendarViewBase
 		Calendar::load( 'CalendarTools', 'library.tools' );
 		
 		// check config
-		$row = CalendarConfig::getInstance( );
+		$row = Calendar::getInstance( );
 		$this->assign( 'row', $row );
 		
 		// add toolbar buttons

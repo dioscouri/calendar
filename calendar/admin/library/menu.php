@@ -113,7 +113,7 @@ class CalendarMenu extends JObject
     function & getInstance($name = 'submenu')
     {
         // Check the config to see if the admin has disabled submenus
-    	$config = CalendarConfig::getInstance();
+    	$config = Calendar::getInstance();
     	$display_submenu = $config->get('display_submenu', '1');
         if (!$display_submenu) 
 		{

@@ -2,7 +2,7 @@
 <?php JHTML::_('script', 'common.js', 'media/com_calendar/js/'); ?>
 <?php $form = @$this->form; ?>
 <?php $row = @$this->row; ?>
-<?php $config = CalendarConfig::getInstance(); ?>
+<?php $config = Calendar::getInstance(); ?>
 
 <fieldset>
     <legend><?php echo JText::_('Add New Event Instance'); ?></legend>

@@ -7,7 +7,7 @@
 <?php $tabs = &JPane::getInstance( 'tabs' ); ?>
 <?php $date = @$this->date; ?>
 <?php $events = @$this->events; ?>
-<?php $config = CalendarConfig::getInstance( ); ?>
+<?php $config = Calendar::getInstance( ); ?>
 <?php 
 Calendar::load( 'CalendarHelperCategory', 'helpers.category' );
 $eventCategory = CalendarHelperCategory::getCategoryName( $row->series_primary_category_id );

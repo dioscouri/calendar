@@ -6,7 +6,7 @@
 <?php $tabs = &JPane::getInstance( 'tabs' ); ?>
 <?php JHTML::_('behavior.tooltip'); ?>
 <?php $categories_list = @$this->categories_list ?>
-<?php $config = CalendarConfig::getInstance(); ?>
+<?php $config = Calendar::getInstance(); ?>
 
 <div id="validation_message"></div>
 

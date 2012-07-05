@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 if ( !class_exists( 'Calendar' ) ) JLoader::register( "Calendar", JPATH_ADMINISTRATOR . DS . "components" . DS . "com_calendar" . DS . "defines.php" );
 
 // load the config class
-Calendar::load( 'CalendarConfig', 'defines' );
+Calendar::load( 'Calendar', 'defines' );
 
 // before executing any tasks, check the integrity of the installation
 Calendar::getClass( 'CalendarHelperDiagnostics', 'helpers.diagnostics' )->checkInstallation( );

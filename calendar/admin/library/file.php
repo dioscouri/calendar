@@ -75,7 +75,7 @@ class CalendarFile extends JObject
 	function handleUpload ($fieldname='userfile') 
 	{
 		$success = false;
-		$config = &CalendarConfig::getInstance();
+		$config = &Calendar::getInstance();
 		
 		// Check if file uploads are enabled
 		if (!(bool)ini_get('file_uploads')) {
@@ -155,7 +155,7 @@ class CalendarFile extends JObject
 	function handleMultipleUpload ($fieldname='userfile', $num = 0) 
 	{
 		$success = false;
-		$config = &CalendarConfig::getInstance();
+		$config = &Calendar::getInstance();
 		
 		// Check if file uploads are enabled
 		if (!(bool)ini_get('file_uploads')) {

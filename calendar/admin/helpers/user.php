@@ -209,7 +209,7 @@ class CalendarHelperUser extends CalendarHelperBase
             return $success;
         }
 
-	if(!CalendarConfig::getInstance()->get('disable_guest_signup_email'))
+	if(!Calendar::getInstance()->get('disable_guest_signup_email'))
 	{
         	// Send registration confirmation mail
         	CalendarHelperUser::_sendMail( $user, $details, $useractivation, $guest );
@@ -498,6 +498,6 @@ class CalendarHelperUser extends CalendarHelperBase
 	        }
     	}
     	
-		return CalendarConfig::getInstance()->get('default_user_group', '1');
+		return Calendar::getInstance()->get('default_user_group', '1');
     }
 }

@@ -263,7 +263,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 				$name = array( );
 				foreach ( @$path as $cat )
 				{
-					$include_root = CalendarConfig::getInstance( )->get( 'include_root_pathway', false );
+					$include_root = Calendar::getInstance( )->get( 'include_root_pathway', false );
 					if ( !$cat->isroot || $include_root )
 					{
 						$pathway_object = new JObject( );
@@ -304,7 +304,7 @@ class CalendarHelperCategory extends CalendarHelperBase
 				$root = JTable::getInstance( 'Categories', 'CalendarTable' )->getRoot( );
 				$root_itemid = Calendar::getClass( "CalendarHelperRoute", 'helpers.route' )->category( $root->category_id, true );
 				
-				$include_root = CalendarConfig::getInstance( )->get( 'include_root_pathway', false );
+				$include_root = Calendar::getInstance( )->get( 'include_root_pathway', false );
 				if ( $include_root )
 				{
 					$link = JRoute::_( "index.php?option=com_calendar&view=events&filter_category=" . $root->category_id . "&Itemid=" . $root_itemid, false );

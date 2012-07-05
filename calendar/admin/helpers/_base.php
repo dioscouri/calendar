@@ -14,7 +14,7 @@ defined('_JEXEC') or die('Restricted access');
 if ( !class_exists('Calendar') ) 
     JLoader::register( "Calendar", JPATH_ADMINISTRATOR.DS."components".DS."com_calendar".DS."defines.php" );
 
-Calendar::load( 'CalendarConfig', 'defines' );
+Calendar::load( 'Calendar', 'defines' );
 
 class CalendarHelperBase extends JObject
 {   
@@ -200,7 +200,7 @@ class CalendarHelperBase extends JObject
 	{
         // default to whatever is in config
             
-        $config = CalendarConfig::getInstance();
+        $config = Calendar::getInstance();
         $dim_unit = $config->get('dimensions_unit', 'cm');
         $weight_unit = $config->get('weight_unit', 'kg');
             
@@ -220,7 +220,7 @@ class CalendarHelperBase extends JObject
 	 */
     function number($number, $options='' )
 	{
-		$config = CalendarConfig::getInstance();
+		$config = Calendar::getInstance();
         $options = (array) $options;
         
         $thousands = isset($options['thousands']) ? $options['thousands'] : $config->get('currency_thousands', ',');

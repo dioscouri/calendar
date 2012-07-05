@@ -413,8 +413,8 @@ class CalendarControllerSecondCategories extends CalendarController
 		
 		Calendar::load( 'CalendarHelperCategory', 'helpers.category' );
 		Calendar::load( 'CalendarImage', 'library.image' );
-		$width = CalendarConfig::getInstance( )->get( 'category_img_width', '0' );
-		$height = CalendarConfig::getInstance( )->get( 'category_img_height', '0' );
+		$width = Calendar::getInstance( )->get( 'category_img_width', '0' );
+		$height = Calendar::getInstance( )->get( 'category_img_height', '0' );
 		
 		$model = $this->getModel( 'Categories', 'CalendarModel' );
 		$model->setState( 'limistart', $from_id );

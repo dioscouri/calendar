@@ -42,7 +42,7 @@ class CalendarHelperImage extends CalendarHelperBase
 		// Parent Helper Construction
 		parent::__construct();
 		
-		$config = CalendarConfig::getInstance();
+		$config = Calendar::getInstance();
 		
 		// Load default Parameters
 		$this->series_img_height = $config->get( 'series_img_height' );

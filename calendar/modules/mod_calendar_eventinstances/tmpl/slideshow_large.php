@@ -10,7 +10,7 @@ $noConflict = "jQuery.noConflict();";
 $document->addScriptDeclaration( $noConflict );
 
 Calendar::load( 'DisqusAPI', 'library.disqus.disqusapi' );
-$config = CalendarConfig::getInstance();
+$config = Calendar::getInstance();
 $disqus = new DisqusAPI( $config->get( 'disqus_api_key' ) );
 ?>
 
