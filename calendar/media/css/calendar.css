@@ -875,3 +875,123 @@ a#more_dates:hover {
     border-spacing: 0px;
     border-collapse: collapse;
 }
+
+	/* calendar */
+	table.calendar {
+	}
+	tr.calendar-row {
+		border-left: 1px solid #d5d5d5;
+	}
+	td.calendar-day {
+		min-height: 80px;
+		font-size: 11px;
+		position: relative;
+	}
+	div.calendar-day {
+		min-height: 80px;
+	}
+	td.calendar-day:hover {
+		background: #eceff5;
+	}
+	td.calendar-day-np {
+		background: #eee;
+		min-height: 80px;
+	}
+	* html div.calendar-day-np {
+		height: 80px;
+	}
+	th.calendar-day-head {
+		background: #002b54;
+		color: #FFF;
+		font-weight: bold;
+		text-align: center;
+		width: 125px;
+		padding: 5px;
+		border-bottom: 1px solid #d5d5d5;
+		border-top: 1px solid #002b54;
+		border-right: 1px solid #002b54;
+	}
+	thead {
+		background: #002b54;
+		color: #FFF;
+		font-weight: bold;
+		text-align: center;
+		width: 125px;
+		padding: 5px;
+		border-bottom: 1px solid #999;
+		border-top: 1px solid #002b54;
+		border-right: 1px solid #002b54;
+	}
+
+	div.day-number {
+		color: #b0b0b0;
+		/*font-weight: bold;*/
+		float: left;
+	}
+	/* shared */
+	td.calendar-day, td.calendar-day-np {
+		width: 125px;
+		padding: 5px;
+		border-bottom: 1px solid #d5d5d5;
+		border-right: 1px solid #d5d5d5;
+	}
+
+	div#date-navigation ul.horiz {
+	    width: 945px;
+		margin: 0;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	div#date-navigation ul.horiz li {
+		display: inline-block;
+		width: 310px;
+		height:20px;
+		list-style: none;
+	}
+	div#date-navigation ul.horiz li.prev {
+		
+	}
+	div#date-navigation ul.horiz li.next {
+	
+	}
+	div#date-navigation ul.horiz li a.prev {
+		
+		background-image: url(/media/com_calendar/images/prev.png);
+		background-repeat:no-repeat;
+		display: block;
+		height: 16px;
+		text-indent: -9999px;
+		width: 9px;
+		margin-left:39px;
+		margin-top:15px;
+	}
+	div#date-navigation ul.horiz li.date-range {
+		text-align: center;
+	}
+	div#date-navigation ul.horiz li.date-range h2 {
+		color:#FFF;
+		
+	}
+	
+	div#date-navigation ul.horiz li a.next {
+	
+		background-image: url(/media/com_calendar/images/next.png);
+		display: block;
+		height: 16px;
+		text-indent: -9999px;
+		width: 9px;
+		margin-left:278px;
+		margin-top:15px;
+	}
+
+	div#date-navigation {
+		width: 953px;
+		background: #002b54;
+		color: #FFF;
+		-webkit-border-top-left-radius: 10px;
+		-webkit-border-top-right-radius: 10px;
+		-moz-border-radius-topleft: 10px;
+		-moz-border-radius-topright: 10px;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+	}
