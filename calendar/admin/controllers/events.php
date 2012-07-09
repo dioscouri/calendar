@@ -260,7 +260,7 @@ class CalendarControllerEvents extends CalendarController
 		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', $elements_post ) );
         
 		// convert elements to array that can be binded
-		Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+		Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 		$helper = new CalendarHelperBase(); 			
         $values = $helper->elementsToArray( $elements );
 
@@ -564,14 +564,14 @@ class CalendarControllerEvents extends CalendarController
         $response['msg'] = '';
         $response['error'] = '';
 
-        Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+        Calendar::load( 'CalendarHelperBase', 'helpers.base' );
         $helper = CalendarHelperBase::getInstance();
 
         // get elements from post
         $elements = json_decode( preg_replace('/[\n\r]+/', '\n', JRequest::getVar( 'elements', '', 'post', 'string' ) ) );
 
         // convert elements to array that can be binded
-        Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+        Calendar::load( 'CalendarHelperBase', 'helpers.base' );
         $helper = CalendarHelperBase::getInstance();
         $values = $helper->elementsToArray( $elements );
 
@@ -717,14 +717,14 @@ class CalendarControllerEvents extends CalendarController
         $response['msg'] = '';
         $response['error'] = '';
 
-        Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+        Calendar::load( 'CalendarHelperBase', 'helpers.base' );
         $helper = CalendarHelperBase::getInstance();
 
         // get elements from post
         $elements = json_decode( preg_replace('/[\n\r]+/', '\n', JRequest::getVar( 'elements', '', 'post', 'string' ) ) );
 
         // convert elements to array that can be binded
-        Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+        Calendar::load( 'CalendarHelperBase', 'helpers.base' );
         $helper = CalendarHelperBase::getInstance();
         $values = $helper->elementsToArray( $elements );
 

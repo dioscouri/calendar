@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 JLoader::import( 'com_calendar.library.plugins._base', JPATH_ADMINISTRATOR.DS.'components' );
-JLoader::import( 'com_calendar.models._base', JPATH_ADMINISTRATOR.DS.'components' );
+JLoader::import( 'com_calendar.models.base', JPATH_ADMINISTRATOR.DS.'components' );
 
 class CalendarReportPlugin extends CalendarPluginBase
 {

@@ -255,7 +255,7 @@ class CalendarPluginBase extends JPlugin
         if (strtolower($name) != 'base')
             Calendar::load( 'CalendarModel'.ucfirst(strtolower($name)), 'models.'.strtolower($name) );
         else
-            Calendar::load( 'CalendarModelBase', 'models._base' );
+            Calendar::load( 'CalendarModelBase', 'models.base' );
     }
     
     /**

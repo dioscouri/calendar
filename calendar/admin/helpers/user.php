@@ -11,7 +11,7 @@
 /** ensure this file is being included by a parent file */
 defined('_JEXEC') or die('Restricted access');
 
-Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 
 class CalendarHelperUser extends CalendarHelperBase
 {

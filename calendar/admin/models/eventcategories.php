@@ -11,7 +11,7 @@
 /** ensure this file is being included by a parent file */
 defined('_JEXEC') or die('Restricted access');
 
-Calendar::load( 'CalendarModelBase', 'models._base' );
+Calendar::load( 'CalendarModelBase', 'models.base' );
 
 class CalendarModelEventCategories extends CalendarModelBase 
 {

@@ -28,7 +28,7 @@ class CalendarControllerDay extends CalendarController
 		$model = $this->getModel( $this->get( 'suffix' ) );
 		$ns = $app->getName().'::'.'com.calendar.mod.categories';
 		
-        Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+        Calendar::load( 'CalendarHelperBase', 'helpers.base' );
         $event_helper = CalendarHelperBase::getInstance( 'event' );
         $state = $event_helper->getState();
 		
@@ -176,7 +176,7 @@ class CalendarControllerDay extends CalendarController
 		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', JRequest::getVar( 'elements', '', 'post', 'string' ) ) );
 		
 		$vars = new JObject();
-		Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+		Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 		$helper = new CalendarHelperBase();
 		$values = $helper->elementsToArray( $elements );
 		$item_id = $values['Itemid'];
@@ -274,7 +274,7 @@ class CalendarControllerDay extends CalendarController
 		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', JRequest::getVar( 'elements', '', 'post', 'string' ) ) );
 		
 		$vars = new JObject();
-		Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+		Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 		$helper = new CalendarHelperBase();
 		$values = $helper->elementsToArray( $elements );
 		$item_id = $values['Itemid'];

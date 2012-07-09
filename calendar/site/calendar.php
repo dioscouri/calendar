@@ -43,6 +43,12 @@ $js = "var com_calendar = {};\n";
 $js .= "com_calendar.jbase = '" . $uri->root( ) . "';\n";
 $doc->addScriptDeclaration( $js );
 
+$parentPath = JPATH_ADMINISTRATOR . '/components/com_calendar/helpers';
+DSCLoader::discover('CalendarHelper', $parentPath, true);
+
+$parentPath = JPATH_ADMINISTRATOR . '/components/com_calendar/library';
+DSCLoader::discover('Calendar', $parentPath, true);
+
 // load the plugins
 JPluginHelper::importPlugin( 'calendar' );
 

@@ -45,7 +45,7 @@ class CalendarTableRecurring extends CalendarTable
 	        $enddate = $this->getFinishDate( $startdate );
 	    }
 
-	    Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+	    Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 	    $helper = CalendarHelperBase::getInstance();
 	    
 	    $occurances = $this->getOccurances();
@@ -168,7 +168,7 @@ class CalendarTableRecurring extends CalendarTable
 	        $startdate = $this->recurring_start_date;
 	    }
 	    
-	    Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+	    Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 	    $helper = CalendarHelperBase::getInstance();
 	    
 	    switch ( $this->recurring_repeats )
@@ -221,7 +221,7 @@ class CalendarTableRecurring extends CalendarTable
 	        $startdate = $this->recurring_start_date;
 	    }
 	    
-	    Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+	    Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 	    $helper = CalendarHelperBase::getInstance();
 	    $datevars = $helper->setDateVariables( $startdate, null, 'yearly' );
 	    

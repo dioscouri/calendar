@@ -27,7 +27,7 @@ $default_handler = $params->get( 'default_handler' );
 $link_handler = $default_handler;
 $item_id = $params->get( 'item_id', JRequest::getInt( 'Itemid' ) );
 
-Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 $event_helper = CalendarHelperBase::getInstance( 'event' );
 $state = $event_helper->getState();
         

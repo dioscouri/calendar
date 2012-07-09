@@ -28,7 +28,7 @@ class CalendarControllerWeek extends CalendarController
 		$model = $this->getModel( $this->get( 'suffix' ) );
 		$ns = $app->getName().'::'.'com.calendar.mod.categories';
 		
-        Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+        Calendar::load( 'CalendarHelperBase', 'helpers.base' );
         $event_helper = CalendarHelperBase::getInstance( 'event' );
         $state = $event_helper->getState();
 		
@@ -56,7 +56,7 @@ class CalendarControllerWeek extends CalendarController
 		return $state;
 	}
 	
-	function display( )
+	function display($cachable=false, $urlparams = false)
 	{
 		// make date and time variables
 		$this->_setModelState();
@@ -74,6 +74,7 @@ class CalendarControllerWeek extends CalendarController
 		
 		$list = $model->getList();
 		
+		$date = new JObject();
 		$date->current = $state->filter_date_from; 
 				
 		$date->month = date( 'm', strtotime($date->current) );
@@ -194,7 +195,7 @@ class CalendarControllerWeek extends CalendarController
 		    $view->setLayout( $layout );
 		}
 		
-		parent::display( );
+		parent::display($cachable, $urlparams);
 	}
 	
 	/**
@@ -216,7 +217,7 @@ class CalendarControllerWeek extends CalendarController
 		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', JRequest::getVar( 'elements', '', 'post', 'string' ) ) );
 		
 		$vars = new JObject();
-		Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+		Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 		$helper = new CalendarHelperBase();
 		$values = $helper->elementsToArray( $elements );
 		$item_id = $values['Itemid'];
@@ -317,7 +318,7 @@ class CalendarControllerWeek extends CalendarController
 		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', JRequest::getVar( 'elements', '', 'post', 'string' ) ) );
 		
 		$vars = new JObject();
-		Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+		Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 		$helper = new CalendarHelperBase();
 		$values = $helper->elementsToArray( $elements );
 		$item_id = $values['Itemid'];

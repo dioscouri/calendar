@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 Calendar::load( 'CalendarPluginBase', 'library.plugins._base' );
-Calendar::load( 'CalendarModelBase', 'models._base' );
+Calendar::load( 'CalendarModelBase', 'models.base' );
 
 class CalendarToolPlugin extends CalendarPluginBase
 {

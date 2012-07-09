@@ -11,7 +11,7 @@
 /** ensure this file is being included by a parent file */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 
 class CalendarHelperEvent extends CalendarHelperBase
 {
@@ -24,7 +24,7 @@ class CalendarHelperEvent extends CalendarHelperBase
 	    if (empty($this->values))
 	    {
     		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', JRequest::getVar( 'elements', '', 'post', 'string' ) ) );
-    		Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+    		Calendar::load( 'CalendarHelperBase', 'helpers.base' );
     		$helper = new CalendarHelperBase();
     		$values = $helper->elementsToArray( $elements );
             $this->values = $values;	        

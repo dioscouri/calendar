@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport( 'joomla.application.component.model' );
-Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 
 class CalendarHelperDiagnostics extends CalendarHelperBase 
 {

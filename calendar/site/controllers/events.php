@@ -55,7 +55,7 @@ class CalendarControllerEvents extends CalendarController
 		$view = $this->getView( $this->get( 'suffix' ), 'html' );
 		$view->assign( 'instance', $instance );
 		
-        Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+        Calendar::load( 'CalendarHelperBase', 'helpers.base' );
         $event_helper = CalendarHelperBase::getInstance( 'event' );
         $previous_state = $event_helper->getState();
 		$view->assign( 'previous_state', $previous_state );
@@ -107,7 +107,7 @@ class CalendarControllerEvents extends CalendarController
 		$state['filter_date_from'] = $state['year'] . '-' . $state['month'] . '-01';
         $state['filter_datetype'] = 'month';
         
-	    Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+	    Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 	    $helper = CalendarHelperBase::getInstance();
 	    $datevars = $helper->setDateVariables( $state['filter_date_from'], null, 'monthly' );
 	    $state['filter_date_to'] = $datevars->nextdate;
@@ -126,7 +126,7 @@ class CalendarControllerEvents extends CalendarController
 		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', JRequest::getVar( 'elements', '', 'post', 'string' ) ) );
 		
 		$vars = new JObject();
-		Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+		Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 		$helper = new CalendarHelperBase();
 		$values = $helper->elementsToArray( $elements );
 		$item_id = $values['Itemid'];
@@ -236,7 +236,7 @@ class CalendarControllerEvents extends CalendarController
 		$state['filter_date_from'] = $state['year'] . '-' . $state['month'] . '-01';
         $state['filter_datetype'] = 'month';
         
-	    Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+	    Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 	    $helper = CalendarHelperBase::getInstance();
 	    $datevars = $helper->setDateVariables( $state['filter_date_from'], null, 'monthly' );
 	    $state['filter_date_to'] = $datevars->nextdate;
@@ -255,7 +255,7 @@ class CalendarControllerEvents extends CalendarController
 		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', JRequest::getVar( 'elements', '', 'post', 'string' ) ) );
 		
 		$vars = new JObject();
-		Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+		Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 		$helper = new CalendarHelperBase();
 		$values = $helper->elementsToArray( $elements );
 		$item_id = $values['Itemid'];

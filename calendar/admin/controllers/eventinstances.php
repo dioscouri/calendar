@@ -73,7 +73,7 @@ class CalendarControllerEventinstances extends CalendarController
 		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', $elements_post ) );
         
 		// convert elements to array that can be binded
-		Calendar::load( 'CalendarHelperBase', 'helpers._base' );
+		Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 		$helper = new CalendarHelperBase(); 			
         $values = $helper->elementsToArray( $elements );
         

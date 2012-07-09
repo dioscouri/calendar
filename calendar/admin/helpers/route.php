@@ -13,7 +13,7 @@ defined('_JEXEC') or die('Restricted access');
 if ( !class_exists('Calendar') ) 
     JLoader::register( "Calendar", JPATH_ADMINISTRATOR.DS."components".DS."com_calendar".DS."defines.php" );
 
-Calendar::load( "CalendarHelperBase", 'helpers._base' );
+Calendar::load( "CalendarHelperBase", 'helpers.base' );
 
 class CalendarHelperRoute extends CalendarHelperBase 
 {
