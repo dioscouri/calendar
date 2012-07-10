@@ -363,13 +363,13 @@
      */
     function calendarAddEventInstance( container, msg, refreshVenues ) 
     {
-        var url = 'index.php?option=com_calendar&format=raw&view=events&task=addInstance';
-        if (calendarDoTask( url, container, document.adminForm, msg, true ))
+        var url = 'index.php?option=com_calendar&tmpl=raw&view=events&task=addInstance';
+        if (Dsc.doTask( url, container, document.adminForm, msg, true ))
         {
             if (refreshVenues == 1)
             {
-                var url = 'index.php?option=com_calendar&format=raw&view=events&task=refreshVenues';
-                if (calendarDoTask( url, 'venues', document.adminForm ))
+                var url = 'index.php?option=com_calendar&tmpl=raw&view=events&task=refreshVenues';
+                if (Dsc.doTask( url, 'venues', document.adminForm ))
                 {
                     document.adminForm.new_venue_name.value = '';
                 }
@@ -385,8 +385,8 @@
      */
     function calendarRemoveEventInstance(id, container, msg) 
     {
-        var url = 'index.php?option=com_calendar&view=events&task=removeInstance&format=raw&eventinstance_id=' + id;
-        calendarDoTask( url, container, document.adminForm, msg, true );
+        var url = 'index.php?option=com_calendar&view=events&task=removeInstance&tmpl=raw&eventinstance_id=' + id;
+        Dsc.doTask( url, container, document.adminForm, msg, true );
     }
     
     /**

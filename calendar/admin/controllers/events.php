@@ -704,8 +704,10 @@ class CalendarControllerEvents extends CalendarController
         $response['error'] = '0';
         $response['msg'] = $this->getInstancesHtml( $event_id );
 
-        echo ( json_encode( $response ) );
-        return;
+        echo json_encode($response);
+
+		// Close the application.
+		JFactory::getApplication()->close(); 
     }
     
     /**
@@ -738,7 +740,10 @@ class CalendarControllerEvents extends CalendarController
         $response['error'] = '0';
         $response['msg'] = $this->getInstancesHtml( $item_id );
 
-        echo ( json_encode( $response ) );
+        echo json_encode($response);
+
+		// Close the application.
+		JFactory::getApplication()->close(); 
     }
     
     /**
