@@ -11,7 +11,7 @@
 /** ensure this file is being included by a parent file */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-Calendar::load( 'CalendarViewBase', 'views._base' );
+Calendar::load( 'CalendarViewBase', 'views.base' );
 
 class CalendarViewCalendars extends CalendarViewBase
 {

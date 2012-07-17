@@ -26,12 +26,9 @@ class CalendarViewBase extends DSCViewAdmin
 	{
 		JHTML::_('stylesheet', 'admin.css', 'media/com_calendar/css/');
 		
-        Calendar::load( 'CalendarUrl', 'library.url' );
-        Calendar::load( 'CalendarSelect', 'library.select' );
-        Calendar::load( 'CalendarGrid', 'library.grid' );
-        Calendar::load( 'CalendarMenu', 'library.menu' );
+        DSC::loadBootstrap();
                 
-       /* $this->getLayoutVars($tpl);*/
+       
         
 		$this->displayTitle( $this->get('title') );
 
@@ -42,7 +39,7 @@ class CalendarViewBase extends DSCViewAdmin
         
         jimport( 'joomla.application.module.helper' );		
 		$modules = JModuleHelper::getModules("calendar_left");
-		if ($modules && !JRequest::getInt('hidemainmenu') || !empty($this->leftMenu))
+		if ($modules && !JRequest::getInt('hidemainmenu') && empty($this->hidemenu) || !empty($this->leftMenu) && empty($this->hidemenu)) 
 		{
 			$this->displayWithLeftMenu($tpl=null, $this->leftMenu);
 		}

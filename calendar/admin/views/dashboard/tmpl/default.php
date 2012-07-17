@@ -4,7 +4,7 @@
 <?php $form = @$this->form; ?>
 <?php $items = @$this->items; ?>
 
-<form action="<?php echo JRoute::_( @$form['action'] ) ?>" method="post" name="adminForm" enctype="multipart/form-data">
+<form action="<?php echo JRoute::_( @$form['action'] ) ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 			  
 	<?php echo CalendarGrid::pagetooltip( JRequest::getVar( 'view' ) ); ?>
 
@@ -48,7 +48,7 @@
 
 			<?php
 			$modules = JModuleHelper::getModules( "calendar_dashboard_right" );
-			$document = &JFactory::getDocument( );
+			$document = JFactory::getDocument( );
 			$renderer = $document->loadRenderer( 'module' );
 			$attribs = array( );
 			$attribs['style'] = 'xhtml';

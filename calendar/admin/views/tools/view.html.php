@@ -11,28 +11,11 @@
 /** ensure this file is being included by a parent file */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-Calendar::load( 'CalendarViewBase', 'views._base' );
+Calendar::load( 'CalendarViewBase', 'views.base' );
 
 class CalendarViewTools extends CalendarViewBase
 {
-	function getLayoutVars( $tpl = null )
-	{
-		$layout = $this->getLayout( );
-		switch ( strtolower( $layout ) )
-		{
-			case "form":
-				JRequest::setVar( 'hidemainmenu', '1' );
-				$this->_form( $tpl );
-				break;
-			case "view":
-				$this->_form( $tpl );
-				break;
-			case "default":
-			default:
-				$this->_default( $tpl );
-				break;
-		}
-	}
+	
 	
 	function _form( $tpl = null )
 	{

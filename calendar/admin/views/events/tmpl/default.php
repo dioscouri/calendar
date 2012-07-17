@@ -6,25 +6,11 @@
 <?php Calendar::load( 'CalendarHelperCategory', 'helpers.category' ); ?>
 <?php $helper = CalendarHelperBase::getInstance('Category'); ?>
 
-<form action="<?php echo JRoute::_( @$form['action'] ) ?>" method="post" name="adminForm" enctype="multipart/form-data">
+<form action="<?php echo JRoute::_( @$form['action'] ) ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 			  
     <?php echo CalendarGrid::pagetooltip( JRequest::getVar( 'view' ) ); ?>
-    
-    <table>
-        <tr>
-            <td align="left" width="100%">
-            </td>
-            <td nowrap="nowrap">
-                <input name="filter" value="<?php echo @$state->filter; ?>" />
-                <button onclick="this.form.submit();"><?php echo JText::_( 'Search' );
-													  ?></button>
-                <button onclick="calendarFormReset(this.form);"><?php echo JText::_( 'Reset' );
-																?></button>
-            </td>
-        </tr>
-    </table>
-																
-    <table class="adminlist" style="clear: both;">
+    															
+    <table class="table table-striped table-bordered" style="clear: both;">
         <thead> 
             <tr>
                 <th style="width: 5px;">
@@ -68,19 +54,19 @@
 					?>
                     <div class="range">
                         <div class="rangeline">
-                            <span class="label"><?php echo JText::_( "From" ); ?>:</span> <input id="filter_id_from" name="filter_id_from" value="<?php echo @$state->filter_id_from; ?>" size="5" class="input" />
+                            <input type="text" placeholder="FROM" id="filter_id_from" name="filter_id_from" value="<?php echo @$state->filter_id_from; ?>" size="5" class="input input-tiny" />
                         </div>
                         <div class="rangeline">
-                            <span class="label"><?php echo JText::_( "To" ); ?>:</span> <input id="filter_id_to" name="filter_id_to" value="<?php echo @$state->filter_id_to; ?>" size="5" class="input" />
+                            <input type="text" placeholder="TO" id="filter_id_to" name="filter_id_to" value="<?php echo @$state->filter_id_to; ?>" size="5" class="input input-tiny" />
                         </div>
                     </div>
                 </th>
                 <th>
                 </th>
                 <th style="text-align: left;">
-                    <input id="filter_name" name="filter_name" value="<?php echo @$state->filter_name; ?>" size="25"/>
-                    <?php echo CalendarSelect::category( @$state->filter_category, 'filter_category', $attribs, 'filter_category', true, false, 'Filter by Primary Category' ); ?>
-                    <?php echo CalendarSelect::secondcategory( @$state->filter_eventcategories, 'filter_eventcategories', $attribs, 'filter_eventcategories', true, false, 'Filter by Secondary Category' ); ?>
+                    <input id="filter_name" type="text" name="filter_name" value="<?php echo @$state->filter_name; ?>" size="25" /><br>
+                    <?php echo CalendarSelect::category( @$state->filter_category, 'filter_category', $attribs, 'filter_category', true, false, 'Filter by Primary Category' ); ?><br>
+                    <?php echo CalendarSelect::secondcategory( @$state->filter_eventcategories, 'filter_eventcategories', $attribs, 'filter_eventcategories', true, false, 'Filter by Secondary Category' ); ?><br>
                 </th>
                 <th>
                     <?php echo CalendarSelect::series( @$state->filter_series, 'filter_series', $attribs, 'filter_series', true ); ?>
@@ -90,7 +76,9 @@
                 </th>
                 <th>
                 </th>
-                <th>
+                <th>                    <?php $attribs = array( 'class' => 'inputbox span1', 'size' => '1', 'onchange' => 'document.adminForm.submit();' );
+					?>
+
                     <?php echo CalendarSelect::booleans( @$state->filter_upcoming_enabled, 'filter_upcoming_enabled', $attribs, 'filter_upcoming_enabled', true ); ?>
                 </th>
                 <th>
