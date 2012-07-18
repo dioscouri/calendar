@@ -17,7 +17,7 @@ if ( empty( $row->event_id ) )
 ?>
 
 <div>
-    <table class="adminlist" style="clear: both;">
+    <table class="table table-striped table-bordered" style="clear: both;">
         <thead>
             <tr>
                 <th style="width: 5px;">
@@ -61,10 +61,10 @@ if ( empty( $row->event_id ) )
                 	<?php echo JHTML::calendar( $item->eventinstance_date, "eventinstance_date[$item->eventinstance_id]", "eventinstance_date[$item->eventinstance_id]", '%Y-%m-%d', array('size'=>'25') ); ?>                     
                 </td>
                 <td style="text-align: center;">
-                    <input type="text" name="eventinstance_start_time[<?php echo $item->eventinstance_id; ?>]" value="<?php echo $item->eventinstance_start_time; ?>" size="25" maxlength="250"  />
+                    <input type="text" class="span2" name="eventinstance_start_time[<?php echo $item->eventinstance_id; ?>]" value="<?php echo $item->eventinstance_start_time; ?>" size="25" maxlength="250"  />
                 </td>
                 <td style="text-align: center;">
-                    <input type="text" name="eventinstance_end_time[<?php echo $item->eventinstance_id; ?>]" value="<?php echo $item->eventinstance_end_time; ?>" size="25" maxlength="250"  />
+                    <input type="text" class="span2" name="eventinstance_end_time[<?php echo $item->eventinstance_id; ?>]" value="<?php echo $item->eventinstance_end_time; ?>" size="25" maxlength="250"  />
                 </td>
                 <td style="text-align: center;">
                     <?php echo CalendarSelect::venue( $item->venue_id, "venue_id[$item->eventinstance_id]" ); ?>
@@ -73,18 +73,21 @@ if ( empty( $row->event_id ) )
                     <?php echo CalendarSelect::actionbutton( $item->actionbutton_id, "actionbutton_id[$item->eventinstance_id]"  ); ?>
                 </td>
                 <td style="text-align: center;">
-                    <input type="text" name="actionbutton_string[<?php echo $item->eventinstance_id; ?>]" value="<?php echo $item->actionbutton_string; ?>" size="25" maxlength="250"  />
+                    <input type="text" class="span2" name="actionbutton_string[<?php echo $item->eventinstance_id; ?>]" value="<?php echo $item->actionbutton_string; ?>" size="25" maxlength="250"  />
                 </td>
                 <td style="text-align: center;">
-                    <input type="text" name="actionbutton_url[<?php echo $item->eventinstance_id; ?>]" value="<?php echo $item->actionbutton_url; ?>" size="50" maxlength="250"  />
+                    <input type="text" class="span2" name="actionbutton_url[<?php echo $item->eventinstance_id; ?>]" value="<?php echo $item->actionbutton_url; ?>" size="50" maxlength="250"  />
                 </td>
                 <td style="text-align: center;">
-                    <a href="<?php echo $item->link; ?>" target="_blank">
+                    <a class="btn btn-info" href="<?php echo $item->link; ?>" target="_blank">
                     <?php echo JText::_( "Edit" ); ?>
                     </a>
                 </td>
                 <td style="text-align: center;">
-                    <input type="button" onclick="calendarRemoveEventInstance(<?php echo $item->eventinstance_id; ?>, 'event_instances', '<?php echo JText::_( "Deleting" ); ?>');" value="<?php echo JText::_( "Delete" ); ?>" />
+                	<button id="btn " data-loading-text="deleting..." class="btn btn-danger" onclick="calendarRemoveEventInstance(<?php echo $item->eventinstance_id; ?>, 'event_instances', '<?php echo JText::_( "Deleting" ); ?>');">
+                   <?php echo JText::_( "Delete" ); ?>
+                  </button>
+                	
                 </td>
             </tr>
             <?php $i=$i+1; $k = (1 - $k); ?>

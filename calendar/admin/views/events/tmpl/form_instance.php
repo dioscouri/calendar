@@ -4,10 +4,10 @@
 <?php $row = @$this->row; ?>
 <?php $config = Calendar::getInstance(); ?>
 
-<fieldset>
-    <legend><?php echo JText::_('Add New Event Instance'); ?></legend>
 
-    <table class="admintable">
+    <h3><?php echo JText::_('Add New Event Instance'); ?></h3>
+
+    <table class="table table-striped table-bordered">
         <tr>
             <td style="width: 100px; text-align: right;" class="key">                       
                 <?php echo JText::_( 'Venue' ); ?>:                     
@@ -110,9 +110,8 @@
 
             </td>
             <td>
-                <input type="button" onclick="calendarAddEventInstance( 'event_instances', '<?php echo JText::_( "Adding Instance" ); ?>', '<?php if ($config->get('enable_add_new')) { echo "1"; } else { echo "0"; } ?>' );" value="<?php echo JText::_( "Add Instance" ); ?>" />
+                <button class="btn btn-primary"  onclick="calendarAddEventInstance( 'event_instances', '<?php echo JText::_( "Adding Instance" ); ?>', '<?php if ($config->get('enable_add_new')) { echo "1"; } else { echo "0"; } ?>' );" ><?php echo JText::_( "Add Instance" ); ?></button>
             </td>
         </tr>
     </table>
     
-</fieldset>

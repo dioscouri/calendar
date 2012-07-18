@@ -12,12 +12,16 @@
 
 <form action="<?php echo JRoute::_( @$form['action'] ) ?>" method="post" class="adminform" name="adminForm" id="adminForm" enctype="multipart/form-data" onsubmit="Dsc.formValidation( '<?php echo @$form['validation_url']; ?>', 'validation_message', document.adminForm.task.value, document.adminForm );" >
 
-<?php 
-echo $tabs->startPane( "pane_events" );
 
-echo $tabs->startPanel( JText::_( 'Basic Information' ), "panel_basics");
-?>
-	<fieldset>
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">Basic Information</a></li>
+    <li><a href="#tab2" data-toggle="tab">Descriptions</a></li>
+    <li><a href="#tab3" data-toggle="tab">Multimedia</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+     <fieldset>
 			<table class="admintable">
 				<tr>
 					<td style="width: 100px; text-align: right;" class="key">
@@ -178,8 +182,7 @@ echo $tabs->startPanel( JText::_( 'Basic Information' ), "panel_basics");
                 </tr>
                 </table>
     </fieldset>
-    
-    <div style="clear: both;"></div>
+     <div style="clear: both;"></div>
     
     <p></p>
     
@@ -190,21 +193,17 @@ echo $tabs->startPanel( JText::_( 'Basic Information' ), "panel_basics");
     }
     ?>
         
-	<fieldset>
-		<legend><?php echo JText::_( 'Existing Event Instances' ); ?></legend>
+	
+		<h3><?php echo JText::_( 'Existing Event Instances' ); ?></h3>
         
         <div id="event_instances">
             <?php echo $this->loadTemplate( 'instances' ); ?>
         </div>
-	</fieldset>
+	
 
-    
-    <div style="clear: both;"></div>
-<?php 
-echo $tabs->endPanel();
-
-echo $tabs->startPanel( JText::_( 'Descriptions' ), "panel_descriptions");
-?>
+     
+    </div>
+    <div class="tab-pane fade" id="tab2">
     <fieldset>
             <table class="admintable">
                 <tr>
@@ -229,13 +228,10 @@ echo $tabs->startPanel( JText::_( 'Descriptions' ), "panel_descriptions");
                 </tr>           
             </table>
     </fieldset>
+    </div>
     
-    <div style="clear: both;"></div>
-<?php 
-echo $tabs->endPanel();
-
-echo $tabs->startPanel( JText::_( 'Multimedia' ), "panel_multimedia");
-?>
+    <div class="tab-pane" id="tab3">
+    
     <fieldset>
             <table class="admintable">
                 <tr>
@@ -250,14 +246,10 @@ echo $tabs->startPanel( JText::_( 'Multimedia' ), "panel_multimedia");
                 </tr>                
             </table>
     </fieldset>
-    
-    <div style="clear: both;"></div>
-<?php 
-echo $tabs->endPanel();
+    </div>
+  </div>
+</div>
 
-echo $tabs->endPane();
-?>
-    
     <div>
         <input type="hidden" name="id" value="<?php echo @$row->event_id; ?>" />
         <input type="hidden" name="task" id="task" value="" />
