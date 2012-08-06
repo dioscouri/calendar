@@ -180,7 +180,24 @@
     					<?php echo CalendarSelect::displaytype( @$row->event_display_type, 'event_display_type', '', 'event_display_type', false, true ); ?>
     				</td>
                 </tr>
-                </table>
+            	<?php 
+            	if (!empty($row->event_id)) 
+            	{
+                	$tagsHelper = new CalendarHelperTags();
+                	if ($tagsHelper->isInstalled()) 
+                	{ 
+                    	?>
+                        <tr>
+                    		<td colspan="2">
+                    			<?php echo $tagsHelper->getForm( $row->event_id ); ?>
+                    		</td>
+                    	</tr>
+            		    <?php 
+                	}
+                } 
+                ?>
+                
+            </table>
     </fieldset>
      <div style="clear: both;"></div>
     
