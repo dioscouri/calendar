@@ -44,7 +44,7 @@ class CalendarHelperTags extends JObject
      * 
      * @param unknown_type $scope
      */
-    public function getScope( $scope='com_featureditems.item' )
+    public function getScope( $scope='com_calendar.event' )
     {
         // TODO cache this
         
