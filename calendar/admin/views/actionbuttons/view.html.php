@@ -31,7 +31,7 @@ class CalendarViewActionbuttons extends CalendarViewBase
 				break;
 			case "default":
 			default:
-				$this->set( 'leftMenu', 'leftmenu_configuration' );
+				//$this->set( 'leftMenu', 'leftmenu_configuration' );
 				$this->_default( $tpl );
 				break;
 		}

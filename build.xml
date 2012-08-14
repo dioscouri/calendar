@@ -117,18 +117,13 @@
     </target>
     
     <target name="clean" description="Destroys all generated files and dirs">
-        <delete dir="${cfg.buildDir}/plugins" />
-        <delete dir="${cfg.buildDir}/modules" />
-        <delete dir="${cfg.buildDir}/components" />
-        <delete dir="${cfg.buildDir}/languages" />
+        <delete dir="${cfg.buildDir}/${cfg.name}" />
     </target>
 
     <target name="init" description="creates necessary directory to build with">
-        <mkdir dir="${cfg.buildDir}" />
-        <mkdir dir="${cfg.buildDir}/plugins" />
-        <mkdir dir="${cfg.buildDir}/modules" />
-        <mkdir dir="${cfg.buildDir}/components" />
-        <mkdir dir="${cfg.buildDir}/languages" />
+        <mkdir dir="${cfg.buildDir}/${cfg.name}" />
+        <mkdir dir="${cfg.buildDir}/${cfg.name}/plugins" />
+        <mkdir dir="${cfg.buildDir}/${cfg.name}/modules" />
     </target>
 
     <target name="build" depends="build_packages" />
@@ -136,23 +131,23 @@
     <target name="build_packages" depends="clean, init, build_component, build_modules, build_plugins, build_languages" />
     
     <target name="build_component" depends="init" description="packages the final component file">
-        <zip destfile="${cfg.buildDir}/components/${cfg.name}.zip" basedir="${cfg.comDir}" />
+        <zip destfile="${cfg.buildDir}/${cfg.name}/${cfg.name}.zip" basedir="${cfg.comDir}" />
     </target>
 
     <target name="build_plugins" description="packages any plugins">
         <!-- add all plugin directories here -->
         <!-- EX: <zip destfile="${cfg.buildDir}/plugins/${cfg.plgPrefix}report_ambrafields.zip" basedir="${cfg.comDir}/${cfg.plgPrefix}report_ambrafields" /> -->
-    	<zip destfile="${cfg.buildDir}/plugins/calendar_plugin_content_eventinstance.zip" basedir="${cfg.comDir}/calendar_plugin_content_eventinstance" />
-    	<zip destfile="${cfg.buildDir}/plugins/calendar_plugin_search.zip" basedir="${cfg.comDir}/calendar_plugin_search" />
+    	<zip destfile="${cfg.buildDir}/${cfg.name}/plugins/calendar_plugin_content_eventinstance.zip" basedir="${cfg.comDir}/plugins/calendar_plugin_content_eventinstance" />
+    	<zip destfile="${cfg.buildDir}/${cfg.name}/plugins/calendar_plugin_search.zip" basedir="${cfg.comDir}/plugins/calendar_plugin_search" />
     </target>
 
     <target name="build_modules" description="packages any modules">
         <!-- add all module directories here -->
     	<!-- EX: <zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}module.zip" basedir="${cfg.comDir}/${cfg.plgPrefix}module" /> -->
-    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}search.zip" basedir="${cfg.comDir}/${cfg.modPrefix}search" />
-    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}calendar.zip" basedir="${cfg.comDir}/${cfg.modPrefix}calendar" />
-    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}categories.zip" basedir="${cfg.comDir}/${cfg.modPrefix}categories" />
-    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}eventinstances.zip" basedir="${cfg.comDir}/${cfg.modPrefix}eventinstances" />
+    	<zip destfile="${cfg.buildDir}/${cfg.name}/modules/${cfg.modPrefix}search.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}search" />
+    	<zip destfile="${cfg.buildDir}/${cfg.name}/modules/${cfg.modPrefix}calendar.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}calendar" />
+    	<zip destfile="${cfg.buildDir}/${cfg.name}/modules/${cfg.modPrefix}categories.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}categories" />
+    	<zip destfile="${cfg.buildDir}/${cfg.name}/modules/${cfg.modPrefix}eventinstances.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}eventinstances" />
     </target>
     
     <target name="build_languages" depends="init" description="packages any languages">
