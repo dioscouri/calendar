@@ -9,7 +9,19 @@
 <form action="<?php echo JRoute::_( @$form['action'] ) ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 			  
     <?php echo CalendarGrid::pagetooltip( JRequest::getVar( 'view' ) ); ?>
-    															
+
+    <ul class="unstyled dsc-flat pad-left pull-right">
+        <li>
+            <input class="search-query" type="text" name="filter" value="<?php echo @$state->filter; ?>" />
+        </li>
+        <li>
+            <button class="btn btn-primary" onclick="this.form.submit();"><?php echo JText::_( 'Search' ); ?></button>
+        </li>
+        <li>
+            <button class="btn btn-danger" onclick="Dsc.resetFormFilters(this.form);"><?php echo JText::_( 'Reset' ); ?></button>
+        </li>
+    </ul>
+    
     <table class="table table-striped table-bordered" style="clear: both;">
         <thead> 
             <tr>
@@ -20,15 +32,12 @@
                    	<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( @$items ); ?>);" />
                 </th>
                 <th style="width: 50px;">
-                    <?php echo CalendarGrid::sort( 'ID', "tbl.event_id", @$state->direction, @$state->order );
-					?>
+                    <?php echo CalendarGrid::sort( 'ID', "tbl.event_id", @$state->direction, @$state->order ); ?>
                 </th>   
                 <th style="width: 50px;">
                 </th>             
                 <th style="text-align: left;">
                     <?php echo CalendarGrid::sort( 'Name', "tbl.event_short_title", @$state->direction, @$state->order ); ?>
-                    +
-                    <?php echo JText::_( "Categories" ); ?>
                 </th>
                 <th style="width: 100px;">
     	            <?php echo CalendarGrid::sort( 'Series', "tbl.event_published", @$state->direction, @$state->order ); ?>
@@ -38,9 +47,6 @@
                 </th>
                 <th style="width: 100px;">
     	            <?php echo JText::_( "Dates" ); ?>
-                </th>
-                <th style="width: 100px;">
-    	            <?php echo CalendarGrid::sort( 'In Upcoming Events Queue', "tbl.event_upcoming_enabled", @$state->direction, @$state->order ); ?>
                 </th>
                 <th style="width: 100px;">
     	            <?php echo CalendarGrid::sort( 'Published', "tbl.event_published", @$state->direction, @$state->order ); ?>
@@ -65,8 +71,6 @@
                 </th>
                 <th style="text-align: left;">
                     <input id="filter_name" type="text" name="filter_name" value="<?php echo @$state->filter_name; ?>" size="25" /><br>
-                    <?php echo CalendarSelect::category( @$state->filter_category, 'filter_category', $attribs, 'filter_category', true, false, 'Filter by Primary Category' ); ?><br>
-                    <?php echo CalendarSelect::secondcategory( @$state->filter_eventcategories, 'filter_eventcategories', $attribs, 'filter_eventcategories', true, false, 'Filter by Secondary Category' ); ?><br>
                 </th>
                 <th>
                     <?php echo CalendarSelect::series( @$state->filter_series, 'filter_series', $attribs, 'filter_series', true ); ?>
@@ -75,11 +79,6 @@
                     <?php echo CalendarSelect::venue( @$state->filter_venue_id, 'filter_venue_id', $attribs, 'filter_venue_id', true ); ?>
                 </th>
                 <th>
-                </th>
-                <th>                    <?php $attribs = array( 'class' => 'inputbox span1', 'size' => '1', 'onchange' => 'document.adminForm.submit();' );
-					?>
-
-                    <?php echo CalendarSelect::booleans( @$state->filter_upcoming_enabled, 'filter_upcoming_enabled', $attribs, 'filter_upcoming_enabled', true ); ?>
                 </th>
                 <th>
                     <?php echo CalendarSelect::booleans( @$state->filter_enabled, 'filter_enabled', $attribs, 'enabled', true ); ?>
@@ -120,8 +119,6 @@
                     <a href="<?php echo $item->link; ?>">
                         <?php echo $item->event_short_title; ?>
                     </a>
-                    <div><b><?php echo JText::_( "Primary Category"); ?>:</b> <span class="grey"><?php echo $item->category_name; ?></span></div>
-                    <div><b><?php echo JText::_( "Secondary Categories"); ?>:</b> <span class="grey"><?php echo $this->getModel()->getSecondaryCategoriesString( $item->event_id ); ?></span></div>
                 </td>
                 <td style="text-align: center;">
 					<?php echo $item->series_name; ?>
@@ -133,9 +130,6 @@
                     <a href="index.php?option=com_calendar&view=eventinstances&filter_event=<?php echo $item->event_id; ?>&filter_order=tbl.eventinstance_date&filter_direction=DESC">
                     <?php echo $this->getModel()->getDatesString( $item->event_id ); ?>
                     </a>
-				</td>
-                <td style="text-align: center;">
-					<?php echo CalendarGrid::enable( $item->event_upcoming_enabled, $i, 'event_upcoming_enabled.' ); ?>
 				</td>
                 <td style="text-align: center;">
 					<?php echo CalendarGrid::enable( $item->event_published, $i, 'event_published.' ); ?>
