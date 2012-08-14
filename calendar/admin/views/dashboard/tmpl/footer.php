@@ -27,7 +27,7 @@
 																							  ?></a>
 		</td>
 		<td style="text-align: center; width: 33%;">
-			<?php echo JText::_( "Calendar" ); ?>: <?php echo JText::_( "Calendar Desc" );
+			<?php echo JText::_( "COM_CALENDAR" ); ?>: <?php echo JText::_( "COM_CALENDAR_DESC" );
 												   ?>
 			<br/>
 			<?php echo JText::_( "Copyright" ); ?>: <?php echo $defines->getCopyrightYear( ); ?> &copy; <a href="<?php echo $url; ?>" target="_blank">Dioscouri Design</a>
