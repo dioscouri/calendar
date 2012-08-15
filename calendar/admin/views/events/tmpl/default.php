@@ -128,7 +128,7 @@
 				</td>
                 <td style="text-align: center;">
                     <a href="index.php?option=com_calendar&view=eventinstances&filter_event=<?php echo $item->event_id; ?>&filter_order=tbl.eventinstance_date&filter_direction=DESC">
-                    <?php echo $this->getModel()->getDatesString( $item->event_id ); ?>
+                    <?php echo $this->getModel()->getDatesString( $item ); ?>
                     </a>
 				</td>
                 <td style="text-align: center;">

@@ -73,10 +73,11 @@
 
 	<!-- Modules -->
 	<modules>
-        <module module="modules/mod_calendar_calendar" client="site" position="left" />
-        <module module="modules/mod_calendar_categories" client="site" position="left" />
-        <module module="modules/mod_calendar_eventinstances" client="site" position="left" />
-		<module module="modules/mod_calendar_search" client="site" position="left" />	
+        <module module="modules/mod_calendar_calendar" client="site" />
+        <module module="modules/mod_calendar_categories" client="site" />
+        <module module="modules/mod_calendar_eventinstances" client="site" />
+		<module module="modules/mod_calendar_search" client="site" />
+        <module module="modules/mod_calendar_upcoming" client="site" />	
 	</modules>
 
 	<!-- Plugins -->
