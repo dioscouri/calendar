@@ -85,6 +85,12 @@
                     <?php echo CalendarSelect::booleans( @$state->filter_enabled, 'filter_enabled', $attribs, 'enabled', true ); ?>
                 </th>
             </tr>
+			<tr>
+				<th colspan="20" style="font-weight: normal;">
+					<div style="float: right; padding: 5px;"><?php echo @$this->pagination->getResultsCounter(); ?></div>
+					<div style="float: left;"><?php echo @$this->pagination->getListFooter(); ?></div>
+				</th>
+			</tr>
         </thead>
         <tfoot>
             <tr>
@@ -161,8 +167,7 @@
     <input type="hidden" name="task" id="task" value="" />
     <input type="hidden" name="boxchecked" value="" />
     <input type="hidden" name="filter_order" value="<?php echo @$state->order; ?>" />
-    <input type="hidden" name="filter_direction" value="<?php echo @$state->direction;
-														?>" />
+    <input type="hidden" name="filter_direction" value="<?php echo @$state->direction; ?>" />
     
     <?php echo $this->form['validate']; ?>
 </form>
