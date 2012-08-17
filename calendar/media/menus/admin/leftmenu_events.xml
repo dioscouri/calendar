@@ -1,23 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <menu>
     <link>
-        <name>Events</name>
+        <name>Shows (Events)</name>
         <url>index.php?option=com_calendar&#38;view=events</url>
     </link>
     <link>
-        <name>Event Instances</name>
+        <name>Performances (Event Instances)</name>
         <url>index.php?option=com_calendar&#38;view=eventinstances</url>
     </link>
-    <link>
-        <name>Daily Events</name>
-        <url>index.php?option=com_calendar&#38;view=dailyevents</url>
-    </link>
-    <link>
-        <name>Create a New Event</name>
-        <url>index.php?option=com_calendar&#38;view=events&#38;task=add</url>
-    </link>
-	<link>
-		<name>Create a New Daily Event</name>
-		<url>index.php?option=com_calendar&#38;view=dailyevents&#38;task=add</url>
-	</link>
 </menu>

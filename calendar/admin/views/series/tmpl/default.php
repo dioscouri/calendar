@@ -8,6 +8,17 @@
 			  
     <?php echo CalendarGrid::pagetooltip( JRequest::getVar( 'view' ) ); ?>
 
+    <ul class="unstyled dsc-flat pad-left pull-right">
+        <li>
+            <input class="search-query" type="text" name="filter" value="<?php echo @$state->filter; ?>" />
+        </li>
+        <li>
+            <button class="btn btn-primary" onclick="this.form.submit();"><?php echo JText::_( 'Search' ); ?></button>
+        </li>
+        <li>
+            <button class="btn btn-danger" onclick="Dsc.resetFormFilters(this.form);"><?php echo JText::_( 'Reset' ); ?></button>
+        </li>
+    </ul>
 																
     <table class="table table-striped table-bordered" style="clear: both;">
         <thead>
