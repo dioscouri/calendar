@@ -31,6 +31,27 @@ class CalendarModelEvents extends CalendarModelBase
 		$filter_upcoming_enabled = $this->getState( 'filter_upcoming_enabled' );
 		$filter_digital_signage = $this->getState( 'filter_digital_signage' );
 		
+		$filter_date_from	= $this->getState('filter_date_from');
+		$filter_date_to		= $this->getState('filter_date_to');
+		$filter_datetype	= $this->getState('filter_datetype');
+		
+		if (strlen($filter_date_from))
+		{
+		    if (strlen($filter_date_to))
+		    {
+		        $query->findByDate( new \DateTime($filter_date_from), new \DateTime($filter_date_to) );
+		    } 
+		        else
+		    {
+		        $query->findByDate( new \DateTime );
+		    }
+		} 
+    		elseif (strlen($filter_date_to)) 
+		{
+		    $query->findByDate( new \DateTime, new \DateTime($filter_date_to) );
+		}
+		
+		/*
 		if ( $filter )
 		{
 			$key = $this->_db->Quote( '%' . $this->_db->getEscaped( trim( strtolower( $filter ) ) ) . '%' );
@@ -122,11 +143,13 @@ class CalendarModelEvents extends CalendarModelBase
 		{
 			$query->having( 'tbl.digital_signage = ' . (int) $filter_digital_signage );
 		}		
+        */		
 		
 	}
 	
 	protected function _buildQueryJoins( &$query )
 	{
+	    /*
 		$query->join( 'LEFT', '#__calendar_categories AS c ON tbl.event_primary_category_id = c.category_id' );
 		
 		$filter_eventcategories = $this->getState( 'filter_eventcategories' );
@@ -137,10 +160,14 @@ class CalendarModelEvents extends CalendarModelBase
 			$query->join( 'LEFT', '#__calendar_secondcategories AS cats ON scat.category_id = cats.category_id' );
 		}
 		$query->join( 'LEFT', '#__calendar_series AS series ON tbl.series_id = series.series_id' );
+		*/
 	}
 	
 	protected function _buildQueryFields( &$query )
 	{
+		$query->select('*');
+		
+		/*
 		$fields = array( );
 		$fields[] = " series.series_name ";
 		
@@ -193,6 +220,7 @@ class CalendarModelEvents extends CalendarModelBase
 		
 		$query->select( $this->getState( 'select', 'tbl.*' ) );
 		$query->select( $fields );
+		*/
 	}
 	
 	/**
@@ -200,6 +228,7 @@ class CalendarModelEvents extends CalendarModelBase
 	 */
 	protected function _buildQueryOrder( &$query )
 	{
+	    /*
 		$order = 'tbl.event_id';
 		$direction = $this->_db->getEscaped( strtoupper( $this->getState( 'direction' ) ) );
 		
@@ -215,24 +244,81 @@ class CalendarModelEvents extends CalendarModelBase
 		{
 			$query->order( 'ordering ASC' );
 		}
+		*/
+	}
+
+	/**
+	 * Builds FROM tables list for the query
+	 */
+	protected function _buildQueryFrom(&$query)
+	{
+
+	}
+	
+	/**
+	 * Retrieves the count
+	 * @return array Array of objects containing the data from the database
+	 */
+	public function getTotal()
+	{
+	    if (empty($this->_total))
+	    {
+	        $query = $this->getQuery();
+	        $this->_total = $query->getTotal();
+	    }
+	    return $this->_total;
+	}
+	
+	/**
+	 * Builds a generic SELECT query
+	 *
+	 * @return  string  SELECT query
+	 */
+	protected function _buildQuery( $refresh=false )
+	{
+	    if (!empty($this->_query) && !$refresh)
+	    {
+	        return $this->_query;
+	    }
+	
+	    $this->loadMQ();
+	    $query = \MappableQuery\MappableQuery::factory('JALC\EventsArtists\Queries\ShowQuery');
+	
+	    $this->_buildQueryFields($query);
+	    $this->_buildQueryFrom($query);
+	    $this->_buildQueryJoins($query);
+	    $this->_buildQueryWhere($query);
+	    $this->_buildQueryGroup($query);
+	    $this->_buildQueryHaving($query);
+	    $this->_buildQueryOrder($query);
+	
+	    return $query;
 	}
 	
 	public function getList( $refresh=false )
 	{
-		$list = parent::getList( $refresh );
-		
-		// If no item in the list, return an array()
-		if ( empty( $list ) )
-		{
-			return array( );
-		}
-		
-		foreach ( $list as $item )
-		{
-			$item->link = 'index.php?option=com_calendar&view=events&task=edit&id=' . $item->event_id;
-			$item->link_view = 'index.php?option=com_calendar&view=events&task=view&id=' . $item->event_id;
-		}
-		return $list;
+	    if (empty($this->_list)) 
+	    {
+	        //$list = parent::getList( $refresh );
+	        $query = $this->getQuery($refresh);
+	        $list = $query->fetchObjects( $this->getState('limitstart'), $this->getState('limit') );
+	        
+	        // If no item in the list, return an array()
+	        if ( empty( $list ) )
+	        {
+	            $list = array( );
+	        }
+	        
+	        foreach ( $list as $item )
+	        {
+	            $item->link = 'index.php?option=com_calendar&view=events&task=edit&id=' . $item->event_id;
+	            $item->link_view = 'index.php?option=com_calendar&view=events&task=view&id=' . $item->event_id;
+	        }
+	        
+	        $this->_list = $list;
+	    }
+
+		return $this->_list;
 	}
 	
 	/**
@@ -268,36 +354,21 @@ class CalendarModelEvents extends CalendarModelBase
 	 * @param unknown_type $event_id
 	 * @return return_type
 	 */
-	function getDatesString( $event_id )
+	function getDatesString( $event )
 	{
 	    $string = JText::_( 'None' );
 
-	    JModel::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/models' );
-		$model = JModel::getInstance( 'EventInstances', 'CalendarModel' );
-		$model->setState( 'filter_event', $event_id );
-		$model->setState( 'filter_enabled', '1' );
-		$model->setState( 'order', 'tbl.eventinstance_date' );
-		$model->setState( 'direction', 'ASC' );
-		
-		if ( $items = $model->getList( ) )
+	    $count = $event->getPerformances->count();
+	    $firstdate = $event->getFirstDate();
+	    $firstdate = $event->getLastDate();
+	    
+		if ($count == '1')
 		{
-		    $count = count($items);
-		    $less = $count-1;
-		    $firstdate = $items[0]->eventinstance_date;
-		    $lastdate = $items[$less]->eventinstance_date;
-			if (!empty($items[$less]->recurring_id) && !$items[$less]->recurring_finishes && $items[$less]->recurring_end_type == 'never')
-			{
-			    $lastdate = JText::_( 'forever' );
-			}
-			
-			if ($count == '1')
-			{
-			    $string = $firstdate; 
-			}
-    			else
-			{
-			    $string = sprintf( JText::_( 'X_OCCURANCES_FROM_A_TO_B' ), $count, $firstdate, $lastdate );
-			}
+		    $string = $firstdate; 
+		}
+			else
+		{
+		    $string = sprintf( JText::_( 'X_OCCURANCES_FROM_A_TO_B' ), $count, $firstdate, $lastdate );
 		}
 		
 	    return $string;
