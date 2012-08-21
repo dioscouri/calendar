@@ -43,13 +43,13 @@
     	            <?php echo CalendarGrid::sort( 'Series', "tbl.event_published", @$state->direction, @$state->order ); ?>
                 </th>
                 <th style="width: 100px;">
-    	            <?php echo JText::_( "Venues" ); ?>
+    	            <?php echo JText::_( "Venue" ); ?>
                 </th>
                 <th style="width: 100px;">
     	            <?php echo JText::_( "Dates" ); ?>
                 </th>
                 <th style="width: 100px;">
-    	            <?php echo CalendarGrid::sort( 'Published', "tbl.event_published", @$state->direction, @$state->order ); ?>
+    	            <?php echo JText::_( "On Sale" ); ?>
                 </th>
             </tr>
             <tr class="filterline">
@@ -84,6 +84,12 @@
                     <?php echo CalendarSelect::booleans( @$state->filter_enabled, 'filter_enabled', $attribs, 'enabled', true ); ?>
                 </th>
             </tr>
+			<tr>
+				<th colspan="20" style="font-weight: normal;">
+					<div style="float: right; padding: 5px;"><?php echo @$this->pagination->getResultsCounter(); ?></div>
+					<div style="float: left;"><?php echo @$this->pagination->getListFooter(); ?></div>
+				</th>
+			</tr>
         </thead>
         <tfoot>
             <tr>
@@ -111,8 +117,8 @@
                     </a>
                 </td>   
                 <td style="text-align: center;">
-                    <?php if (!empty($item->event_full_image)) { ?>
-                        <img src="<?php echo $item->event_full_image; ?>" style="max-width: 36px; max-height: 36px;" />
+                    <?php if ($full_image = $this->getModel()->getFullImage( $item )) { ?>
+                        <img src="<?php echo $full_image; ?>" style="max-width: 36px; max-height: 36px;" />
                     <?php } ?>
                 </td>
                 <td style="text-align: left;">
@@ -124,7 +130,7 @@
 					<?php echo $item->series_name; ?>
 				</td>
                 <td style="text-align: center;">
-					<?php echo $this->getModel()->getVenuesString( $item->event_id ); ?>
+					<?php echo $this->getModel()->getVenuesString( $item ); ?>
 				</td>
                 <td style="text-align: center;">
                     <a href="index.php?option=com_calendar&view=eventinstances&filter_event=<?php echo $item->event_id; ?>&filter_order=tbl.eventinstance_date&filter_direction=DESC">
@@ -132,7 +138,7 @@
                     </a>
 				</td>
                 <td style="text-align: center;">
-					<?php echo CalendarGrid::enable( $item->event_published, $i, 'event_published.' ); ?>
+					<?php echo CalendarGrid::boolean( $item->onSale ); ?>
 				</td>
             </tr>
             <?php $i = $i + 1;

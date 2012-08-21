@@ -15,6 +15,12 @@ Calendar::load( 'CalendarModelBase', 'models.base' );
 
 class CalendarModelEvents extends CalendarModelBase
 {
+    function __construct($config = array())
+    {
+        parent::__construct($config);
+        $this->setState( 'select', array('show.*') );
+    }
+    
 	protected function _buildQueryWhere( &$query )
 	{
 		$filter = $this->getState( 'filter' );
@@ -43,12 +49,16 @@ class CalendarModelEvents extends CalendarModelBase
 		    } 
 		        else
 		    {
-		        $query->findByDate( new \DateTime );
+		        $query->findByDate( new \DateTime($filter_date_from), new \DateTime( date('Y-m-d', strtotime('now +1 month') ) ) );
 		    }
 		} 
     		elseif (strlen($filter_date_to)) 
 		{
 		    $query->findByDate( new \DateTime, new \DateTime($filter_date_to) );
+		}
+		else
+		{
+		    $query->findByDate( new \DateTime, new \DateTime( date('Y-m-d', strtotime('now +1 month') ) ) );
 		}
 		
 		/*
@@ -165,7 +175,7 @@ class CalendarModelEvents extends CalendarModelBase
 	
 	protected function _buildQueryFields( &$query )
 	{
-		$query->select('*');
+		$query->select('show.*');
 		
 		/*
 		$fields = array( );
@@ -299,9 +309,7 @@ class CalendarModelEvents extends CalendarModelBase
 	{
 	    if (empty($this->_list)) 
 	    {
-	        //$list = parent::getList( $refresh );
-	        $query = $this->getQuery($refresh);
-	        $list = $query->fetchObjects( $this->getState('limitstart'), $this->getState('limit') );
+	        $list = $this->getListFromCache($refresh);
 	        
 	        // If no item in the list, return an array()
 	        if ( empty( $list ) )
@@ -309,16 +317,36 @@ class CalendarModelEvents extends CalendarModelBase
 	            $list = array( );
 	        }
 	        
-	        foreach ( $list as $item )
-	        {
-	            $item->link = 'index.php?option=com_calendar&view=events&task=edit&id=' . $item->event_id;
-	            $item->link_view = 'index.php?option=com_calendar&view=events&task=view&id=' . $item->event_id;
-	        }
-	        
 	        $this->_list = $list;
 	    }
 
 		return $this->_list;
+	}
+	
+	protected function getListFromCache($refresh)
+	{
+	    $key = base64_encode(serialize($this->getState()));
+	    
+	    $classname = strtolower( get_class($this) );
+	    $cache = JFactory::getCache( $classname . '.list', '' );
+	    $cache->setCaching(true);
+	    $cache->setLifeTime('86400');
+	    $list = $cache->get($key);
+	    if (!$list || $refresh)
+	    {
+    	    $query = $this->getQuery($refresh);
+    	    $list = $query->fetchObjects( $this->getState('limitstart'), $this->getState('limit') );
+    	    
+    	    foreach ( $list as $item )
+    	    {
+    	        $item->link = 'index.php?option=com_calendar&view=events&task=edit&id=' . $item->event_id;
+    	        $item->link_view = 'index.php?option=com_calendar&view=events&task=view&id=' . $item->event_id;
+    	    }
+
+    	    $cache->store($list, $key);
+	    }
+ 
+	    return $list;
 	}
 	
 	/**
@@ -356,6 +384,7 @@ class CalendarModelEvents extends CalendarModelBase
 	 */
 	function getDatesString( $event )
 	{
+	    return '';
 	    $string = JText::_( 'None' );
 
 	    $count = $event->getPerformances->count();
@@ -382,6 +411,7 @@ class CalendarModelEvents extends CalendarModelBase
 	 */
 	function getVenuesString( $event_id )
 	{
+	    return '';
 	    $string = JText::_( 'None' );
 
 	    JModel::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/models' );
