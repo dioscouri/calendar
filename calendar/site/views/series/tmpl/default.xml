@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="CALENDAR SERIES VIEW LAYOUT">
+	<layout title="COM_CALENDAR_SERIES_VIEW_LAYOUT">
 		<message>
-			<![CDATA[CALENDAR SERIES VIEW LAYOUT DESC]]>
+			<![CDATA[COM_CALENDAR_SERIES_VIEW_LAYOUT_DESC]]>
 		</message>
 	</layout>
 	<state>
-		<name>CALENDAR SERIES VIEW LAYOUT</name>
-		<description>CALENDAR SERIES VIEW LAYOUT DESC</description>
+		<name>COM_CALENDAR_SERIES_VIEW_LAYOUT</name>
+		<description>COM_CALENDAR_SERIES_VIEW_LAYOUT_DESC</description>
 		<url addpath="/administrator/components/com_calendar/elements">
             <param name="id" type="calendarseries" section="com_calendar" default="" label="Select Series" description="A Calendar Series ID" />
             <param name="task" type="hidden" section="com_calendar" default="view" />
