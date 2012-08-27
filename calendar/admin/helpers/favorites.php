@@ -24,7 +24,7 @@ class CalendarHelperFavorites extends JObject
         jimport('joomla.filesystem.file');
         if (JFile::exists( JPATH_ADMINISTRATOR . '/components/com_favorites/defines.php' ))
         {
-            JLoader::register( "Tags", JPATH_ADMINISTRATOR . "/components/com_favorites/defines.php" );
+            JLoader::register( "Favorites", JPATH_ADMINISTRATOR . "/components/com_favorites/defines.php" );
             
             $parentPath = JPATH_ADMINISTRATOR . '/components/com_favorites/helpers';
             DSCLoader::discover('FavoritesHelper', $parentPath, true);
