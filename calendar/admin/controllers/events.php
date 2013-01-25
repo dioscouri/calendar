@@ -51,7 +51,11 @@ class CalendarControllerEvents extends CalendarController
 		$state['filter_venue_id'] = $app->getUserStateFromRequest( $ns . 'filter_venue_id', 'filter_venue_id', '', '' );
 		$state['filter_upcoming_enabled'] = $app->getUserStateFromRequest( $ns . 'filter_upcoming_enabled', 'filter_upcoming_enabled', '', '' );
 		$state['filter_digital_signage'] = $app->getUserStateFromRequest( $ns . 'filter_digital_signage', 'filter_digital_signage', '', '' );
-		
+		$state['filter_date_from'] = $app->getUserStateFromRequest($ns.'filter_date_from', 'filter_date_from', '', '');
+		$state['filter_date_to'] = $app->getUserStateFromRequest($ns.'filter_date_to', 'filter_date_to', '', '');
+		$state['filter_venues'] = $app->getUserStateFromRequest( $ns . 'filter_venues', 'filter_venues', '', '' );
+		$state['filter_type'] = $app->getUserStateFromRequest( $ns . 'filter_type', 'filter_type', '', '' );
+				
 		foreach ( @$state as $key => $value )
 		{
 			$model->setState( $key, $value );
@@ -309,106 +313,84 @@ class CalendarControllerEvents extends CalendarController
 	 */
 	function save( )
 	{
-		$task = JRequest::getVar( 'task' );
+	    $post = JRequest::get( 'post', '4' );
 		$model = $this->getModel( $this->get( 'suffix' ) );
+		$item = $model->getItem();
+		$row = $model->getTable();
 		
-		$row = $model->getTable( );
-		$row->load( $model->getId( ) );
-		$post = JRequest::get( 'post', '4' );
+		$row->load( array( 'datasource_id'=>$item->getDataSourceID() ) );
 		$row->bind( $post );
-		
-		$row->event_short_description = JRequest::getVar( 'event_short_description', '', 'post', 'string', JREQUEST_ALLOWRAW );
-		$row->event_long_description = JRequest::getVar( 'event_long_description', '', 'post', 'string', JREQUEST_ALLOWRAW );
-		
-		$row->_isNew = empty( $row->event_id );
-		
-		$fieldname = 'event_full_image_new';
-		$userfile = JRequest::getVar( $fieldname, '', 'files', 'array' );
-		if ( !empty( $userfile['size'] ) )
-		{
-			if ( $upload = $this->addfile( $fieldname ) )
-			{
-				$row->event_full_image = $upload->getPhysicalName( );
-			}
-			else
-			{
-				$error = true;
-			}
-		}
-		
-		$newseries = JRequest::getVar( 'new_series_name' );
-		if ( !empty( $newseries ) )
-		{
-			Calendar::load( 'CalendarHelperSeries', 'helpers.series' );
-			$row->series_id = CalendarHelperSeries::createSeriesFromName( $newseries );
-		}
-		
-		$newpcat = JRequest::getVar( 'new_primary_category_name' );
-		if ( !empty( $newpcat ) )
-		{
-		    JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
-		    $pcat = JTable::getInstance( 'Categories', 'CalendarTable' );
-		    //$pcat->getRoot();
-		    $pcat->category_enabled = '1';
-			$pcat->category_name = $newpcat;
-			if ($pcat->save())
-			{
-			    $row->event_primary_category_id = $pcat->category_id;
-			} 
-    			else
-			{
-			    JFactory::getApplication()->enqueueMessage( $pcat->getError(), 'notice' );
-			}
-		}
-		
-		// save secondary categories
-		// no secondary cat can be == the primary
-		$secondary_categories = JRequest::getVar( 'secondary_categories', array(), 'post', 'array' );
-		/*foreach ($secondary_categories as $key=>$secondary_category)
-		{
-		    if ($secondary_category == $row->event_primary_category_id)
-		    {
-		        unset($secondary_categories[$key]);
-		    }
-		}*/
-		
-		$newscat = JRequest::getVar( 'new_secondary_category_name' );
-		if ( !empty( $newscat ) )
-		{
-		    JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
-		    $scat = JTable::getInstance( 'Categories', 'CalendarTable' );
-			$scat->category_name = $newscat;
-			$scat->category_enabled = '1';
-			if ($scat->save())
-			{
-			    $secondary_categories[] = $scat->category_id;
-			} 
-    			else
-			{
-			    JFactory::getApplication()->enqueueMessage( $scat->getError(), 'notice' );
-			}
-		}
-		
-		$row->event_multimedia = JRequest::getVar( 'event_multimedia', '', 'post', 'string', JREQUEST_ALLOWRAW );
+		$row->event_short_title = $item->title;
 		
 		if ( $row->save( ) )
 		{
-			$row->event_id = $row->id;
-			$model->setId( $row->event_id );
 			$this->messagetype = 'message';
 			$this->message = JText::_( 'Saved' );
+			$this->row = $row;
+
+			Calendar::load('CalendarHelperBase','helpers.base');
+			$helper = new CalendarHelperBase();
+			$eventtypes_ids = json_decode( $row->event_types );
+    			
+			JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
+			$eventtype = JTable::getInstance('EventTypes', 'CalendarTable');
+			$types = JRequest::getVar( 'eventtypes', array(), 'post', 'array' );
+            if ($search_key = array_search($row->type_id, $types)) 
+            {
+                unset($types[$search_key]);
+            }
 			
-			$row->storeSecondaryCategories( $secondary_categories );
+    		$row->event_types = json_encode( $types );
+    		$row->store();
+
+    		$et_model = JModel::getInstance( 'EventTypes', 'CalendarModel' );
+    		$et_model->setState('filter_event', $row->event_id);
+    		$item_eventtypes = $et_model->getList( true );
+			foreach ($item_eventtypes as $et) 
+			{
+			    if (!in_array($et->type_id, $types)) 
+			    {
+			    	$eventtype->load(array('event_id'=>$row->event_id, 'type_id'=>$et->type_id));
+			        $eventtype->delete();
+			    }
+			}
+			
+			foreach ($types as $et)
+			{
+			    if (!in_array($et, $eventtypes_ids))
+			    {
+			        $eventtype = JTable::getInstance('EventTypes', 'CalendarTable');
+			        $eventtype->event_id = $row->event_id;
+			        $eventtype->type_id = $et;
+			        $eventtype->store();
+			    }
+			}
 			
 			$this->row = $row;
-			$this->saveEventInstances();
+			$this->saveToDataSources( $post );
+			
+			$model->clearCache();
+			
+			$instances_model = $this->getModel('eventinstances');
+			$instances_model->clearCache();
 		}
-		else
+    		else
 		{
-			$this->messagetype = 'notice';
-			$this->message = JText::_( 'Save Failed' ) . " - " . $row->getError( );
+		    $this->messagetype = 'warning';
+
+		    $app = JFactory::getApplication();
+		    $app->enqueueMessage( JText::_( 'Save Failed' ), 'warning');
+		    
+		    foreach ($row->getErrors() as $error)
+		    {
+		        $error = trim($error);
+		        if (!empty($error)) {
+		            $app->enqueueMessage($error, 'warning');
+		        }
+		    }
 		}
 		
+		$task = JRequest::getVar( 'task' );
 		$redirect = "index.php?option=com_calendar";
 		switch ( $task )
 		{
@@ -475,19 +457,45 @@ class CalendarControllerEvents extends CalendarController
 	
 	function edit($cachable=false, $urlparams = false)
 	{
+	    $model = $this->getModel( $this->get( 'suffix' ) );
+	    $item = $model->getItem(null, true);
+	    
+	    if (!$model->getID()) 
+	    {
+	        $redirect = $this->list_url;
+	        $this->message = 'No Datasource ID exists for this event, so you cannot edit it.';
+	        $this->messagetype = 'notice';
+	        $this->setRedirect( $redirect, $this->message, $this->messagetype );
+	        return;
+	    }
+	    
+	    if (is_object($item) && empty($item->event_id)) 
+	    {
+	        $table = $model->getTable();
+	        $table->load( array('datasource_id'=>$item->getDataSourceID() ) );
+	        $table->bind($item);
+	        $table->datasource_id = $item->getDataSourceID();
+	        $table->event_short_title = $item->title;
+	        $table->check();
+	        $table->save();
+	        
+	        // clear cache
+	        $item = $model->getItem( null, true );
+	    }
+	    
+	    /*
         $model = JModel::getInstance( 'EventInstances', 'CalendarModel' );
         $model->setState( 'filter_event', $model->getId() );
         $model->setState( 'order', 'tbl.eventinstance_date' );
         $model->setState( 'direction', 'ASC' );
-        $query = $model->getQuery();
-        $query->order( 'tbl.eventinstance_start_time' );
-        $model->setQuery( $query );
+        //$query = $model->getQuery();
+        //$query->order( 'tbl.eventinstance_start_time' );
+        //$model->setQuery( $query );
         $items = $model->getList();
 
-		$model = $this->getModel( $this->get( 'suffix' ) );
-		$event = $model->getItem( $model->getId() );
 		$secondary_categories = array();
 		$categories_list = '';
+		/*
 		if ( !empty( $event->event_id ) )
 		{
 			$model = JModel::getInstance( 'EventCategories', 'CalendarModel' );
@@ -503,11 +511,12 @@ class CalendarControllerEvents extends CalendarController
 				$categories_list = implode( ', ', $cats );
 			}
 		}
-        
-        $view   = $this->getView( $this->get('suffix'), 'html' );
-        $view->set('items', $items);
-		$view->assign( 'secondary_categories', $secondary_categories );
-		$view->assign( 'categories_list', $categories_list );
+        */
+	    
+        //$view   = $this->getView( $this->get('suffix'), 'html' );
+        //$view->set('items', $items);
+		//$view->assign( 'secondary_categories', $secondary_categories );
+		//$view->assign( 'categories_list', $categories_list );
         
 	    parent::edit($cachable, $urlparams);
 	}
@@ -799,6 +808,91 @@ class CalendarControllerEvents extends CalendarController
                 $table->store();
             }
         }
+    }
+    
+    private function saveToDataSources( $data ) 
+    {
+        $clearTessWebAPICache = false;
+        
+        $row = $this->row;
+        $model = $this->getModel( $this->get( 'suffix' ) );
+        
+        $qid = $model->getIdForQuery($data['id']);
+        switch ($qid->data_source) 
+        {
+            case "tp":
+                return;
+                break;
+            case "t":
+            case "tess":
+                $data['tessituraID'] = $qid->id;
+                $data['artsvisionID'] = '';
+                $clearTessWebAPICache = true;
+                break;
+            case "a":
+            case "av":
+                $data['tessituraID'] = '';
+                $data['artsvisionID'] = $qid->id;
+                break;
+            default:
+                return;
+                break;
+        }
+        
+        $data['title'] = preg_replace('/\<p(\s*)?\/?\>/i', '', $data['title']);
+        $data['subtitle'] = preg_replace('/\<p(\s*)?\/?\>/i', '', $data['subtitle']);
+
+        $parentPath = JPATH_ADMINISTRATOR . '/components/com_jalc_events/tables';
+        JTable::addIncludePath( $parentPath );
+        
+        $options = array( 'site' => 'admin', 'type' => 'components', 'ext' => 'com_jalc_events' );
+        $dsModel = Calendar::getClass('JalcEventsModelEvent', 'models.event', $options );
+        $dsModel->save($data);
+        
+        if ($clearTessWebAPICache) 
+        {
+            $this->clearTessWebAPICache();
+        }
+    }
+    
+    public function testSoapAPI() 
+    {
+        include_once ( JPATH_SITE . '/libraries/firephp/fb.php');
+        
+        jimport('jalc.ServiceLoader');
+        jimport('tessitura.SoapAPI');
+        $api = Jalc\ServiceLoader::getTessituraApi('live', 'soap');
+    
+        $api->connect();
+    
+        //$twsid = $api->getWebSessionID();
+        //FB::log($twsid, 'twsid');
+    
+        if (!$client = $api->getClient()) {
+            return false;
+        }
+    
+        //$functions = $client->__getFunctions();
+        //FB::log($functions, 'functions');
+    
+        try {
+            $countries = $client->getCountries();
+            FB::log($countries, 'countries');
+        }
+        catch(Exception $e) {
+            FB::log($e, 'error getCountries');
+        }
+        
+        try {
+            $destroyCache = $client->destroyCache();
+            //$destroyCache = $client->__soapCall('destroyCache');
+            FB::log($destroyCache, 'destroyCache');
+        }
+        catch(Exception $e) {
+            FB::log($e, 'error destroyCache');
+        }
+        
+        FB::log($client, 'client');
     }
 }
 

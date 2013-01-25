@@ -53,6 +53,64 @@ class CalendarController extends DSCControllerAdmin
 		$view->setModel( $model, true );
 		$view->display( );
 	}
+	
+	/**
+	 * Note: This only clears the events cache; the packages cache can be cleared from CalendarControllerPackages#clearAllCache
+	 */
+	public function clearAllCache()
+	{
+	    $app = JFactory::getApplication();
+	    
+		$model = $this->getModel( 'Types' );
+		$model->clearCache();
+		$app->enqueueMessage( "Cleared 'Event Types' Cache" );
+		
+		$model = $this->getModel( 'Events' );
+		$model->clearCache();
+		$app->enqueueMessage( "Cleared 'Events' Cache" );
+		
+		$model = $this->getModel( 'EventInstances' );
+		$model->clearCache();
+		$app->enqueueMessage( "Cleared 'Event Instances' Cache" );
+		
+		$app->enqueueMessage( "Please take a second to visit <a href='" . JURI::root() . "calendar?reset=1' target='_blank'>" . JURI::root() . "calendar?reset=1</a> in order to refill the cache of events and ensure speedy operation of the website.  Thank you!", 'warning');
+		
+		$this->clearTessWebAPICache();
+		
+		// check for a $return value in the request, base64_encoded, and if present, setRedirect there
+		// otherwise setRedirect to the events list to force at least a partial repopulation of the cache
+		$return = JRequest::getVar('return', '', 'base64');
+		if (!empty($return)) {
+		    $return = base64_decode($return);
+		} else {
+		    $return = "index.php?option=com_calendar&view=events";
+		}
+		$this->setRedirect($return);
+	}
+	
+	public function clearTessWebAPICache()
+	{
+	    $app = JFactory::getApplication();
+	    
+	    jimport('jalc.ServiceLoader');
+	    jimport('tessitura.SoapAPI');
+	    $api = Jalc\ServiceLoader::getTessituraApi(null, 'soap');
+	    
+	    $api->connect();
+	    
+	    if (!$client = $api->getClient()) {
+	        $app->enqueueMessage( "Failed to clear 'TessWebAPI' Cache - could not get soap client", 'warning' );
+	        return false;
+	    }
+	    
+	    try {
+	        $destroyCache = $client->destroyCache();
+	        $app->enqueueMessage( "Cleared 'TessWebAPI' Cache" );
+	    }
+	    catch(Exception $e) {
+	        $app->enqueueMessage( "Failed to clear 'TessWebAPI' Cache", 'warning' );
+	    }
+	}
 }
 
 ?>

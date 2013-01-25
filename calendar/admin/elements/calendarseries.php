@@ -30,9 +30,9 @@ class JFakeElementCalendarSeries extends JFakeElementBase
 {
 	var	$_name = 'CalendarSeries';
 
-	public function getInput($name, $value, &$node, $control_name) 
+	public function getInput() 
 	{
-		$this->fetchElement($name, $value, &$node, $control_name);
+		return JFakeElementCalendarSeries::fetchElement($this->name, $this->value, $this->element, $this->options['control']);
 	}
 	
 	public function fetchElement($name, $value, &$node, $control_name)
@@ -73,9 +73,9 @@ class JFakeElementCalendarSeries extends JFakeElementBase
 }
 
 if(version_compare(JVERSION,'1.6.0','ge')) {
-	class JFormFieldCalendarCalendar extends JFakeElementCalendarCalendar {}
+	class JFormFieldCalendarSeries extends JFakeElementCalendarSeries {}
 } else {
-	class JElementCalendarCalendar extends JFakeElementCalendarCalendar {}
+	class JElementCalendarSeries extends JFakeElementCalendarSeries {}
 }
 
 /*

@@ -30,19 +30,31 @@
                    	<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( @$items ); ?>);" />
                 </th>
                 <th style="width: 50px;">
-                    <?php echo CalendarGrid::sort( 'ID', "tbl.venue_id", @$state->direction, @$state->order );
-					?>
-                </th>                
+                    <?php echo JText::_( "DS-ID" ); ?>
+                </th>
+                <th style="width: 50px;">
+                    <?php echo JText::_( "Joomla-ID" ); ?>
+                </th>
                 <th style="text-align: left;">
-                    <?php echo CalendarGrid::sort( 'Name', "tbl.venue_name", @$state->direction, @$state->order );
-					?>
+                    <?php echo CalendarGrid::sort( 'Name', "tbl.venue_name", @$state->direction, @$state->order ); ?>
                 </th>
                 <th>
-                	<?php echo CalendarGrid::sort( 'URL', "tbl.venue_url", @$state->direction, @$state->order );
-					?>
+                	<?php echo CalendarGrid::sort( 'Code', "tbl.code", @$state->direction, @$state->order ); ?>
+                </th>
+                <th>
+                	<?php echo CalendarGrid::sort( 'URL', "tbl.venue_url", @$state->direction, @$state->order ); ?>
+                </th>
+                <th class="dsc-order">
+    	            <?php echo CalendarGrid::sort( 'Order', "tbl.ordering", @$state->direction, @$state->order ); ?>
+    	            <?php echo JHTML::_( 'grid.order', @$items ); ?>
+                </th>
+                <th>
+                	<?php echo JText::_( "Admin Only" ); ?>?
                 </th>
             </tr>
             <tr class="filterline">
+            	<th>
+                </th>
             	<th>
                 </th>
                 <th colspan="2">
@@ -62,13 +74,25 @@
                 </th>
                 <th>
                 </th>
+                <th>
+                </th>
+                <th>
+                </th>
+                <th>
+                    <?php echo DSCSelect::booleans( @$state->filter_admin_only, 'filter_admin_only', $attribs, 'filter_admin_only', true, 'Select State', 'Admin Only', 'Front-end Only' ); ?>
+                </th>
             </tr>
+			<tr>
+				<th colspan="20" style="font-weight: normal;">
+					<div style="float: right; padding: 5px;"><?php echo @$this->pagination->getResultsCounter(); ?></div>
+					<div style="float: left;"><?php echo @$this->pagination->getListFooter(); ?></div>
+				</th>
+			</tr>
         </thead>
         <tfoot>
             <tr>
                 <td colspan="20">
-                    <div style="float: right; padding: 5px;"><?php echo @$this->pagination->getResultsCounter( );
-															 ?></div>
+                    <div style="float: right; padding: 5px;"><?php echo @$this->pagination->getResultsCounter( ); ?></div>
                     <?php echo @$this->pagination->getPagesLinks( ); ?>
                 </td>
             </tr>
@@ -83,22 +107,43 @@
                     <?php echo $i + 1; ?>
                 </td>
                 <td style="text-align: center;">
-                   	<?php echo CalendarGrid::checkedout( $item, $i, 'venue_id' ); ?>
+                   	<input id="cb<?php echo $i; ?>" type="checkbox" onclick="Joomla.isChecked(this.checked);" value="<?php echo $item->getDatasourceID(); ?>" name="cid[]">
                 </td>
+                <td style="text-align: center;">
+                    <a href="<?php echo $item->link; ?>">
+                        <?php echo $item->getDatasourceID(); ?>
+                    </a>
+                </td>   
                 <td style="text-align: center;">
                     <a href="<?php echo $item->link; ?>">
                         <?php echo $item->venue_id; ?>
                     </a>
-                </td>   
+                </td>
                 <td style="text-align: left;">
                     <a href="<?php echo $item->link; ?>">
-                        <?php echo $item->venue_name; ?>
+                        <?php echo $item->name; ?>
                     </a>
-                </td>                   
+                    <p class="dsc-tip">
+                    <?php echo (!empty($item->venue_name) && $item->venue_name != $item->name) ? 'Override: ' . $item->venue_name : ''; ?>
+                    </p>
+                </td>   
                 <td style="text-align: left;">
-                    <a href="<?php echo $item->venue_url; ?>">
-                        <?php echo $item->venue_url; ?>
+                    <?php // WTF - these two fields now cause the app to explode. one day they work, next day BOOM ?>
+                    <a href="<?php echo $item->link; ?>">
+                        <?php //echo $item->code; ?>
                     </a>
+                </td>   
+                <td style="text-align: left;">
+                    <a href="<?php //echo $item->website; ?>" target="_blank">
+                        <?php //echo $item->website; ?>
+                    </a>
+                </td>
+				<td style="text-align: center;">
+					<?php echo DSCGrid::order( $item->venue_id ); ?>
+					<?php echo DSCGrid::ordering( $item->venue_id, $item->ordering ); ?>
+				</td>
+                <td style="text-align: center;">
+                    <?php echo CalendarGrid::enable( $item->admin_only, $i, 'admin_only.' ); ?>
                 </td>
             </tr>
             <?php $i = $i + 1;
@@ -114,13 +159,6 @@
             </tr>
             <?php endif; ?>
         </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="20">
-                    <?php echo @$this->pagination->getListFooter( ); ?>
-                </td>
-            </tr>
-        </tfoot>
     </table>
 
     <input type="hidden" name="order_change" value="0" />
@@ -128,8 +166,7 @@
     <input type="hidden" name="task" id="task" value="" />
     <input type="hidden" name="boxchecked" value="" />
     <input type="hidden" name="filter_order" value="<?php echo @$state->order; ?>" />
-    <input type="hidden" name="filter_direction" value="<?php echo @$state->direction;
-														?>" />
+    <input type="hidden" name="filter_direction" value="<?php echo @$state->direction; ?>" />
     
     <?php echo $this->form['validate']; ?>
 </form>

@@ -33,41 +33,11 @@ class CalendarTableEvents extends CalendarTable
 	 * (non-PHPdoc)
 	 * @see JTable::check()
 	 */
-	function check( )
+	function check()
 	{
 		if ( empty( $this->event_short_title ) )
 		{
 			$this->setError( JText::_( "Event Short Title Required" ) );
-			return false;
-		}
-		
-		if ( empty( $this->event_long_title ) )
-		{
-			$this->event_long_title = $this->event_short_title;			
-		}
-		
-		if ( empty( $this->event_short_description ) )
-		{
-			//$this->setError( JText::_( "Event Short Description Required" ) );
-			//return false;
-		}
-		
-		/*if ( empty( $this->event_full_image ) )
-		{
-			$this->setError( JText::_( "Event Image Required" ) );
-			return false;
-		}*/
-		
-		if ( empty( $this->event_primary_category_id ) )
-		{
-			$this->setError( JText::_( "Event Primary Category Required" ) );
-			return false;
-		}
-		
-		if ( empty( $this->event_display_type ) )
-		{
-			$this->setError( JText::_( "Event Display Type Required" ) );
-			return false;
 		}
 		
 		$nullDate = $this->_db->getNullDate( );
@@ -84,7 +54,12 @@ class CalendarTableEvents extends CalendarTable
 		}
 		$this->event_alias = JFilterOutput::stringURLSafe( $this->event_alias );
 		
-		return true;
+		if ( empty( $this->datasource_id ) )
+		{
+		    $this->setError( JText::_( "Data Source ID Required" ) );
+		}
+		
+		return parent::check();
 	}
 	
 	/**

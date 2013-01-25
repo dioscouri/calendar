@@ -9,120 +9,126 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-
-JHTML::_( 'script', 'common.js', 'media/com_calendar/js/' );
+$counter = 0;
+$base_url = 'index.php?option=com_calendar&Itemid=' . $item_id;
 ?>
 
-<?php if ( $v != 2) { ?>
 <div id="calendar">
-<?php } ?>
-    <form name='mini_calendar' id='mini_calendar' action='' method='post'>
-    <div id="calendar-nav" class="wrap">
-        <ul class="horiz">
-    		<li><a href="<?php echo JRoute::_( 'index.php?option=com_calendar&view=' . $view . '&reset=0&current_date=' . $date->prevdate . '&month=' . $date->prevmonth . '&year=' . $date->prevyear . '&Itemid=' . $item_id ); ?>"><?php echo JText::_( "Previous" ); ?></a></li>
-            <li><?php echo $header_title; ?></li>
-    		<li><a class="next" href="<?php echo JRoute::_( 'index.php?option=com_calendar&view=' . $view . '&reset=0&current_date=' . $date->nextdate . '&month=' . $date->nextmonth . '&year=' . $date->nextyear . '&Itemid=' . $item_id ); ?>"><?php echo JText::_( "Next" ); ?></a></li>
-        </ul>
+
+    <div id="calendar-view-navigation" class="wrap full tab-wrapper">
+        <ul class="full table tabs">
+    		<li class="tab cell <?php if ($state['view'] == 'month') { echo "open"; } ?>">
+    		    <a class="" href="<?php if ($state['view'] == 'month') { echo "javascript:void(0);"; } else { echo JRoute::_( $base_url . "&view=month&date=" . $state['date'] ); } ?>">
+    		        <?php echo JText::_( "Month" ); ?>
+    		    </a>
+    		</li>
+    		<li class="tab cell <?php if ($state['view'] == 'week') { echo "open"; } ?>">
+    		    <a class="" href="<?php if ($state['view'] == 'week') { echo "javascript:void(0);"; } else { echo JRoute::_( $base_url . "&view=week&date=" . $state['date'] ); } ?>">
+    		        <?php echo JText::_( "Week" ); ?>
+    		    </a>
+    		</li>
+    		<li class="tab cell <?php if ($state['view'] == 'day') { echo "open"; } ?>">
+    		    <a class="" href="<?php if ($state['view'] == 'day') { echo "javascript:void(0);"; } else { echo JRoute::_( $base_url . "&view=day&date=" . $state['date'] ); } ?>">
+    		        <?php echo JText::_( "Day" ); ?>
+    		    </a>
+    		</li>
+        </ul>    
+    </div>
+
+    <div id="current-month" class="wrap">
+        <?php echo date( 'M j', strtotime( $state['date'] ) );
+        if ($state['date'] == $date->currentdate_end) {
+            echo date( ', Y', strtotime(  $state['date'] ) );
+        } else {
+            echo "-" . date( 'M j, Y', strtotime(  $date->currentdate_end ) );
+        } ?>
+        <div id="date-navigation" class="wrap right">
+            <ul class="controls controls-medium flat">
+        		<li class="prev"><a href="<?php echo JRoute::_( 'index.php?option=com_calendar&view='.$date->handler.'&date=' . $date->navigation->prev . $itemid_string ); ?>"><?php echo JText::_( "Previous" ); ?></a></li>
+        		<li class="next"><a href="<?php echo JRoute::_( 'index.php?option=com_calendar&view='.$date->handler.'&date=' . $date->navigation->next . $itemid_string ); ?>"><?php echo JText::_( "Next" ); ?></a></li>
+            </ul>    
+        </div>
     </div>
     
-    <ol class="days horiz">
-        <li class="wide">S</li>
+    <ol class="days-of-week flat">
+        <li>SU</li>
         <li>M</li>
         <li>T</li>
         <li>W</li>
         <li>T</li>
         <li>F</li>
-        <li class="wide">S</li>
+        <li class="last">SA</li>
     </ol>
-    <ol class="horiz">
+    
+    <ol class="dates flat">
         <?php
-            $n = 0;
-            while ($n<$date->monthstartdayofweek)
+            $n = ($date->currentdate_dayofweek_start == 0) ? 7 : $date->currentdate_dayofweek_start;
+            while ($n>0)
             {
+                $this_date = date( 'Y-m-d', strtotime( $state['date'] . ' -' . $n . ' days' ) );
+                $counter++;
                 ?>
-                <li></li>
+                <li class="inactive <?php if (!($counter % 7)) { echo "last "; } ?>">
+                    <a href="<?php echo JRoute::_( $base_url . "&view=" . $state['view'] . "&date=" . $this_date ); ?>">
+                        <?php echo date( 'j', strtotime( $this_date ) ); ?>
+                    </a>
+                </li>
                 <?php
-                $n++;
+                $n--;
             } 
             
-            $daycounter = 1;
-            for ( $i = 1; $i <= $date->numberofweeks; $i++ )
+            $this_date = $state['date'];
+            for ( $i = 0; $this_date <= $date->currentdate_end; $i++, $this_date = date( 'Y-m-d', strtotime( $state['date'] . ' +' . $i . ' days' ) ) )
             {
-                foreach ( $date->weekdays as $key => $value )
-                {
-                    $loop_date = date('Y-m-d', strtotime($date->year . '-' . $date->month . '-' . $daycounter));                    
-                    
-                    switch ( $date->handler )
-                    {
-                        case 'month':
-                            $day_state = 'active';                               
-                            break;
-                        case 'week':
-                        case 'three':
-                            if( in_array( $loop_date, $date->range ) )
-                            {
-                                $day_state = 'active';
-                            }
-                            else 
-                            {
-                                $day_state = '';
-                            }
-                            break;
-                        default:
-                            $day_state = '';
-                            break;
-                    }
-
-                    if( date('Y-m-d') == $loop_date ) $day_state = 'current';
-                    if( $loop_date == date('Y-m-d', strtotime($date->current)) ) $day_state = 'active';
-                
-                    if ( $daycounter <= $date->numberofdays )
-                    {
-                        if ( $key == $date->weekstart ){
-                            ?><li class="wide <?php echo $day_state; ?>"><?php
-                        }else{
-                            ?><li class="<?php echo $day_state; ?>"><?php
-                        }
-                            $link = 'index.php?option=com_calendar&view=' . $link_handler;
-                            $link .= '&Itemid=' . $item_id;
-                            $link .= '&year=' . $date->year;
-                            $link .= '&month=' . $date->month;
-                            $link .= '&current_date=' . $date->year . '-' . $date->month . '-' . $daycounter;
-                            
-                            $day = $date->year . '-' . $date->month . '-' . $daycounter;
-                            if ($helper->dateHasEvent( $day )) {
-                            ?>
-                            <a href="<?php echo $link; ?>"><?php echo $daycounter; ?></a>
-                            <?php
-                            } else {
-                                echo "<span class='inactive'>$daycounter</span>";
-                            }
-                            $daycounter++;
-                            ?>
-                        </li>
-                        <?php
-                    }
+                $counter++;
+                $is_first = false;
+                if ($this_date == $state['date']) {
+                    $is_first = true;
                 }
+                ?>
+                <li class="active <?php if ($is_first) { echo "today "; } if (!($counter % 7)) { echo "last "; } ?>">
+                    <a href="<?php echo JRoute::_( $base_url . "&view=" . $state['view'] . "&date=" . $this_date ); ?>">
+                        <?php echo date( 'j', strtotime( $this_date ) ); ?>
+                    </a>
+                </li>
+                <?php
+            }
+
+            $n = 1;
+            $remainder = (6  - $date->currentdate_dayofweek_end == 0) ? 7 : 6  - $date->currentdate_dayofweek_end;
+            if ($counter + $remainder < $date->minimum_number_of_weeks * 7) {
+                $remainder = $date->minimum_number_of_weeks * 7 - $counter;
             }
             
-            $n = $date->monthenddayofweek;
-            while ($n<6)
+            while ($n<=$remainder)
             {
+                $this_date = date( 'Y-m-d', strtotime( $date->currentdate_end . ' +' . $n . ' days' ) );
+                $counter++;
                 ?>
-                <li></li>
+                <li class="inactive <?php if (!($counter % 7)) { echo "last "; } ?>">
+                    <a href="<?php echo JRoute::_( $base_url . "&view=" . $state['view'] . "&date=" . $this_date ); ?>">
+                        <?php echo date( 'j', strtotime( $this_date ) ); ?>
+                    </a>
+                    
+                </li>
                 <?php
                 $n++;
             } 
             ?>
     </ol>
+
+    <div class="pick-a-date-wrapper wrap">
+        <ul class="pick-a-date table full">
+            <li class="cell"><?php echo JText::_( "Pick a Date" ); ?></li>
+            <li class="cell date-input"><input type="text" name="date" id="datepicker" value="<?php echo $state['date']; ?>" size="10"></li>
+        </ul>
+    </div>
     
-    <input type="hidden" name="option" value="com_calendar" />
-    <input type="hidden" name="view" value="<?php echo $date->handler; ?>" />
-    <input type="hidden" name="task" value="" />
-    <input type="hidden" name="Itemid" value="<?php echo $item_id; ?>" />
-    <input type="hidden" name="default_handler" value="<?php echo $default_handler; ?>" />
-    
-    </form>
-<?php if ( $v != 2) { ?>
 </div>
-<?php } ?>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    jQuery( "#datepicker" ).datepicker({ minDate: 0, dateFormat: "yy-mm-dd", dayNamesMin: ["Su", "M", "T", "W", "T", "F", "Sa"], onSelect: function(dateText, inst) { window.location = '<?php echo JRoute::_( $base_url . "&view=" . $state['view'] . "&date=" ); ?>' + dateText; } });
+});
+</script>
+

@@ -34,22 +34,24 @@ class CalendarTableVenues extends CalendarTable
 	{
 		if ( empty( $this->venue_name ) )
 		{
-			$this->setError( JText::_( "Venue Name Required" ) );
-			return false;
+			//$this->setError( JText::_( "Venue Name Required" ) );
 		}
 		
 		if ( !empty( $this->venue_name ) && empty($this->venue_id))
 		{
-		    $key = strtolower( $this->venue_name );
-		    $query = "SELECT * FROM #__calendar_venues WHERE LOWER( venue_name ) = '$key';";
+		    /*
 		    $db = $this->getDBO();
+		    
+		    $key = $db->Quote( strtolower( $this->venue_name ) );
+		    $query = "SELECT * FROM #__calendar_venues WHERE LOWER( `venue_name` ) = $key;";
+		    
 		    $db->setQuery( $query );
 		    $result = $db->loadResult();
 		    if ($result)
 		    {
-    			$this->setError( JText::_( "Venue Name Must Be Unique" ) );
-    			return false;		        
+    			//$this->setError( JText::_( "Venue Name Must Be Unique" ) );
 		    }
+		    */
 		}
 		
 		$nullDate = $this->_db->getNullDate( );
@@ -59,7 +61,12 @@ class CalendarTableVenues extends CalendarTable
 			$this->venue_created_date = $date->toMysql( );
 		}
 		
-		return true;
+		if ( empty( $this->datasource_id ) )
+		{
+		    $this->setError( JText::_( "Data Source ID Required" ) );
+		}
+		
+		return parent::check();
 	}
 	
 	/**

@@ -36,4 +36,14 @@ class CalendarViewVenues extends CalendarViewBase
 				break;
 		}
 	}
+	
+	/**
+	 * The default toolbar for a list
+	 * @return unknown_type
+	 */
+	function _defaultToolbar()
+	{
+	    $this->addClearCacheToolbarButton('venues');
+	    parent::_defaultToolbar();
+	}
 }

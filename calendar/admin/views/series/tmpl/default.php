@@ -3,12 +3,16 @@
 <?php $state = @$this->state; ?>
 <?php $form = @$this->form; ?>
 <?php $items = @$this->items; ?>
+<?php $attribs = array( 'class' => 'inputbox', 'size' => '1', 'onchange' => 'document.adminForm.submit();' ); ?>
 
 <form action="<?php echo JRoute::_( @$form['action'] ) ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 			  
     <?php echo CalendarGrid::pagetooltip( JRequest::getVar( 'view' ) ); ?>
 
     <ul class="unstyled dsc-flat pad-left pull-right">
+        <li>
+            <?php echo CalendarSelect::season( @$state->filter_season, 'filter_season', $attribs, 'filter_season', true ); ?>
+        </li>
         <li>
             <input class="search-query" type="text" name="filter" value="<?php echo @$state->filter; ?>" />
         </li>
@@ -30,16 +34,10 @@
                    	<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( @$items ); ?>);" />
                 </th>
                 <th style="width: 50px;">
-                    <?php echo CalendarGrid::sort( 'ID', "tbl.series_id", @$state->direction, @$state->order );
-					?>
+                    <?php echo CalendarGrid::sort( 'ID', "tbl.series_id", @$state->direction, @$state->order ); ?>
                 </th>                
                 <th style="text-align: left;">
-                    <?php echo CalendarGrid::sort( 'Name', "tbl.series_name", @$state->direction, @$state->order );
-					?>
-                </th>
-                 <th style="text-align: left;">
-                    <?php echo CalendarGrid::sort( 'Title', "tbl.series_title", @$state->direction, @$state->order );
-					?>
+                    <?php echo CalendarGrid::sort( 'Title', "tbl.series_title", @$state->direction, @$state->order ); ?>
                 </th>
                 <th>
                 	<?php echo JText::_( "Image" ); ?>
@@ -61,20 +59,22 @@
                     </div>
                 </th>
                 <th style="text-align: left;">
-                                        <input id="filter_name" type="text" name="filter_name" value="<?php echo @$state->filter_name;  ?>" class="input span3" size="25"/>
-
-                </th>
-                <th>
+                    <input id="filter_name" type="text" name="filter_name" value="<?php echo @$state->filter_name;  ?>" class="input span3" size="25"/>
                 </th>
                 <th>
                 </th>
             </tr>
+			<tr>
+				<th colspan="20" style="font-weight: normal;">
+					<div style="float: right; padding: 5px;"><?php echo @$this->pagination->getResultsCounter(); ?></div>
+					<div style="float: left;"><?php echo @$this->pagination->getListFooter(); ?></div>
+				</th>
+			</tr>
         </thead>
         <tfoot>
             <tr>
                 <td colspan="20">
-                    <div style="float: right; padding: 5px;"><?php echo @$this->pagination->getResultsCounter( );
-															 ?></div>
+                    <div style="float: right; padding: 5px;"><?php echo @$this->pagination->getResultsCounter( ); ?></div>
                     <?php echo @$this->pagination->getPagesLinks( ); ?>
                 </td>
             </tr>
@@ -98,19 +98,12 @@
                 </td>   
                 <td style="text-align: left;">
                     <a href="<?php echo $item->link; ?>">
-                        <?php echo $item->series_name; ?>
-                    </a>
-                </td>     
-                <td style="text-align: left;">
-                    <a href="<?php echo $item->link; ?>">
                         <?php echo $item->series_title; ?>
                     </a>
                 </td>              
                 <td style="text-align: center;">
                     <?php
-						$table = JTable::getInstance( 'Series', 'CalendarTable' );
-						$table->load( $item->series_id );
-						echo $table->getImage( );
+
 					?>
                 </td>
             </tr>
@@ -127,13 +120,6 @@
             </tr>
             <?php endif; ?>
         </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="20">
-                    <?php echo @$this->pagination->getListFooter( ); ?>
-                </td>
-            </tr>
-        </tfoot>
     </table>
 
     <input type="hidden" name="order_change" value="0" />

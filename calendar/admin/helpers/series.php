@@ -24,6 +24,8 @@ class CalendarHelperSeries extends CalendarHelperBase
 	 */
 	function createSeriesFromName( $series_name )
 	{
+	    return null;
+	    
 	    JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
 		$table = JTable::getInstance( 'Series', 'CalendarTable' );
 		
@@ -49,6 +51,8 @@ class CalendarHelperSeries extends CalendarHelperBase
 	 */
 	public static function getSeriesName( $series_id )
 	{
+	    return null;
+	    
 		JModel::addIncludePath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_calendar' . DS . 'models' );
 		$model = JModel::getInstance( 'Series', 'CalendarModel' );
 		$model->setId( $series_id );

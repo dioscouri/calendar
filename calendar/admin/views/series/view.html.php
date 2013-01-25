@@ -15,5 +15,13 @@ Calendar::load( 'CalendarViewBase', 'views.base' );
 
 class CalendarViewSeries extends CalendarViewBase
 {
-	
+    /**
+     * The default toolbar for a list
+     * @return unknown_type
+     */
+    function _defaultToolbar()
+    {
+        $this->addClearCacheToolbarButton('series');
+        parent::_defaultToolbar();
+    }
 }

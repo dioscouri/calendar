@@ -25,8 +25,23 @@ class CalendarViewBase extends DSCViewAdmin
 	    
 	    JHTML::_('stylesheet', 'common.css', 'media/dioscouri/css/');	    
 		JHTML::_('stylesheet', 'admin.css', 'media/com_calendar/css/');
-        
+		
         parent::display($tpl);
+	}
+	
+	protected function addClearCacheToolbarButton( $view=null )
+	{
+		if (JFactory::getUser()->authorise('core.admin', 'com_calendar'))
+	    {
+	        $link = 'index.php?option=com_calendar&view=events&task=clearAllCache';
+	        $bar = JToolBar::getInstance('toolbar');
+	        if (!empty($view)) {
+	            $return = base64_encode( JRoute::_("index.php?option=com_calendar&view=" . $view ) );
+	            $link .= '&return=' . $return;
+	        }
+	        
+	        $bar->prependButton( 'Link', 'default', 'Clear All Cache', $link );
+	    }
 	}
 
 }

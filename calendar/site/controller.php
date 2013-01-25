@@ -444,6 +444,38 @@ class CalendarController extends DSCControllerSite
 		echo ( json_encode( $return ) );
 	}
 	
+	/**
+	 * Get the return URL.
+	 *
+	 * If a "return" variable has been passed in the request
+	 *
+	 * @return	string	The return URL.
+	 * @since	1.6
+	 */
+	protected function getReturnUrl()
+	{
+	    $return = JRequest::getVar('return', null, 'default', 'base64');
+	
+	    if (empty($return) || !JUri::isInternal(base64_decode($return))) {
+	        return JURI::base();
+	    }
+	    else {
+	        return base64_decode($return);
+	    }
+	}
+	
+	/**
+	 * Get the default redirect URL.
+	 *
+	 * @return	string	The redirect URL.
+	 * @since	1.6
+	 */
+	protected function getRedirectUrl()
+	{
+	    $redirect = "index.php?option=com_calendar&view=month";
+	    return $redirect;
+	}
+	
 }
 
 ?>

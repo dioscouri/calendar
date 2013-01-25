@@ -12,198 +12,254 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport( 'joomla.application.component.model' );
-Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 
-class CalendarHelperDiagnostics extends CalendarHelperBase 
+class CalendarHelperDiagnostics extends DSCHelperDiagnostics 
 {
-    /**
-     * Redirects with message
-     * 
-     * @param object $message [optional]    Message to display
-     * @param object $type [optional]       Message type
-     */
-    function redirect($message = '', $type = '')
-    {
-        $mainframe = JFactory::getApplication();
-        
-        if ($message) 
-        {
-            $mainframe->enqueueMessage($message, $type);
-        }
-        
-        JRequest::setVar('controller', 'config');
-        JRequest::setVar('view', 'config');
-        JRequest::setVar('task', '');
-        return;
-    }    
-
     /**
      * Performs basic checks on your installation to ensure it is OK
      * @return unknown_type
      */
-    function checkInstallation() 
+    function checkInstallation()
     {
-        /* Check default currency
-        if (!$this->checkDefaultCurrency()) 
-        {
-            return $this->redirect( JText::_('DIAGNOSTIC CHECKDEFAULTCURRENCY FAILED') .' :: '. $this->getError(), 'error' );
-        }*/
+        $functions = array();
+        $functions[] = 'checkEventinstanceTitle';
+        $functions[] = 'checkEventtypeAdmin_only';
+        $functions[] = 'checkEventtypeURL';
+        $functions[] = 'addActionbuttonOverrideFields';
+        $functions[] = 'addActionbuttonNoteFields';
+        $functions[] = 'addEventActionbuttonOverrideFields';
+        $functions[] = 'addEventActionbuttonOverrideTextField';
+        $functions[] = 'checkEventinstancePrices';
         
-       
-    }
-    
-    /**
-     * Creates a table if it doesn't exist
-     * 
-     * @param $table
-     * @param $definition
-     */
-    function createTable( $table, $definition )
-    {
-        if (!$this->tableExists( $table ))
+        foreach ($functions as $function)
         {
-            $db =& JFactory::getDBO();
-            $db->setQuery( $definition );
-            if (!$db->query())
+            if (!$this->{$function}())
             {
-                $this->setError( $db->getErrorMsg() );
-                return false;
+                return $this->redirect( JText::_("COM_CALENDAR_".$function."_FAILED") .' :: '. $this->getError(), 'error' );
             }
         }
-        return true;
     }
     
     /**
-     * Checks if a table exists
-     * 
-     * @param $table
+     *
+     * @param unknown_type $fieldname
+     * @param unknown_type $value
      */
-    function tableExists( $table )
+    protected function setCompleted( $fieldname, $value='1' )
     {
-        $db =& JFactory::getDBO();
-        
-        // Manually replace the Joomla Tables prefix. Automatically it fails
-        // because the table name is between single-quotes
-        $db->setQuery(str_replace('#__', $db->_table_prefix, "SHOW TABLES LIKE '$table'"));
-        $result = $db->loadObject();
-        
-        if ($result === null) return false;
-        else return true;
+        JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
+        $config = JTable::getInstance( 'Config', 'CalendarTable' );
+        $config->load( array( 'config_name'=>$fieldname ) );
+        $config->config_name = $fieldname;
+        $config->value = '1';
+        $config->save();
     }
     
     /**
-     * Inserts fields into a table
-     * 
-     * @param string $table
-     * @param array $fields
-     * @param array $definitions
+     *
      * @return boolean
      */
-    function insertTableFields($table, $fields, $definitions)
+    private function checkEventinstanceTitle()
     {
-        $database = JFactory::getDBO();
-        $fields = (array) $fields;
-        $errors = array();
-        
-        foreach ($fields as $field)
+        if (Calendar::getInstance()->get( __FUNCTION__, '0' ))
         {
-            $query = " SHOW COLUMNS FROM {$table} LIKE '{$field}' ";
-            $database->setQuery( $query );
-            $rows = $database->loadObjectList();
-            if (!$rows && !$database->getErrorNum()) 
-            {       
-                $query = "ALTER TABLE `{$table}` ADD `{$field}` {$definitions[$field]}; ";
-                $database->setQuery( $query );
-                if (!$database->query())
-                {
-                    $errors[] = $database->getErrorMsg();
-                }
-            }
+            return true;
         }
-        
-        if (!empty($errors))
+    
+        $table = '#__calendar_eventinstances';
+        $definitions = array();
+        $fields = array();
+    
+        $fields[] = "eventinstance_title";
+        $definitions["eventinstance_title"] = "text NULL";
+    
+        if ($this->insertTableFields( $table, $fields, $definitions ))
         {
-            $this->setError( implode('<br/>', $errors) );
-            return false;
+            $this->setCompleted( __FUNCTION__ );
+            return true;
         }
-        return true;
+        return false;
     }
     
     /**
-     * Changes fields in a table
-     * 
-     * @param string $table
-     * @param array $fields
-     * @param array $definitions
-     * @param array $newnames
+     *
      * @return boolean
      */
-    function changeTableFields($table, $fields, $definitions, $newnames)
+    private function checkEventtypeAdmin_only()
     {
-        $database = JFactory::getDBO();
-        $fields = (array) $fields;
-        $errors = array();
-        
-        foreach ($fields as $field)
-        {
-            $query = " SHOW COLUMNS FROM {$table} LIKE '{$field}' ";
-            $database->setQuery( $query );
-            $rows = $database->loadObjectList();
-            if ($rows && !$database->getErrorNum()) 
-            {       
-                $query = "ALTER TABLE `{$table}` CHANGE `{$field}` `{$newnames[$field]}` {$definitions[$field]}; ";
-                $database->setQuery( $query );
-                if (!$database->query())
-                {
-                    $errors[] = $database->getErrorMsg();
-                }
-            }
-        }
-        
-        if (!empty($errors))
-        {
-            $this->setError( implode('<br/>', $errors) );
-            return false;
-        }
-        return true;
+    	if (Calendar::getInstance()->get( __FUNCTION__, '0' ))
+    	{
+    		return true;
+    	}
+    
+    	$table = '#__calendar_types';
+    	$definitions = array();
+    	$fields = array();
+    
+    	$fields[] = "admin_only";
+    	$definitions["admin_only"] = "tinyint(1) NOT NULL";
+    
+    	if ($this->insertTableFields( $table, $fields, $definitions ))
+    	{
+    		$this->setCompleted( __FUNCTION__ );
+    		return true;
+    	}
+    	return false;
     }
     
     /**
-     * Drops fields from a table
-     * 
-     * @param string $table
-     * @param array $fields
-     * @param array $definitions
+     *
      * @return boolean
      */
-    function dropTableFields($table, $fields)
+    private function checkEventtypeURL()
     {
-        $database = JFactory::getDBO();
-        $fields = (array) $fields;
-        $errors = array();
-        
-        foreach ($fields as $field)
+        if (Calendar::getInstance()->get( __FUNCTION__, '0' ))
         {
-            $query = " SHOW COLUMNS FROM {$table} LIKE '{$field}' ";
-            $database->setQuery( $query );
-            $rows = $database->loadObjectList();
-            if ($rows && !$database->getErrorNum()) 
-            {       
-                $query = "ALTER TABLE `{$table}` DROP `{$field}`; ";
-                $database->setQuery( $query );
-                if (!$database->query())
-                {
-                    $errors[] = $database->getErrorMsg();
-                }
-            }
+            return true;
         }
-        
-        if (!empty($errors))
+    
+        $table = '#__calendar_types';
+        $definitions = array();
+        $fields = array();
+    
+        $fields[] = "type_url";
+        $definitions["type_url"] = "text NOT NULL";
+    
+        if ($this->insertTableFields( $table, $fields, $definitions ))
         {
-            $this->setError( implode('<br/>', $errors) );
-            return false;
+            $this->setCompleted( __FUNCTION__ );
+            return true;
         }
-        return true;
+        return false;
     }
-	
+    
+    /**
+     *
+     * @return boolean
+     */
+    private function addActionbuttonOverrideFields()
+    {
+        if (Calendar::getInstance()->get( __FUNCTION__, '0' ))
+        {
+            return true;
+        }
+    
+        $table = '#__calendar_actionbuttons';
+        $definitions = array();
+        $fields = array();
+    
+        $fields[] = "actionbutton_override_main_site";
+        $definitions["actionbutton_override_main_site"] = "tinyint(1) DEFAULT 0";
+    
+        if ($this->insertTableFields( $table, $fields, $definitions ))
+        {
+            $this->setCompleted( __FUNCTION__ );
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     *
+     * @return boolean
+     */
+    private function addActionbuttonNoteFields()
+    {
+        if (Calendar::getInstance()->get( __FUNCTION__, '0' ))
+        {
+            return true;
+        }
+    
+        $table = '#__calendar_actionbuttons';
+        $definitions = array();
+        $fields = array();
+    
+        $fields[] = "actionbutton_notes";
+        $definitions["actionbutton_notes"] = "text";
+    
+        if ($this->insertTableFields( $table, $fields, $definitions ))
+        {
+            $this->setCompleted( __FUNCTION__ );
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+    *
+    * @return boolean
+    */
+    private function addEventActionbuttonOverrideFields()
+    {
+        if (Calendar::getInstance()->get( __FUNCTION__, '0' ))
+        {
+            return true;
+        }
+    
+        $table = '#__calendar_events';
+        $definitions = array();
+        $fields = array();
+    
+        $fields[] = "event_actionbutton_url";
+        $definitions["event_actionbutton_url"] = "text";
+    
+        if ($this->insertTableFields( $table, $fields, $definitions ))
+        {
+            $this->setCompleted( __FUNCTION__ );
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+    *
+    * @return boolean
+    */
+    private function addEventActionbuttonOverrideTextField()
+    {
+        if (Calendar::getInstance()->get( __FUNCTION__, '0' ))
+        {
+            return true;
+        }
+    
+        $table = '#__calendar_events';
+        $definitions = array();
+        $fields = array();
+    
+        $fields[] = "event_actionbutton_label";
+        $definitions["event_actionbutton_label"] = "text";
+    
+        if ($this->insertTableFields( $table, $fields, $definitions ))
+        {
+            $this->setCompleted( __FUNCTION__ );
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     *
+     * @return boolean
+     */
+    private function checkEventinstancePrices()
+    {
+        if (Calendar::getInstance()->get( __FUNCTION__, '0' ))
+        {
+            return true;
+        }
+    
+        $table = '#__calendar_eventinstances';
+        $definitions = array();
+        $fields = array();
+    
+        $fields[] = "eventinstance_prices";
+        $definitions["eventinstance_prices"] = "text NULL";
+    
+        if ($this->insertTableFields( $table, $fields, $definitions ))
+        {
+            $this->setCompleted( __FUNCTION__ );
+            return true;
+        }
+        return false;
+    }
 }

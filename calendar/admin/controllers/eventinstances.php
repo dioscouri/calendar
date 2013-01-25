@@ -56,68 +56,34 @@ class CalendarControllerEventinstances extends CalendarController
 		return $state;
 	}
 	
-	/**
-	 * Verifies the fields in a submitted form.  Uses the table's check() method.
-	 * Will often be overridden. Is expected to be called via Ajax 
-	 * 
-	 * @return unknown_type
-	 */
-	function validate()
+	function edit($cachable=false, $urlparams = false)
 	{
-		$response = array();
-		$response['msg'] = '';
-		$response['error'] = '';
-			
-		// get elements from post
-		$elements_post = JRequest::getVar( 'elements', '', 'post', 'string', JREQUEST_ALLOWRAW );
-		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', $elements_post ) );
-        
-		// convert elements to array that can be binded
-		Calendar::load( 'CalendarHelperBase', 'helpers.base' );
-		$helper = new CalendarHelperBase(); 			
-        $values = $helper->elementsToArray( $elements );
-        
-		// get table object
-		$table = $this->getModel( $this->get('suffix') )->getTable();
-		
-		// bind to values
-        $table->bind( $values );
-
-	    // check if new venue being uploaded
-        if (!empty($values['new_venue_name']))
-        {
-            $table->venue_id = true;
-        }
-        
-		$h = $values['eventinstance_start_time_hours'];
-		$m = $values['eventinstance_start_time_minutes'];
-		if ( empty( $m ) )
+		$model = $this->getModel( $this->get( 'suffix' ) );
+		$item = $model->getItem(null, true);
+		 
+		if (!$model->getID())
 		{
-			$m = '0';
+			$redirect = $this->list_url;
+			$this->message = 'No Datasource ID exists for this event, so you cannot edit it.';
+			$this->messagetype = 'notice';
+			$this->setRedirect( $redirect, $this->message, $this->messagetype );
+			return;
 		}
-		
-		if ($m < '10')
+		 
+		if (is_object($item) && empty($item->eventinstance_id))
 		{
-		    $m = '0'.$m;
+			$table = $model->getTable();
+			$table->load( array('datasource_id'=>$item->getDataSourceID() ) );
+			$table->bind($item);
+			$table->datasource_id = $item->getDataSourceID();
+			$table->check();
+			$table->save();
+			 
+			// clear cache
+			$item = $model->getItem( null, true );
 		}
-		
-		if ($h < '10')
-		{
-		    $h = '0'.$h;
-		}
-		
-		$table->eventinstance_start_time = $h . ':' . $m;
-        
-		// validate it using table's ->check() method
-		if (!$table->check())
-		{
-			// if it fails check, return message
-			$response['error'] = '1';
-			$response['msg'] = $helper->generateMessage( $table->getError() ); 
-		}
-			
-		echo ( json_encode( $response ) );
-		return;
+	
+		parent::edit($cachable, $urlparams);
 	}
 	
 	/**
@@ -126,98 +92,21 @@ class CalendarControllerEventinstances extends CalendarController
 	 */
 	function save( )
 	{
+		$post = JRequest::get( 'post', '4' );
 		$task = JRequest::getVar( 'task' );
 		$model = $this->getModel( $this->get( 'suffix' ) );
+		$item = $model->getItem( $model->getId(), true );
+		$row = $model->getTable();
 		
-		$row = $model->getTable( );
-		$row->load( $model->getId( ) );
-		$post = JRequest::get( 'post', '4' );
+		$row->load( array( 'datasource_id'=>$item->getDataSourceID() ) );
 		$row->bind( $post );
-		
-		$row->eventinstance_description = JRequest::getVar( 'eventinstance_description', '', 'post', 'string', JREQUEST_ALLOWRAW );
-		
-		$h = JRequest::getVar( 'eventinstance_start_time_hours' );
-		$m = JRequest::getVar( 'eventinstance_start_time_minutes' );
-		if ( empty( $m ) )
-		{
-			$m = '0';
-		}
-		
-		if ($m < '10')
-		{
-		    $m = '0'.$m;
-		}
-		
-		if ($h < '10')
-		{
-		    $h = '0'.$h;
-		}
-		
-		$row->eventinstance_start_time = $h . ':' . $m;
-		
-		$fieldname = 'eventinstance_full_image_new';
-		$userfile = JRequest::getVar( $fieldname, '', 'files', 'array' );
-		if ( !empty( $userfile['size'] ) )
-		{
-			if ( $upload = $this->addfile( $fieldname ) )
-			{
-				$row->eventinstance_full_image = $upload->getPhysicalName( );
-			}
-			else
-			{
-				$error = true;
-			}
-		}
-		
-		$new_venue = JRequest::getVar( 'new_venue_name' );
-		if ( !empty( $new_venue ) )
-		{
-		    JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
-		    $venue = JTable::getInstance( 'Venues', 'CalendarTable' );
-			$venue->venue_name = $new_venue;
-			if ($venue->save())
-			{
-			    $row->venue_id = $venue->venue_id;
-			} 
-    			else
-			{
-			    JFactory::getApplication()->enqueueMessage( $venue->getError(), 'notice' );
-			}
-		}
-		
-		$row->_isNew = empty( $row->eventinstance_id );
 		
 		if ( $row->save( ) )
 		{
-			$row->eventinstance_id = $row->id;
-			$model->setId( $row->eventinstance_id );
+			$model->clearCache();
+			
 			$this->messagetype = 'message';
 			$this->message = JText::_( 'Saved' );
-			
-			if ($row->_isNew && $row->eventinstance_recurring)
-		    {
-        		// Also save the recurring params
-        		$recurring = JTable::getInstance( 'Recurring', 'CalendarTable' );
-        		$recurring->bind( $post );
-        		$recurring->recurring_name = $row->eventinstance_name;
-        		$recurring->recurring_alias = $row->eventinstance_alias;
-        		$recurring->recurring_description = $row->eventinstance_description;
-        		$recurring->recurring_published = $row->eventinstance_published;
-        		$recurring->recurring_start_date = $row->eventinstance_date; 
-        		$recurring->recurring_start_time = $row->eventinstance_start_time;
-        		$recurring->recurring_end_time = $row->eventinstance_end_time;
-	            $recurring->event_id = $row->event_id;
-	            $recurring->venue_id = $row->venue_id;
-	            $recurring->recurring_end_type = JRequest::getVar( 'recurring_end_type' );
-	            $recurring->recurring_finishes = ($recurring->recurring_end_type != 'never');
-                $recurring->save();
-                
-                $row->recurring_id = $recurring->recurring_id;
-                $row->store();
-
-                // Save each eventinstance of the recurrance
-                $recurring->createEventInstances( $recurring->getNextDate() );
-		    }
 		}
 		else
 		{

@@ -45,6 +45,11 @@ class CalendarViewConfig extends CalendarViewBase
 		// check config
 		$row = Calendar::getInstance( );
 		$this->assign( 'row', $row );
+
+		// add the core ACL options button only if access allows them to
+		if (JFactory::getUser()->authorise('core.admin', 'com_calendar')) {
+		    JToolBarHelper::preferences('com_calendar');
+		}
 		
 		// add toolbar buttons
 		JToolBarHelper::save( 'save' );

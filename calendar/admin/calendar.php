@@ -35,6 +35,9 @@ if (empty($controller))
     JFactory::getApplication()->redirect( $redirect );
 }
 
+DSC::loadBootstrap();
+JHTML::_('stylesheet', 'common.css', 'media/dioscouri/css/');
+
 $doc = JFactory::getDocument( );
 $uri = JURI::getInstance( );
 $js = "var com_calendar = {};\n";

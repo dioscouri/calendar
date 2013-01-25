@@ -32,45 +32,12 @@ class CalendarTableEventinstances extends CalendarTable
 	
 	function check( )
 	{
-		if ( empty( $this->eventinstance_date ) || $this->eventinstance_date == '0000-00-00' )
+		if ( empty( $this->datasource_id ) )
 		{
-			$this->setError( JText::_( "Event Instance Date Required" ) );
-			return false;
+			$this->setError( JText::_( "Data Source ID Required" ) );
 		}
 		
-		if ( empty( $this->eventinstance_start_time ) )
-		{
-			//$this->setError( JText::_( "Event Instance Time Required" ) );
-			//return false;
-		}
-		
-		if ( empty( $this->venue_id ) )
-		{
-			//$this->setError( JText::_( "Event Instance Venue Required" ) );
-			//return false;
-		}
-		
-		$nullDate = $this->_db->getNullDate( );
-		if ( empty( $this->eventinstance_created_date ) || $this->eventinstance_created_date == $nullDate )
-		{
-			$date = JFactory::getDate( );
-			$this->eventinstance_created_date = $date->toMysql( );
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * Stores the object
-	 * @param object
-	 * @return boolean
-	 */
-	function store( $updateNulls=false )
-	{
-		$date = JFactory::getDate( );
-		$this->eventinstance_modified_date = $date->toMysql( );
-		$store = parent::store( $updateNulls );
-		return $store;
+		return parent::check();
 	}
 	
 	/**

@@ -26,6 +26,10 @@
         <fields name="params">
             <fieldset name="basic" addfieldpath="/administrator/components/com_calendar/elements">
                 <field name="item_id" type="text" default="" label="Item ID" description="Default Item ID" />
+                
+                <field name="types" type="textarea" default="" label="Event Type Filters" description="A list of event types to filter by, each one separated by a comma. Provide the event type ID.  If left blank, no event type filter will be applied." rows="5" cols="35" />
+                <field name="venues" type="textarea" default="" label="Venue Filters" description="A list of venues to filter by, each one separated by a comma. Provide the venue DS-ID. If left blank, no venue filter will be applied." rows="5" cols="35" />
+                
             </fieldset>
             <fieldset name="advanced">
                 <field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />

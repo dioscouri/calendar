@@ -31,9 +31,19 @@ class CalendarViewTypes extends CalendarViewBase
 				break;
 			case "default":
 			default:
-			    $this->set( 'leftMenu', 'leftmenu_configuration' );
+			    $this->set( 'leftMenu', 'leftmenu_events' );
 				$this->_default( $tpl );
 				break;
 		}
+	}
+	
+	/**
+	 * The default toolbar for a list
+	 * @return unknown_type
+	 */
+	function _defaultToolbar()
+	{
+	    $this->addClearCacheToolbarButton('types');
+	    parent::_defaultToolbar();
 	}
 }

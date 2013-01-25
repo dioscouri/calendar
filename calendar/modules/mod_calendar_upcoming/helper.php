@@ -12,6 +12,8 @@ jimport( 'joomla.application.component.model' );
 
 class modCalendarUpcomingHelper extends JObject
 {
+    public $models = array();
+    
 	/**
 	 * Sets the modules params as a property of the object
 	 * @param unknown_type $params
@@ -42,6 +44,16 @@ class modCalendarUpcomingHelper extends JObject
 		
 	}
 	
+	public function getModel( $name='EventInstances' )
+	{
+        if (empty($this->models[$name])) 
+        {
+            $this->models[$name] = JModel::getInstance( $name, 'CalendarModel' );
+        }
+        
+        return $this->models[$name];	    
+	}
+	
 	/**
 	 * Gets the various db information to sucessfully display items
 	 * @return unknown_type
@@ -50,46 +62,67 @@ class modCalendarUpcomingHelper extends JObject
 	{
 	    $return = new modCalendarUpcomingDataSet( $this->params );
 	    
-	    $model = JModel::getInstance( 'EventInstances', 'CalendarModel' );
+	    $model = $this->getModel();
 	    $table = $model->getTable();
 	    
 	    $list = array();
 	    
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
+	    $return->start_date = date('Y-m-d');
+	    $return->end_date = date( 'Y-m-d', strtotime('+7 days', strtotime( $return->start_date ) ) );
+	    $model->setState('filter_date_to', $return->end_date );
+	    $model->setState('filter_enabled', 1);
 	    
-	    $return->today_items = $list;
+	    $types = array();
+	    $param_types = explode(',', $this->params->get('types') );
+	    foreach( $param_types as $type )
+	    {
+	        $type = trim($type);
+	        if (!empty($type))
+	        {
+	            $types[] = $type;
+	        }
+	    }
+	    $model->setState('filter_types', $types);
 	    
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
-	    $list[] = $table;
+	    $venues = array();
+	    $param_venues = explode(',', $this->params->get('venues') );
+	    foreach( $param_venues as $venue )
+	    {
+	        $venue = trim($venue);
+	        if (!empty($venue))
+	        {
+	            $venues[] = $venue;
+	        }
+	    }
+	    $model->setState('filter_venues', $venues);
 	    
+	    $list = $model->getList();
+
+	    $today_items = array();
+	    $this_week_items = array();
+	    
+	    foreach ($list as $item) 
+	    {
+	        if ($item->eventinstance_date == $return->start_date) {
+	            $today_items[] = $item;
+	        } else {
+	            $this_week_items[] = $item;
+	        }
+	    }
+	    
+	    $return->today_items = $today_items;
 	    $return->this_week_items = $list;
 	    
 	    return $return;
+	}
+	
+	public function getAvailability( $items ) 
+	{
+	    $model = $this->getModel();
 	    
-        $model = JModel::getInstance( 'EventInstances', 'CalendarModel' );
-        
-        if ($list = $model->getList())
-        {
-            foreach ($list as $list_item)
-            {
-                
-            }
-        }
-        		
-		return $list;
+	    $ids = DSCHelper::getColumn( $items, 'dataSourceID' );
+	    $availability = $model->getAvailability( $ids );
+        return $availability;
 	}
 }
 

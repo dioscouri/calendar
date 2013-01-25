@@ -44,36 +44,67 @@ if (empty($item_id))
 JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
 JModel::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/models' );
 
+
+/* SET all the vars*/
 $vars = new JObject();
 $vars->item_id = $item_id;
 $rows = array();
 $ids = explode(',', $params->get('ids') );
+$date = JFactory::getDate();
+$venues = $params->get('venues');
+$types = $params->get('types');
+$startdate = $params->get('startdate');
+$enddate = $params->get('enddate');
 
+
+
+/*We are going to use all the filters to get ID's than add them to the IDS  array and use Jtable to get all the rows and return them, so you can do a specific list and a dynmanic list together*/
+$model = JModel::getInstance( 'Eventinstances', 'CalendarModel' );
+
+
+/*SO THEY CAN JUST SELECT TODAY*/
+$starttoday = $params->get('starttoday');
+if($starttoday) {	
+	$startdate = $date->toFormat( '%Y-%m-%d' );
+} 
+
+    $model->setState( '$filter_date_to	', $startdate );
+//
+	 $model->setState( '$filter_date_from	', $enddate );
+
+
+/* allow upcoming events*/
 $use_upcoming = $params->get('use_upcoming');
 if ($use_upcoming)
-{
-    $date = JFactory::getDate();
-    $ids = array();
-    // $ids = array of ids from the queue
-    
-    $model = JModel::getInstance( 'Eventinstances', 'CalendarModel' );
-    $model->setState( 'limit', $params->get('limit') );
+{  
     $model->setState( 'filter_upcoming_enabled', '1' );
-    $model->setState( 'filter_date_from', $date->toFormat( '%Y-%m-%d' ) );
-    $model->setState( 'order', 'tbl.eventinstance_date' );
-    $model->setState( 'direction', 'ASC' );
-	$query = $model->getQuery( );
-	$query->order( 'tbl.eventinstance_start_time' );
-	$model->setQuery( $query );
-		
-    if ($list = $model->getList())
+}
+if (is_array($types))
+{  
+    $model->setState( 'filter_types', $types );
+}
+if (is_array($venues))
+{  
+    $model->setState( 'filter_venues', $venues );
+}
+
+
+
+ $model->setState( 'order', 'tbl.eventinstance_date' );
+ $model->setState( 'direction', 'ASC' );
+ $model->setState( 'limit', $params->get('limit') );
+ $model->setState( 'enabled', '1' );
+ 
+
+ 
+  if ($list = $model->getList())
     {
         foreach ($list as $li)
         {
             $ids[] = $li->eventinstance_id;
         } 
     }
-}
+
 
 if (count($ids) > '1')
 {
@@ -81,9 +112,12 @@ if (count($ids) > '1')
     foreach ($ids as $id)
     {
 		$row = JTable::getInstance( 'EventInstances', 'CalendarTable' );
+		
 		$row->load( $id );
+		
 		$row->bindObjects();
-                
+		$item = $row;
+            
         if (empty($row->event_published) || empty($row->eventinstance_id))
         {
             continue;
@@ -113,6 +147,7 @@ if (count($ids) > '1')
     if (!empty($row->event_published) && !empty($row->eventinstance_id))
     {
         $vars->row = $row;
+        
         require ( JModuleHelper::getLayoutPath( 'mod_calendar_eventinstances', $params->get('layout', 'large') ) );        
     } 
 }

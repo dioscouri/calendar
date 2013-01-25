@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_CALENDAR_TYPES_DEFAULT_LAYOUT" hidden="true">
+		<message>
+			<![CDATA[COM_CALENDAR_TYPES_DEFAULT_LAYOUT_DESC]]>
+		</message>
+	</layout>
+    
+    <fields name="request">
+        <fieldset name="request" addfieldpath="/administrator/components/com_calendar/elements">
+            
+            <field name="filter_class" type="text"
+                label="Classification"
+                required="true"
+                description="Which event type classification should be displayed?"
+            />
+            
+        </fieldset>
+    </fields>
+    
+    <!-- Add fields to the parameters object for the layout. -->
+    <fields name="params">
+        <fieldset name="params"
+            label="Display Options"
+        >
+
+            <field name="class_description" type="textarea"
+                label="Description"
+                description="Please provide the description text for this Event Type Classification"
+                cols="50"
+                rows="10"
+            />
+
+        </fieldset>
+    </fields>
+    
+</metadata>

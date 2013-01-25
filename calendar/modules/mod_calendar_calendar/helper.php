@@ -24,6 +24,8 @@ class modCalendarCalendarHelper
 
 	function dateHasEvent( $date=null )
 	{
+	    return true;
+	    
 	    if (empty($date))
 	    {
 	        $jdate = JFactory::getDate();

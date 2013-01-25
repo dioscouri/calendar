@@ -38,6 +38,7 @@ class CalendarControllerSeries extends CalendarController
 		$state['filter_id_from'] = $app->getUserStateFromRequest( $ns . 'id_from', 'filter_id_from', '', '' );
 		$state['filter_id_to'] = $app->getUserStateFromRequest( $ns . 'id_to', 'filter_id_to', '', '' );
 		$state['filter_name'] = $app->getUserStateFromRequest( $ns . 'name', 'filter_name', '', '' );
+		$state['filter_season'] = $app->getUserStateFromRequest( $ns . 'filter_season', 'filter_season', JALC\Entities\Season::getCurrentFiscalYear(), '' );
 		
 		foreach ( @$state as $key => $value )
 		{

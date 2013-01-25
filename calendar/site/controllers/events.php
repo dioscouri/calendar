@@ -21,59 +21,85 @@ class CalendarControllerEvents extends CalendarController
 		$this->set( 'suffix', 'events' );
 	}
 	
-	function view( )
+	function _setModelState( )
 	{
-		JRequest::setVar( 'layout', 'view' );
-
-		$event_id = JRequest::getInt( 'id' );
-		$instance_id = JRequest::getInt( 'instance_id' );
-		
-        JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
-		$instance = JTable::getInstance( 'EventInstances', 'CalendarTable' );
-		$instance->load( $instance_id );
-		$instance->trimProperties();
-		$instance->bindObjects();
-		
-		if ( $instance->event_id != $event_id )
-		{
-		    echo JText::_( "Invalid Event Instance" );
-		    return;
-		}
-		
-		JModel::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/models' );
-		$model = JModel::getInstance( 'EventInstances', 'CalendarModel' );
-		$model->setState( 'filter_event', $instance->event_id );
-		$model->setState( 'filter_date_from', $instance->eventinstance_date );
-		$model->setState( 'order', 'tbl.eventinstance_date' );
-		$model->setState( 'direction', 'ASC' );
-        $query = $model->getQuery();
-        $query->where( "tbl.eventinstance_id != '" . $instance->eventinstance_id ."'" );
-        $query->order( 'tbl.eventinstance_start_time' );
-        $model->setQuery( $query );
-		$instance->more_dates = $model->getList();
-		
-		$view = $this->getView( $this->get( 'suffix' ), 'html' );
-		$view->assign( 'instance', $instance );
-		
+		$state = parent::_setModelState( );
+		$app = JFactory::getApplication( );
+		$model = $this->getModel( $this->get( 'suffix' ) );
+        $ns = $app->getName().'::'.'com.calendar.mod.categories';
+        
         Calendar::load( 'CalendarHelperBase', 'helpers.base' );
         $event_helper = CalendarHelperBase::getInstance( 'event' );
-        $previous_state = $event_helper->getState();
-		$view->assign( 'previous_state', $previous_state );
-		
-		$back_url = $event_helper->getBackToCalendarURL( $instance );
-		$view->assign( 'back_url', $back_url );
-		
-        Calendar::load( 'DisqusAPI', 'library.disqus.disqusapi' );
-        Calendar::load( 'CalendarArticle', 'library.article' );
-        Calendar::load( 'CalendarHelperICal', 'helpers.ical' );
-        Calendar::load( 'CalendarHelperCategory', 'helpers.category' );
+        $state = $event_helper->getState();
 
-        $document = &JFactory::getDocument();
-        $document->setTitle( strip_tags( $instance->event_short_title ) );
-        $document->setDescription( strip_tags( htmlspecialchars_decode( $instance->event_short_description ) ) );
-        
-		parent::display( );
-		return;
+		$state['limit'] = '';		
+		$state['filter_id_from'] = $app->getUserStateFromRequest( $ns . 'id_from', 'filter_id_from', '', '' );
+		$state['filter_id_to'] = $app->getUserStateFromRequest( $ns . 'id_to', 'filter_id_to', '', '' );
+		$state['filter_name'] = $app->getUserStateFromRequest( $ns . 'name', 'filter_name', '', '' );
+		$state['filter_enabled'] = '1';
+	    $state['order'] = 'tbl.eventinstance_date';
+	    $state['direction'] = 'ASC';
+		$state['filter_date_from'] = $state['date'];
+        $state['filter_datetype'] = '';
+
+	    $state['filter_date_to'] = '2013-07-01'; // TODO make this a menu item param
+                
+        JRequest::setVar('month', $state['month'] );
+        JRequest::setVar('year', $state['year'] );
+
+		foreach ( @$state as $key => $value )
+		{
+			$model->setState( $key, $value );
+		}
+		return $state;
+	}
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see CalendarController::display()
+	 */
+	function display($cachable=false, $urlparams = false)
+	{
+	    $this->_setModelState();
+	    $model = $this->getModel( $this->get( 'suffix' ) );
+	    $state = $model->getState();
+	    $view = $this->getView( $this->get( 'suffix' ), 'html' );
+	    
+		JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
+		$calendar = JTable::getInstance( 'Calendars', 'CalendarTable' );
+		$calendar->load( $state->calendar_id );
+
+		// TODO do a validity check -- certain calendars should only display events from today => forward, 
+		// so add that as a boolean param for #__calendars_calendars, and enforce it here
+		
+		if ($model->pingTessituraWebAPI())
+		{
+		    $list = $model->getList();
+		    //$ids = DSCHelper::getColumn( $list, 'dataSourceID' );
+		    //$availability = $model->getAvailability( $ids );
+		
+		}
+		else
+		{
+		    $list = array();
+		    $ids = array();
+		    $availability = array();
+		    $view->set('no_items', true);
+		    $view->set('no_pagination', true);
+		}
+	    
+		$date_navigation = new JObject();
+		$date_navigation->current = $state->filter_date_from;
+		$date_navigation->prev = date('Y-m-d', strtotime( $state->filter_date_from . ' -31 days' ) );
+		$date_navigation->next = date('Y-m-d', strtotime( $state->filter_date_from . ' +31 days' ) );		
+		
+		$count = count($list);
+		
+		$view->assign( 'date_navigation', $date_navigation );
+		$view->assign( 'count', $count );
+		$view->assign( 'calendar', $calendar );
+		
+		parent::display($cachable, $urlparams);
 	}
 	
 	/**
@@ -87,39 +113,7 @@ class CalendarControllerEvents extends CalendarController
 	function filterprimary()
 	{	
 		$this->_setModelState();
-	    $model = $this->getModel( 'month' );
-	    
-		$state = array();
-	    $app = JFactory::getApplication( );
-	    $ns = $this->getNamespace( );
-		$m = JRequest::getVar( 'month' );
-		$y = JRequest::getVar( 'year' );
-		if( empty( $m ) && empty( $y ) )
-		{
-			$state['month'] = date( 'm' );
-			$state['year'] = date( 'Y' );
-		}		
-		else 
-		{
-			$state['month'] = $app->getUserStateFromRequest( $ns . 'month', 'month', '', '' );
-			$state['year'] = $app->getUserStateFromRequest( $ns . 'year', 'year', '', '' );
-		}
-		$state['filter_date_from'] = $state['year'] . '-' . $state['month'] . '-01';
-        $state['filter_datetype'] = 'month';
-        
-	    Calendar::load( 'CalendarHelperBase', 'helpers.base' );
-	    $helper = CalendarHelperBase::getInstance();
-	    $datevars = $helper->setDateVariables( $state['filter_date_from'], null, 'monthly' );
-	    $state['filter_date_to'] = $datevars->nextdate;
-        
-	    $state['order'] = 'tbl.eventinstance_date';
-	    $state['direction'] = 'ASC';
-	    
-		foreach ( @$state as $key => $value )
-		{
-			$model->setState( $key, $value );
-		}
-		
+	    $model = $this->getModel( $this->get( 'suffix' ) );
 	    $state = $model->getState();
 	    
 		// get categories for filtering
@@ -132,14 +126,11 @@ class CalendarControllerEvents extends CalendarController
 		$item_id = $values['Itemid'];
 		$vars->item_id = $item_id;
 		$vars->values = $values;
-		
+				
 		$categories = array();
-		foreach($elements as $element)
+		if (!empty($values['_checked']['primary_category']))
 		{
-			if($element->checked && strpos ( $element->name , 'primary_cat_' ) !== false )
-			{
-				$categories[] = $element->value;
-			}
+		    $categories = $values['_checked']['primary_category'];
 		}
 		
 		$model->setState( 'filter_primary_categories', $categories );
@@ -200,9 +191,15 @@ class CalendarControllerEvents extends CalendarController
 			
 		$vars->date = $date;
 		$vars->days = $days;
-				
-		$html = $this->getLayout( 'default', $vars, 'month' ); 		
-		echo ( json_encode( array('msg'=>$html) ) );
+
+		$module_html = $this->loadModule( JRequest::getVar('module_id') );
+		$html = $this->getLayout( 'default', $vars, 'month' );
+		$html = $this->getLayout( 'calendar', $vars, 'month' );
+		
+		$return = array();
+		$return['content'] = $html;
+		$return['module'] = $module_html; 		
+		echo ( json_encode( $return ) );
 	}
 	
 	/**
@@ -216,40 +213,9 @@ class CalendarControllerEvents extends CalendarController
 	function filtersecondary()
 	{	
 		$this->_setModelState();
-	    $model = $this->getModel( 'month' );
-
-	    $state = array();
-	    $app = JFactory::getApplication( );
-	    $ns = $this->getNamespace( );
-		$m = JRequest::getVar( 'month' );
-		$y = JRequest::getVar( 'year' );
-		if( empty( $m ) && empty( $y ) )
-		{
-			$state['month'] = date( 'm' );
-			$state['year'] = date( 'Y' );
-		}		
-		else 
-		{
-			$state['month'] = $app->getUserStateFromRequest( $ns . 'month', 'month', '', '' );
-			$state['year'] = $app->getUserStateFromRequest( $ns . 'year', 'year', '', '' );
-		}
-		$state['filter_date_from'] = $state['year'] . '-' . $state['month'] . '-01';
-        $state['filter_datetype'] = 'month';
-        
-	    Calendar::load( 'CalendarHelperBase', 'helpers.base' );
-	    $helper = CalendarHelperBase::getInstance();
-	    $datevars = $helper->setDateVariables( $state['filter_date_from'], null, 'monthly' );
-	    $state['filter_date_to'] = $datevars->nextdate;
-        
-	    $state['order'] = 'tbl.eventinstance_date';
-	    $state['direction'] = 'ASC';
+	    $model = $this->getModel( $this->get( 'suffix' ) );
+	    $state = $model->getState();
 	    
-		foreach ( @$state as $key => $value )
-		{
-			$model->setState( $key, $value );
-		}
-		
-        $state = $model->getState();	    
 		// get categories for filtering		
 		// take filter categories and do filtering
 		$elements = json_decode( preg_replace('/[\n\r]+/', '\n', JRequest::getVar( 'elements', '', 'post', 'string' ) ) );
@@ -262,12 +228,10 @@ class CalendarControllerEvents extends CalendarController
 		$vars->item_id = $item_id;
 		$vars->values = $values;
 		
-		foreach($elements as $element)
+		$filter_category = '';
+		if (!empty($values['_checked']['secondary_category']))
 		{
-			if($element->checked && $element->name == 'secondary_category' )
-			{
-				$filter_category = $element->value;
-			}
+		    $filter_category = $values['_checked']['secondary_category'];
 		}
 		$model->setState( 'filter_secondary_category', $filter_category );
 		
@@ -331,138 +295,5 @@ class CalendarControllerEvents extends CalendarController
 		
 		$html = $this->getLayout( 'default', $vars, 'month' ); 
 		echo ( json_encode( array('msg'=>$html) ) );
-	}
-	
-	/**
-	 * 
-	 * Enter description here ...
-	 * @return return_type
-	 */
-	function downloadICal()
-	{
-	    $instance_id = JRequest::getInt( 'instance_id' );
-        JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
-		$instance = JTable::getInstance( 'EventInstances', 'CalendarTable' );
-		$instance->load( $instance_id );
-		
-		if (empty($instance->eventinstance_id))
-		{
-		    return;
-		}
-		
-		$instance->bindObjects();
-		
-		Calendar::load( 'CalendarHelperICal', 'helpers.ical' );
-		$helper = new CalendarHelperICal();
-		$helper->instance = $instance;
-		$helper->download();
-	}
-	
-	/**
-	 * 
-	 * Enter description here ...
-	 * @return return_type
-	 */
-	function getEvents()
-	{
-	    $launch_date = '2011-08-03';
-	    $day_after_launch_date = '2011-08-04';
-	    
-	    JRequest::setVar('format', 'json');
-	    JLoader::import( 'com_calendar.library.json', JPATH_ADMINISTRATOR . DS . 'components' );
-	    
-	    JModel::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/models' );
-	    $model = JModel::getInstance( 'EventInstances', 'CalendarModel' );
-	    $model->setState('filter_enabled', '1' );
-	    
-	    $date = JRequest::getVar('date');
-	    switch ($date)
-	    {
-	        case "featured":
-	            // startdate == today + 2
-	            $jdate = JFactory::getDate( strtotime('today +2 days') );
-	            $day = $jdate->toFormat( '%Y-%m-%d' );
-	            $model->setState('filter_date_from', $day );
-	            $model->setState('filter_datetype', 'date' );
-	            
-	            $model->setState('filter_digital_signage', '1' );
-	            $limit = JRequest::getInt('limit', 3);
-	            $model->setState('limit', $limit );
-	            $obj_name = "var objFeatured";
-	            break;
-	        case "tomorrow":
-	            $jdate = JFactory::getDate( strtotime('tomorrow') );
-	            $day = $jdate->toFormat( '%Y-%m-%d' );
-	    	    if ($day < $day_after_launch_date)
-	            {
-	                //$day = $day_after_launch_date;
-	            }
-        	    $model->setState('filter_date_from', $day );
-        	    $model->setState('filter_date_to', $day );
-        	    $model->setState('filter_datetype', 'date' );
-        	    $obj_name = "var objTomorrow";
-	            break;
-	        case "today":
-	            $jdate = JFactory::getDate( strtotime('today') );
-	            $day = $jdate->toFormat( '%Y-%m-%d' );
-	            if ($day < $launch_date)
-	            {
-	                //$day = $launch_date;
-	            }
-        	    $model->setState('filter_date_from', $day );
-        	    $model->setState('filter_date_to', $day );
-        	    $model->setState('filter_datetype', 'date' );
-        	    $obj_name = "var objToday";
-	            break;
-	        default:
-	            if (empty($date))
-	            {
-	                $jdate = JFactory::getDate( strtotime('today') );
-	            } 
-	                else
-	            {
-	                $jdate = JFactory::getDate( strtotime( $date ) );
-	            }
-	            $day = $jdate->toFormat( '%Y-%m-%d');
-        	    $model->setState('filter_date_from', $day );
-        	    $model->setState('filter_date_to', $day );
-        	    $model->setState('filter_datetype', 'date' );
-        	    $obj_name = "var objDate";
-	            break;
-	    }
-		$query = $model->getQuery( );
-		$query->order( 'tbl.eventinstance_date' );
-		$query->order( 'tbl.eventinstance_start_time' );
-		$query->group( 'tbl.event_id' );
-		$model->setQuery( $query );
-		
-		if (!$list = $model->getList())
-		{
-		    $list = array();
-		    $object = new stdClass();
-		    $object->error = JText::_( "No Events Scheduled" );
-		    $list[] = $object;
-		} 
-		    else
-		{
-		    $keys = array( 'eventinstance_date', 'eventinstance_start_time', 'event_short_title', 'event_full_image', 'event_id', 'eventinstance_id' );
-		    foreach ($list as $item)
-		    {
-		        $props = get_object_vars( $item );
-		        foreach ($props as $key=>$prop)
-		        {
-		            if (!in_array($key, $keys))
-		            {
-		                unset($item->$key);
-		            }
-		        }
-		    }
-		}
-	    
-		$response = new stdClass();
-		$response->data = $list;
-		$string = json_encode( $response );
-		$string = $obj_name . " = " . $string;
-		echo $string;
 	}
 }

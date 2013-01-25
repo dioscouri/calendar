@@ -39,7 +39,7 @@ class CalendarControllerDay extends CalendarController
 		$state['filter_enabled'] = '1';
 	    $state['order'] = 'tbl.eventinstance_date';
 	    $state['direction'] = 'ASC';
-	    $state['filter_date_from'] = $state['current_date'];
+	    $state['filter_date_from'] = $state['date'];
         $state['filter_datetype'] = 'date';
 	    $state['filter_date_to'] = $state['filter_date_from'];
 	    
@@ -53,108 +53,56 @@ class CalendarControllerDay extends CalendarController
 		return $state;
 	}
 	
-	function display( )
+	function display($cachable=false, $urlparams = false)
 	{
-		// make date and time variables
-		$this->_setModelState();
+	    $this->_setModelState();
 	    $model = $this->getModel( $this->get( 'suffix' ) );
 	    $state = $model->getState();
+	    $view = $this->getView( $this->get( 'suffix' ), 'html' );
 	    
-	    // order data by time
-		$query = $model->getQuery( );
-		$query->order( 'tbl.eventinstance_start_time' );
-		$model->setQuery( $query );
+		JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
+		$calendar = JTable::getInstance( 'Calendars', 'CalendarTable' );
+		$calendar->load( $state->calendar_id );
+
+		// TODO do a validity check -- certain calendars should only display events from today => forward,
+		// so add that as a boolean param for #__calendars_calendars, and enforce it here
+		$defines = Calendar::getInstance();
+		$document = JFactory::getDocument();
+		$document->addScriptDeclaration( "window.async_actionbuttons = " . $defines->get('async_actionbuttons') );
 		
-		$list = $model->getList();
-	    		
-		$date->current = $state->filter_date_from; 
-		
-		$date->month = date( 'm', strtotime($date->current) );
-		$date->year = date( 'Y', strtotime($date->current) );
-		$date->month_name = date( 'F', strtotime( $date->year . '-' . $date->month . '-01' ) );
-		
-		// date and time variables 
-		$date->hours = $this->getHours( );
-		$date->nonworkingdays = $this->getNonWorkingDays( );
-		
-		// navigation dates
-		$date->nextdaydate = date( 'Y-m-d', strtotime( $date->current . ' +1 day' ) );
-		$date->nextmonth   = date( 'm',     strtotime( $date->current . ' +1 day' ) );
-		$date->nextyear    = date( 'Y',     strtotime( $date->current . ' +1 day' ) );
-		$date->prevdaydate = date( 'Y-m-d', strtotime( $date->current . ' -1 day' ) );
-		$date->prevmonth   = date( 'm',     strtotime( $date->current . ' -1 day' ) );
-		$date->prevyear    = date( 'Y',     strtotime( $date->current . ' -1 day' ) );
-		
-		// affix the Closed Days to the end of the list array
-	    Calendar::load( 'CalendarHelperCalendar', 'helpers.calendar' );
-	    $helper = new CalendarHelperCalendar();
-		$config = Calendar::getInstance();
-		$non_working_days = $config->get('non_working_days');
-		$closed_days = explode(',', $non_working_days);
-		$closed_days_array = array();
-		foreach( $closed_days as $day_of_week )
+		if ($model->pingTessituraWebAPI())
 		{
-		    $closed_days_array[] = $helper->getDaysOfMonth($date->month, $date->year, trim( $day_of_week ) );
-		}
-		
-		foreach ($closed_days_array as $closed_days_of_month)
-		{
-		    foreach ($closed_days_of_month as $closed_day)
-		    {
-		        if ($closed_day == $date->current)
-		        {
-    		        $instance = JTable::getInstance( 'EventInstances', 'CalendarTable' );
-    		        $instance->eventinstance_date = $closed_day;
-    		        $instance->isClosedDay = true;
-    		        $list[] = $instance;
-		        }
+		    $list = $model->getList();
+			if ($defines->get('async_actionbuttons')) {
+		        $ids = array();
+		        $availability = array();
+		    } else {
+		        $ids = DSCHelper::getColumn( $list, 'dataSourceID' );
+		        $availability = $model->getAvailability( $ids );		        
 		    }
 		}
-		
-		$instance = JTable::getInstance( 'EventInstances', 'CalendarTable' );		
-		$days = array();
-		foreach ($list as $item)
+		else
 		{
-		    $day = $item->eventinstance_date;
-		    if (empty($days[$day]))
-		    {
-		        $days[$day] = new JObject();
-		        $days[$day]->dateTime = strtotime( $day );
-		        $days[$day]->dateMySQL = $day;
-		        $days[$day]->events = array();
-		    }
-		    
-			if (!empty($item->isClosedDay))
-		    {
-		        $days[$day]->isClosed = true;
-		        $days[$day]->text = JText::_( $config->get( 'non_working_day_text', 'Lab closed' ) );
-		    } 
-		        else 
-		    {
-    		    $instance->event_full_image = $item->event_full_image;
-    		    $item->image_src = $instance->getImage('src');
-    		    $days[$day]->events[] = $item;
-		    }
+		    $list = array();
+		    $ids = array();
+		    $availability = array();
+		    $view->set('no_items', true);
+		    $view->set('no_pagination', true);
 		}
+	    
+		$date_navigation = new JObject();
+		$date_navigation->current = $state->filter_date_from;
+		$date_navigation->prev = date('Y-m-d', strtotime( $state->filter_date_from . ' -1 days' ) );
+		$date_navigation->next = date('Y-m-d', strtotime( $state->filter_date_from . ' +1 days' ) );		
 		
-		ksort($days);
-		$view = $this->getView( $this->get( 'suffix' ), 'html' );
-		$view->assign( 'date', $date );
-		$view->assign( 'days', $days );
+		$count = count($list);
 		
-		$workingday = new JObject();
-		$workday_text = $config->get( 'working_day_text' );
-		$workday_url = $config->get( 'working_day_link' );
-		$workday_url_label = $config->get( 'working_day_link_text' ); 
-		if (!empty($workday_text))
-		{
-		    $workingday->text = $workday_text;
-		    $workingday->url = $workday_url;
-		    $workingday->url_label = $workday_url_label; 
-		}
-		$view->assign( 'workingday', $workingday );
+		$view->assign( 'date_navigation', $date_navigation );
+		$view->assign( 'count', $count );
+		$view->assign( 'calendar', $calendar );
+		$view->assign( 'availability', $availability );
 		
-		parent::display( );
+		parent::display($cachable, $urlparams);
 	}
 	
 	/**

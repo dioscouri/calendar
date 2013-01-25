@@ -1,0 +1,160 @@
+<?php
+/**
+ * @version    1.5
+ * @package    Calendar
+ * @author     Dioscouri Design
+ * @link     http://www.dioscouri.com
+ * @copyright Copyright (C) 2009 Dioscouri Design. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ */
+defined( '_JEXEC' ) or die( 'Restricted access' );
+$counter = 0;
+$base_url = 'index.php?option=com_calendar&Itemid=' . $item_id;
+?>
+
+<div id="event-view-navigation" class="wrap full">
+	<div class="full tabs tabs-white">
+	    <div class="tab">
+    	    <a class="full" href="<?php echo JRoute::_( $event_helper->getBackToCalendarURL() . $itemid_string ); ?>">
+    	        <?php echo JText::_( "Back to Results" ); ?>
+    	    </a>
+	    </div>
+	</div>
+
+	<?php if (!empty($surrounding['prev']) || !empty($surrounding['next'])) { ?>
+    <ul class="full tabs tabs-white table">
+        
+		<li class="tab cell control medium prev<?php if (empty($surrounding['prev'])) { echo '-null'; } ?>">
+		    <?php if (!empty($surrounding['prev'])) { ?>
+		    <a class="" href="<?php echo JRoute::_( "index.php?option=com_calendar&view=event&id=" . $surrounding['prev'] . "&Itemid=" . $item_id ); ?>">
+		        <?php echo JText::_( "Prev" ); ?>
+		    </a>
+		    <?php } ?>
+		</li>
+		
+		<li class="tab cell control medium next<?php if (empty($surrounding['next'])) { echo '-null'; } ?>">
+		    <?php if (!empty($surrounding['next'])) { ?>
+		    <a class="control" href="<?php echo JRoute::_( "index.php?option=com_calendar&view=event&id=" . $surrounding['next'] . "&Itemid=" . $item_id ); ?>">
+		        <?php echo JText::_( "Next" ); ?>
+		    </a>
+		    <?php } ?>
+		</li>
+		
+    </ul>
+    <?php } ?>
+        
+</div>
+
+<div id="calendar-toggle" class="tabs" onclick="jQuery('#calendar').slideToggle( '2000' );">
+    <div class="tab">
+        <a href="javascript:void(0);">
+        <?php echo JText::_( "Calendar" ) ?>
+        </a>
+    </div>
+</div>
+
+<div id="calendar" style="display: none;">
+
+    <div id="calendar-view-navigation" class="wrap full">
+        <ul class="full table tabs">
+    		<li class="tab cell <?php if ($state['view'] == 'month') { echo "open"; } ?>">
+    		    <a class="" href="<?php if ($state['view'] == 'month') { echo "javascript:void(0);"; } else { echo JRoute::_( $base_url . "&view=month&date=" . $state['date'] ); } ?>">
+    		        <?php echo JText::_( "Month" ); ?>
+    		    </a>
+    		</li>
+    		<li class="tab cell <?php if ($state['view'] == 'week') { echo "open"; } ?>">
+    		    <a class="" href="<?php if ($state['view'] == 'week') { echo "javascript:void(0);"; } else { echo JRoute::_( $base_url . "&view=week&date=" . $state['date'] ); } ?>">
+    		        <?php echo JText::_( "Week" ); ?>
+    		    </a>
+    		</li>
+    		<li class="tab cell <?php if ($state['view'] == 'day') { echo "open"; } ?>">
+    		    <a class="" href="<?php if ($state['view'] == 'day') { echo "javascript:void(0);"; } else { echo JRoute::_( $base_url . "&view=day&date=" . $state['date'] ); } ?>">
+    		        <?php echo JText::_( "Day" ); ?>
+    		    </a>
+    		</li>
+        </ul>    
+    </div>
+
+    <div id="current-month" class="wrap">
+        <?php echo date( 'M j', strtotime( $state['date'] ) );
+        if ($state['date'] == $date->currentdate_end) {
+            echo date( ', Y', strtotime(  $state['date'] ) );
+        } else {
+            echo "-" . date( 'M j, Y', strtotime(  $date->currentdate_end ) );
+        } ?>
+        <div id="date-navigation" class="wrap right">
+            <ul class="controls controls-medium flat">
+        		<li class="prev"><a href="<?php echo JRoute::_( 'index.php?option=com_calendar&view='.$date->handler.'&date=' . $date->navigation->prev . $itemid_string ); ?>"><?php echo JText::_( "Previous" ); ?></a></li>
+        		<li class="next"><a href="<?php echo JRoute::_( 'index.php?option=com_calendar&view='.$date->handler.'&date=' . $date->navigation->next . $itemid_string ); ?>"><?php echo JText::_( "Next" ); ?></a></li>
+            </ul>    
+        </div>
+    </div>
+    
+    <ol class="days-of-week flat">
+        <li>SU</li>
+        <li>M</li>
+        <li>T</li>
+        <li>W</li>
+        <li>T</li>
+        <li>F</li>
+        <li class="last">SA</li>
+    </ol>
+    
+    <ol class="dates flat">
+        <?php
+            $n = ($date->currentdate_dayofweek_start == 0) ? 7 : $date->currentdate_dayofweek_start;
+            while ($n>0)
+            {
+                $this_date = date( 'Y-m-d', strtotime( $state['date'] . ' -' . $n . ' days' ) );
+                $counter++;
+                ?>
+                <li class="inactive <?php if (!($counter % 7)) { echo "last "; } ?>">
+                    <a href="<?php echo JRoute::_( $base_url . "&view=" . $state['view'] . "&date=" . $this_date ); ?>">
+                        <?php echo date( 'j', strtotime( $this_date ) ); ?>
+                    </a>
+                </li>
+                <?php
+                $n--;
+            } 
+            
+            $this_date = $state['date'];
+            for ( $i = 0; $this_date <= $date->currentdate_end; $i++, $this_date = date( 'Y-m-d', strtotime( $state['date'] . ' +' . $i . ' days' ) ) )
+            {
+                $counter++;
+                $is_first = false;
+                if (is_object($item->startDateTime) && $this_date == $item->startDateTime->format('Y-m-d')) {
+                    $is_first = true;
+                }
+                ?>
+                <li class="active <?php if ($is_first) { echo "today "; } if (!($counter % 7)) { echo "last "; } ?>">
+                    <a href="<?php echo JRoute::_( $base_url . "&view=" . $state['view'] . "&date=" . $this_date ); ?>">
+                        <?php echo date( 'j', strtotime( $this_date ) ); ?>
+                    </a>
+                </li>
+                <?php
+            }
+
+            $n = 1;
+            $remainder = (6  - $date->currentdate_dayofweek_end == 0) ? 7 : 6  - $date->currentdate_dayofweek_end;
+            if ($counter + $remainder < $date->minimum_number_of_weeks * 7) {
+                $remainder = $date->minimum_number_of_weeks * 7 - $counter;
+            }
+            
+            while ($n<=$remainder)
+            {
+                $this_date = date( 'Y-m-d', strtotime( $date->currentdate_end . ' +' . $n . ' days' ) );
+                $counter++;
+                ?>
+                <li class="inactive <?php if (!($counter % 7)) { echo "last "; } ?>">
+                    <a href="<?php echo JRoute::_( $base_url . "&view=" . $state['view'] . "&date=" . $this_date ); ?>">
+                        <?php echo date( 'j', strtotime( $this_date ) ); ?>
+                    </a>
+                    
+                </li>
+                <?php
+                $n++;
+            } 
+            ?>
+    </ol>
+
+</div>

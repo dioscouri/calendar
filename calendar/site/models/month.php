@@ -15,11 +15,7 @@ Calendar::load( 'CalendarModelEventinstances', 'models.eventinstances' );
 
 class CalendarModelMonth extends CalendarModelEventinstances
 {
-	/*
-	 * Required the Table of event instances it will return eventinstances table object
-	 *  
-	 */ 
-	function &getTable( $name = 'eventinstances', $prefix = 'CalendarTable', $options = array( ) )
+	function getTable( $name = 'eventinstances', $prefix = 'CalendarTable', $options = array( ) )
 	{
 		if ( empty( $name ) )
 		{

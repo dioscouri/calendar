@@ -38,12 +38,20 @@ class CalendarControllerTypes extends CalendarController
 		$state['filter_id_from'] = $app->getUserStateFromRequest( $ns . 'id_from', 'filter_id_from', '', '' );
 		$state['filter_id_to'] = $app->getUserStateFromRequest( $ns . 'id_to', 'filter_id_to', '', '' );
 		$state['filter_name'] = $app->getUserStateFromRequest( $ns . 'name', 'filter_name', '', '' );
+		$state['filter_admin_only'] = $app->getUserStateFromRequest( $ns . 'admin_only', 'filter_admin_only', '', '' );
 		
 		foreach ( @$state as $key => $value )
 		{
 			$model->setState( $key, $value );
 		}
 		return $state;
+	}
+	
+	public function save()
+	{
+		$row = parent::save();
+		
+		$this->clearAllCache();
 	}
 }
 

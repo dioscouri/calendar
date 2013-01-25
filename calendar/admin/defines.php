@@ -45,7 +45,10 @@ class Calendar extends DSC
     var $disqus_forum_id                    = '';
     var $default_date                       = '';
     
-	
+    var $strip_tags_eventinstance_description_short = '';
+    var $async_actionbuttons = '';
+    var $enable_favorites = '0';
+    
 	/**
 	 * Returns the query
 	 * @return string The query to be used to retrieve the rows from the database

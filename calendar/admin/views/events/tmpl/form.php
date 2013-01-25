@@ -7,269 +7,251 @@
 <?php JHTML::_('behavior.tooltip'); ?>
 <?php $categories_list = @$this->categories_list ?>
 <?php $config = Calendar::getInstance(); ?>
+<?php $editor = JFactory::getEditor( ); ?>
 
 <div id="validation_message"></div>
 
-<form action="<?php echo JRoute::_( @$form['action'] ) ?>" method="post" class="adminform" name="adminForm" id="adminForm" enctype="multipart/form-data" onsubmit="Dsc.formValidation( '<?php echo @$form['validation_url']; ?>', 'validation_message', document.adminForm.task.value, document.adminForm );" >
+<form action="<?php echo JRoute::_( @$form['action'] ) ?>" method="post" class="adminform" name="adminForm" id="adminForm" enctype="multipart/form-data" onsubmit="Dsc.formValidation( '<?php echo @$form['validation_url']; ?>', 'validation_message', document.adminForm.task.value, document.adminForm );">
 
+    <div class="tabbable">
+        <!-- Only required for left/right tabs -->
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab1" data-toggle="tab">Basic Information</a></li>
+            <li><a href="#publication" data-toggle="tab">Publication</a></li>
+            <li><a href="#tab2" data-toggle="tab">Descriptions</a></li>
+            <li><a href="#program-notes" data-toggle="tab">Program Notes</a></li>
+            <li><a href="#tab3" data-toggle="tab">Multimedia</a></li>
+            <li><a href="#tab4" data-toggle="tab">Gory Details</a></li>
+        </ul>
 
-<div class="tabbable"> <!-- Only required for left/right tabs -->
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab1" data-toggle="tab">Basic Information</a></li>
-    <li><a href="#tab2" data-toggle="tab">Descriptions</a></li>
-    <li><a href="#tab3" data-toggle="tab">Multimedia</a></li>
-  </ul>
-  <div class="tab-content">
-    <div class="tab-pane active" id="tab1">
-     <fieldset>
-			<table class="admintable">
-				<tr>
-					<td style="width: 100px; text-align: right;" class="key">
-						<?php echo JText::_( 'Short Title' ); ?>:
-					</td>
-					<td>
-						<input type="text" name="event_short_title" value="<?php echo @$row->event_short_title; ?>" size="72" maxlength="250" style="font-size: 20px;" />
-                        <br/>
-                        Please limit to 60 characters
-					</td>
-				</tr>
-                <tr>
-                    <td style="width: 100px; text-align: right;" class="key">
-                        <?php echo JText::_( 'Long Title' ); ?>:
-                    </td>
-                    <td>
-                        <input name="event_long_title" value="<?php echo @$row->event_long_title; ?>" type="text" size="150" maxlength="250" />
-                        <br/>
-                        Please limit to 100 characters
-                    </td>
-                </tr>
-				<tr>
-                    <td style="width: 100px; text-align: right;" class="key">
-                        <?php echo JText::_( 'Alias' ); ?>:
-                    </td>
-                    <td>
-                        <input name="event_alias" value="<?php echo @$row->event_alias; ?>" type="text" size="48" maxlength="250" />
-                        <br/>
-                        This will be automatically created for you
-                    </td>
-                </tr>
-    			<tr>
-                    <td style="width: 100px; text-align: right;" class="key">
-                        <?php echo JText::_( 'Calendar' ); ?>:
-                    </td>
-                    <td>
-    					<?php echo CalendarSelect::type( @$row->type_id, 'type_id', '', 'type_id', false, true ); ?>
-    				</td>
-                </tr>
-                <tr>
-    				<td style="width: 100px; text-align: right;" class="key">
-    					<label for="enabled">
-    						<?php echo JText::_( 'Published' ); ?>:
-    					</label>
-    				</td>
-    				<td>
-    					<?php echo JHTML::_( 'select.booleanlist', 'event_published', '', @$row->event_published ); ?>
-    				</td>
-    			</tr>
-                <tr>
-    				<td style="width: 100px; text-align: right;" class="key">
-    					<label for="enabled">
-    						<?php echo JText::_( 'Enable in Upcoming Events Queue' ); ?>:
-    					</label>
-    				</td>
-    				<td>
-    					<?php echo JHTML::_( 'select.booleanlist', 'event_upcoming_enabled', '', @$row->event_upcoming_enabled ); ?>
-    				</td>
-    			</tr>
-                <?php /*<tr>
-    				<td style="width: 100px; text-align: right;" class="key">
-    					<label for="event_full_image">
-    					<?php echo JText::_( 'Image' ); ?>:
-    					</label>
-    				</td>
-    				<td>
-    					
-						if ( !empty( $row->event_full_image ) )
-						{
-							$table = JTable::getInstance( 'Events', 'CalendarTable' );
-							$table->load( @$row->event_id );
-							$img = "<img src='" .$table->getImage('full', true). "' height='128px' />";
-							echo CalendarUrl::popup( $table->getImage( 'full', true ), $img, array( 'update' => false, 'img' => true ) );
-						} 
-						
-    					<br />
-    					<input type="text" name="event_full_image" id="event_full_image" size="125" value="<?php echo @$row->event_full_image; ?>" />
-                        <br />
-                        Please enter the full URL to the image
-						 * 
-    				</td>
-    			</tr>*/
-                      
-                 ?>
-    			<tr>
-    				<td style="width: 100px; text-align: right;" class="key">
-    					<label for="event_full_image_new">
-    					<?php echo JText::_( 'Upload New Image' ); ?>:
-    					</label>
-    				</td>
-    				<td>
-    					<input name="event_full_image_new" type="file" size="40" />
-    				</td>
-    			</tr> 
-    		
-    			<tr>
-    				<td style="width: 100px; text-align: right;" class="key">
-    					<label for="event_primary_category_id">
-    					<?php echo JText::_( 'Primary Category' ); ?>:
-    					</label>
-    				</td>
-    				<td>
-    					<div>
-        					<?php echo JText::_( 'Select an existing one' ); ?>:
-    					    <?php echo CalendarSelect::category( @$row->event_primary_category_id, 'event_primary_category_id', '', 'event_primary_category_id', true, false, 'Select Category' ); ?>
-    					</div>
-                        
-                        <?php if ($config->get('enable_add_new')) { ?>
-                        <div>
-        					<?php echo JText::_( 'Or enter new one' ); ?>:
-    						<input name="new_primary_category_name" value="" type="text" size="48" maxlength="250" />
-    					</div>
-                        <?php } ?>
-    				</td>
-    			</tr>             
-    			<tr>
-					<td style="width: 100px; text-align: right;" class="key">
-						<?php echo JText::_( 'Select Secondary Categories' ); ?>:
-					</td>
-					<td>
-                        <?php $cat_attribs = array('class' => 'inputbox', 'size' => '10', 'multiple' => 'multiple'); ?>
-                        <?php echo CalendarSelect::secondcategory( $this->secondary_categories, 'secondary_categories[]', $cat_attribs, 'secondary_categories', false, false ); ?>
-                        <?php if ($config->get('enable_add_new')) { ?>
-                        <div>
-        					<?php echo JText::_( 'Or enter new one' ); ?>:
-    						<input name="new_secondary_category_name" value="" type="text" size="48" maxlength="250" />
-    					</div>
-                        <?php } ?>
-					</td>
-				</tr>
-				<tr>
-    				<td style="width: 100px; text-align: right;" class="key">    					
-    					<?php echo JText::_( 'Series' ); ?>:    					
-    				</td>
-    				<td>
-    					<div>
-    					<?php echo JText::_( 'Select an existing one' ); ?>:  					
-    					<?php
-						echo CalendarSelect::series( @$row->series_id, 'series_id', '', 'series_id', true, 'No Series Selected' );
-						?>
-    					</div>
-                        <?php if ($config->get('enable_add_new')) { ?>
-    					<div>
-        					<?php echo JText::_( 'Or enter new one' ); ?>: 
-    						<input name="new_series_name" value="" type="text" size="48" maxlength="250" />
-    					</div>
-                        <?php } ?>
-    				</td>
-    			</tr>
-               
-    			<tr>
-                    <td style="width: 100px; text-align: right;" class="key">
-                        <?php echo JText::_( 'Display Type' ); ?>:
-                    </td>
-                    <td>
-    					<?php echo CalendarSelect::displaytype( @$row->event_display_type, 'event_display_type', '', 'event_display_type', false, true ); ?>
-    				</td>
-                </tr>
-            	<?php 
-            	if (!empty($row->event_id)) 
-            	{
-                	$tagsHelper = new CalendarHelperTags();
-                	if ($tagsHelper->isInstalled()) 
-                	{ 
-                    	?>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+                <fieldset>
+                    <table class="table table-striped table-bordered">
                         <tr>
-                    		<td colspan="2">
-                    			<?php echo $tagsHelper->getForm( $row->event_id ); ?>
-                    		</td>
-                    	</tr>
-            		    <?php 
-                	}
-                } 
-                ?>
-                
-            </table>
-    </fieldset>
-     <div style="clear: both;"></div>
-    
-    <p></p>
-    
-    <?php
-    if ( !empty( $row->event_id ) )
-    {						
-    	echo $this->loadTemplate( 'instance' );
-    }
-    ?>
-        
-	
-		<h3><?php echo JText::_( 'Existing Event Instances' ); ?></h3>
-        
-        <div id="event_instances">
-            <?php echo $this->loadTemplate( 'instances' ); ?>
-        </div>
-	
+                            <td class="dsc-key"><?php echo JText::_( 'Title' ); ?>:</td>
+                            <td>
+                                <input name="title" value="<?php echo @$row->title; ?>" type="text" size="100" maxlength="250" style="font-size: 20px;" />
+                                <?php if (!empty($row->avInternalTitle) && $row->avInternalTitle != $row->title) { ?>
+                                    <p class="dsc-tip">&nbsp;&nbsp;&bull;&nbsp;&nbsp;<b>AV Internal Title:</b> <?php echo $row->avInternalTitle; ?></p>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Subtitle' ); ?>:</td>
+                            <td>
+                                <input name="subtitle" value="<?php echo @$row->subtitle; ?>" type="text" size="100" maxlength="250" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Date and Time' ); ?>:</td>
+                            <td>
+                                <h3>
+                                    <?php echo @$row->getFirstDate()->format('l, M j, Y, g:ia'); ?>
+                                    -
+                                    <?php echo @$row->getLastDate()->format('l, M j, Y, g:ia'); ?>
+                                </h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Venue' ); ?>:</td>
+                            <td>
+                                <h4>
+                                    <?php echo @$row->getPrimaryVenue()->name; ?>
+                                </h4>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Prices' ); ?>:</td>
+                            <td>
+                                <textarea id="displayPrices" name="displayPrices" style="height: 100px; width: 350px;"><?php echo @$row->displayPrices; ?></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Primary Event Type' ); ?>:</td>
+                            <td><?php echo CalendarSelect::type( @$row->type_id, 'type_id', '', 'type_id', true ); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Additional Event Types' ); ?>:</td>
+                            <td>
+                                <p class="dsc-tip">Use Ctrl+click to select multiple additional event types</p>
+                                <?php echo CalendarSelect::type( @$row->event_types, 'eventtypes[]', array('class' => 'inputbox', 'size' => '10', 'multiple'=>'multiple'), 'eventtypes' ); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Local Image' ); ?>:</td>
+                            <td><?php $media = new DSCElementMedia(); ?> <?php echo $media->fetchElement( 'event_full_image', @$row->event_full_image ); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Sponsors' ); ?>:</td>
+                            <td>
+                                <?php $editor = JFactory::getEditor( ); ?>
+                                <?php echo $editor->display( 'event_sponsors', @$row->event_sponsors, '100%', '150', '100', '10' ); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key">
+                            <?php echo JText::_( 'Actionbutton URL Override' ); ?>:
+                            </td>
+                            <td>
+                                <input name="event_actionbutton_url" type="text" value="<?php echo @$row->event_actionbutton_url; ?>" class="input-xxlarge" />
+                        		<p class="dsc-tip dsc-clear">
+                        		If provided, this will take priority over the Event Type's actionbutton URL and the Tess/AV purchase URL.
+                                If you need a unique URL for a specific performance, edit that performance.
+                                Leave this blank to just use the default. 
+                        		</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key">
+                            <?php echo JText::_( 'Actionbutton Label Override' ); ?>:
+                            </td>
+                            <td>
+                                <input name="event_actionbutton_label" type="text" value="<?php echo @$row->event_actionbutton_label; ?>" class="input-xlarge" />
+                        		<p class="dsc-tip dsc-clear">
+                        		If provided, this will take priority over the Event Type's actionbutton label and the Tess/AV default label.
+                                If you need a unique label for a specific performance, edit that performance.
+                                Leave this blank to just use the default. 
+                        		</p>
+                            </td>
+                        </tr>
+                        <?php 
+                        if (!empty($row->event_id))
+                        {
+                            $tagsHelper = new CalendarHelperTags();
+                            if ($tagsHelper->isInstalled())
+                            {
+                                ?>
+                        <tr>
+                            <td colspan="2"><?php echo $tagsHelper->getForm( $row->event_id ); ?>
+                            </td>
+                        </tr>
+                        <?php 
+                            }
+                        } 
+                            else 
+                        {
+                            echo "Save this item to be able to add Tags";
+                        }
+                        ?>
 
-     
+                    </table>
+                </fieldset>
+
+                <div style="clear: both;"></div>
+
+                <p></p>
+
+            </div>
+            
+            <div class="tab-pane fade" id="publication">
+                <fieldset>
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Published' ); ?>:</td>
+                            <td>
+                                <?php echo JHTML::_( 'select.booleanlist', 'published', '', @$row->published ); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'On Sale' ); ?>:</td>
+                            <td>
+                                <?php echo JHTML::_( 'select.booleanlist', 'onSale', '', @$row->onSaleArtsVisionCol ); ?>
+                                <p class="dsc-tip">This only applies to ArtsVision events.</p>
+                            </td>
+                        </tr>
+                        <?php if ($row->startPublishing) { ?>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Start Publishing' ); ?>:</td>
+                            <td>
+                                <?php echo JHTML::calendar( @$row->startPublishing->format('Y-m-d'), "startPublishing", "startPublishing", '%Y-%m-%d', array('size'=>'20') ); ?>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                    </table>
+                </fieldset>
+            </div>
+            
+            <div class="tab-pane fade" id="tab2">
+                <fieldset>
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Short Description' ); ?>:</td>
+                            <td>
+                                <?php echo $editor->display( 'shortDescription', @$row->shortDescription, '100%', '300', '100', '20' ); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Long Description' ); ?>:</td>
+                            <td>
+                                <?php echo $editor->display( 'fullDescription', @$row->fullDescription, '100%', '300', '100', '20' ); ?>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+            
+            <div class="tab-pane fade" id="program-notes">
+                <fieldset>
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Program Notes' ); ?>:</td>
+                            <td>
+                                <?php echo $editor->display( 'programNotes', @$row->programNotes, '100%', '300', '100', '20' ); ?>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+
+            <div class="tab-pane" id="tab3">
+
+                <fieldset>
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Event Multimedia' ); ?>:</td>
+                            <td><?php // ******************** MEDIAMANAGER ITEMS ******************** ?> <?php if (JFile::exists( JPATH_ADMINISTRATOR.DS."components".DS."com_mediamanager".DS."defines.php" )) { ?> <?php
+                            if ( !class_exists('MediaManager') ) {
+                                JLoader::register( "MediaManager", JPATH_ADMINISTRATOR.DS."components".DS."com_mediamanager".DS."defines.php" );
+                            }
+                            JModel::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_mediamanager/models' );
+                            $model = JModel::getInstance( 'ElementMedia', 'MediaManagerModel' );
+                            echo $model->fetchElement( 'mediamanager_id', @$row->mediamanager_id );
+                            echo $model->clearElement( 'mediamanager_id', '' );
+                            ?> <?php } ?> <?php /*$editor = JFactory::getEditor( ); ?>
+                        <?php echo $editor->display( 'event_multimedia', @$row->event_multimedia, '100%', '450', '100', '20' ); */ ?>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+            
+            <div class="tab-pane" id="tab4">
+
+                <fieldset>
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'DataSource ID' ); ?>:</td>
+                            <td><?php echo @$row->datasource_id; ?></td>
+                        </tr>
+                        <tr>
+                            <td class="dsc-key"><?php echo JText::_( 'Old Web ID' ); ?>:</td>
+                            <td>
+                                <input name="oldWebID" value="<?php echo @$row->oldWebID; ?>" type="text" size="10" maxlength="250" />
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+                
+            </div>
+            
+        </div>
     </div>
-    <div class="tab-pane fade" id="tab2">
-    <fieldset>
-            <table class="admintable">
-                <tr>
-                    <td style="width: 100px; text-align: right;" class="key">
-                        <?php echo JText::_( 'Short Description' ); ?>:
-                    </td>
-                    <td>
-                        <?php $editor = JFactory::getEditor( ); ?>
-                        <?php echo $editor->display( 'event_short_description', @$row->event_short_description, '100%', '450', '100', '20' );
-                        ?>
-                    </td>
-                </tr>  
-                <tr>
-                    <td style="width: 100px; text-align: right;" class="key">
-                        <?php echo JText::_( 'Long Description' ); ?>:
-                    </td>
-                    <td>
-                        <?php $editor = JFactory::getEditor( ); ?>
-                        <?php echo $editor->display( 'event_long_description', @$row->event_long_description, '100%', '450', '100', '20' );
-                        ?>
-                    </td>
-                </tr>           
-            </table>
-    </fieldset>
-    </div>
-    
-    <div class="tab-pane" id="tab3">
-    
-    <fieldset>
-            <table class="admintable">
-                <tr>
-                    <td style="width: 100px; text-align: right;" class="key">
-                        <?php echo JText::_( 'Event Multimedia' ); ?>:
-                    </td>
-                    <td>
-                        <?php $editor = JFactory::getEditor( ); ?>
-                        <?php echo $editor->display( 'event_multimedia', @$row->event_multimedia, '100%', '450', '100', '20' );
-                        ?>
-                    </td>
-                </tr>                
-            </table>
-    </fieldset>
-    </div>
-  </div>
-</div>
 
     <div>
-        <input type="hidden" name="id" value="<?php echo @$row->event_id; ?>" />
-        <input type="hidden" name="task" id="task" value="" />
+        <input type="hidden" name="id" value="<?php echo @$row->getDataSourceID(); ?>" /> <input type="hidden" name="task" id="task" value="" />
     </div>
-    
+
 </form>

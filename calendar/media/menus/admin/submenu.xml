@@ -13,6 +13,10 @@
 		<url>index.php?option=com_calendar&#38;view=series</url>
 	</link>
     <link>
+        <name>Packages</name>
+        <url>index.php?option=com_calendar&#38;view=packages</url>
+    </link>
+    <link>
         <name>Action Buttons</name>
         <url>index.php?option=com_calendar&#38;view=actionbuttons</url>
     </link>

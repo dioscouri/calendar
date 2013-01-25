@@ -22,6 +22,55 @@
 		</language>
 	</languages>
     
+    
+    <!-- Joomla 1.6+ only -->
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+
+        <field name="item_id" type="text" default="" label="Item ID" description="Default Item ID" />
+		<field name="ids" type="text" default="" label="Event Instance IDs" description="Event Instance ID Numbers, each one separated by a comma" />
+		
+		<field name="types" type="calendartypes" default="" label="Types" description="" addfieldpath="/administrator/components/com_calendar/elements/" />
+		<field name="venues" type="calendarvenues" default="" label="Venues" description="" addfieldpath="/administrator/components/com_calendar/elements/" />
+		<field name="starttoday" type="radio" default="1" label="Start Today" description="Make the Start Date 'Today'">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </field>
+		<field name="startdate" type="calendar" default="" label="Start Date" description="" />
+		<field name="enddate" type="calendar" default="" label="End Date" description="" />
+		
+        <field name="use_upcoming" type="radio" default="0" label="Use Upcoming Events?" description="Use Items from the Upcoming Events Queue?">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </field>
+        <field name="limit" type="text" default="3" label="LIMIT" description="LIMIT DESC" />
+        <field name="slideshow" type="radio" default="0" label="Slideshow" description="Slideshow?">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </field>
+	    </fieldset>
+	    <fieldset name="advanced">
+				<field name="layout" type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+
+				<field name="moduleclass_sfx" type="text"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+
+				<field name="owncache" type="list" default="1"
+					label="COM_MODULES_FIELD_CACHING_LABEL" description="COM_MODULES_FIELD_CACHING_DESC" >
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING
+					</option>
+				</field>
+
+				<field name="cache_time" type="text" default="900"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+			</fieldset>
+    </fields>
+    </config>
+    
 	<params>
         <param name="item_id" type="text" default="" label="Item ID" description="Default Item ID" />
 		<param name="ids" type="text" default="" label="Event Instance IDs" description="Event Instance ID Numbers, each one separated by a comma" />

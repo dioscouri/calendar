@@ -8,4 +8,8 @@
         <name>Performances (Event Instances)</name>
         <url>index.php?option=com_calendar&#38;view=eventinstances</url>
     </link>
+    <link>
+        <name>Event Types</name>
+        <url>index.php?option=com_calendar&#38;view=types</url>
+    </link>
 </menu>

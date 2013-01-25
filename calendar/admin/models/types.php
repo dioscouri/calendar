@@ -20,7 +20,10 @@ class CalendarModelTypes extends CalendarModelBase
 		$filter = $this->getState( 'filter' );
 		$filter_id_from = $this->getState( 'filter_id_from' );
 		$filter_id_to = $this->getState( 'filter_id_to' );
+		$filter_id = $this->getState( 'filter_id' );
 		$filter_name = $this->getState( 'filter_name' );
+		$filter_class = $this->getState( 'filter_class' );
+		$filter_admin_only = $this->getState( 'filter_admin_only' );
 		
 		if ( $filter )
 		{
@@ -56,6 +59,25 @@ class CalendarModelTypes extends CalendarModelBase
 			$where = array( );
 			$where[] = 'LOWER(tbl.type_name) LIKE ' . $key;
 			$query->where( '(' . implode( ' OR ', $where ) . ')' );
+		}
+		
+		if ( !empty( $filter_id ) ) 
+		{
+		    if (!is_array( $filter_id )) 
+		    {
+		        $filter_id = array( $filter_id );
+		    }
+
+		    $query->where( "tbl.type_id IN ('" . implode( "', '", $filter_id) . "')" );
+		}
+		
+		if ( strlen( $filter_class ) )
+		{
+		    $query->where( "tbl.type_class = '" . $filter_class . "'" );
+		}
+		if ( strlen( $filter_admin_only ) )
+		{
+			$query->where( "tbl.admin_only = '" . $filter_admin_only . "'" );
 		}
 	}
 	

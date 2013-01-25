@@ -9,14 +9,30 @@
     <!-- Joomla 1.6+ only -->
     <fields name="request">
         <fieldset name="request" addfieldpath="/administrator/components/com_calendar/elements">
-            <field name="reset" type="hidden" default="1" />
+            <!-- <field name="reset" type="hidden" default="1" />  -->
             
             <field name="calendar_id" type="calendarcalendar"
                 label="COM_CALENDAR_ELEMENT_SELECT_CALENDAR_LABEL"
                 required="true"
                 description="COM_CALENDAR_ELEMENT_SELECT_CALENDAR_DESC"
             />
-
+        </fieldset>
+    </fields>
+    
+    <!-- Add fields to the parameters object for the layout. -->
+    <fields name="params">
+        <fieldset name="params"
+            label="Basic Options"
+        >
+            <field name="reset"
+                type="radio"
+                description="Reset"
+                label="Reset"
+                default="1"
+            >
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </field>
         </fieldset>
     </fields>
     
@@ -25,7 +41,7 @@
         <name>COM_CALENDAR_WEEK_DEFAULT_LAYOUT</name>
         <description>COM_CALENDAR_WEEK_DEFAULT_LAYOUT_DESC</description>
         <url addpath="/administrator/components/com_calendar/elements" >
-            <param name="reset" type="hidden" default="1" />
+            <!-- <param name="reset" type="hidden" default="1" /> -->
             <param name="calendar_id" type="calendarcalendar" section="com_calendar" default="" label="COM_CALENDAR_ELEMENT_SELECT_CALENDAR_LABEL" description="COM_CALENDAR_ELEMENT_SELECT_CALENDAR_DESC" />
         </url>
     </state>

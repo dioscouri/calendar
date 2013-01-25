@@ -262,9 +262,10 @@ class CalendarSelect extends JHTMLSelect
      */
     public static function series( $selected, $name = 'filter_parentid', $attribs = array( 'class' => 'inputbox', 'size' => '1' ), $idtag = null, $allowNone = true, $title_none = 'Select Series', $enabled = null )
     {
-    	// Build list
+        return null; // for now
+        
     	$list = array( );
-    
+    	
     	if ( $allowNone )
     	{
     		$list[] = self::option( '', "- " . JText::_( $title_none ) . " -", 'series_id', 'series_name' );
@@ -297,7 +298,7 @@ class CalendarSelect extends JHTMLSelect
     
     	if ( $allowNone )
     	{
-    		$list[] = self::option( '', "- " . JText::_( $title_none ) . " -", 'event_id', 'event_short_title' );
+    		$list[] = self::option( '', "- " . JText::_( $title_none ) . " -", 'value', 'text' );
     	}
     
     	$model = JModel::getInstance( 'Events', 'CalendarModel' );
@@ -305,10 +306,10 @@ class CalendarSelect extends JHTMLSelect
     
     	foreach ( @$items as $item )
     	{
-    		$list[] = self::option( $item->event_id, JText::_( $item->event_short_title ), 'event_id', 'event_short_title' );
+    		$list[] = self::option( $item->getDataSourceID(), strip_tags( $item->title ), 'value', 'text' );
     	}
     
-    	return self::genericlist( $list, $name, $attribs, 'event_id', 'event_short_title', $selected, $idtag );
+    	return self::genericlist( $list, $name, $attribs, 'value', 'text', $selected, $idtag );
     }
     
     /**
@@ -324,10 +325,10 @@ class CalendarSelect extends JHTMLSelect
     {
     	// Build list
     	$list = array( );
-    
+        
     	if ( $allowNone )
     	{
-    		$list[] = self::option( '', "- " . JText::_( $title_none ) . " -", 'venue_id', 'venue_name' );
+    		$list[] = self::option( '', "- " . JText::_( $title_none ) . " -", 'value', 'text' );
     	}
     
     	$model = JModel::getInstance( 'Venues', 'CalendarModel' );
@@ -335,10 +336,10 @@ class CalendarSelect extends JHTMLSelect
     
     	foreach ( @$items as $item )
     	{
-    		$list[] = self::option( $item->venue_id, JText::_( $item->venue_name ), 'venue_id', 'venue_name' );
+    		$list[] = self::option( $item->getDataSourceID(), strip_tags( $item->name ) );
     	}
     
-    	return self::genericlist( $list, $name, $attribs, 'venue_id', 'venue_name', $selected, $idtag );
+    	return self::genericlist( $list, $name, $attribs, 'value', 'text', $selected, $idtag );
     }
     
     /**
@@ -511,17 +512,33 @@ class CalendarSelect extends JHTMLSelect
     
         if ( $allowNone )
         {
-            $list[] = self::option( '', "- " . JText::_( $title_none ) . " -", 'venue_id', 'venue_name' );
+            $list[] = self::option( '', "- " . JText::_( $title_none ) . " -", 'value', 'text' );
         }
     
         $model = JModel::getInstance( 'Types', 'CalendarModel' );
+        $model->setState('order', 'tbl.type_name');
         $items = $model->getList( );
     
         foreach ( @$items as $item )
         {
-            $list[] = self::option( $item->type_id, JText::_( $item->type_name ) );
+            $list[] = self::option( $item->type_id, $item->type_name );
         }
     
+        return self::genericlist( $list, $name, $attribs, 'value', 'text', $selected, $idtag );
+    }
+    
+    public static function season( $selected, $name = 'filter_season', $attribs = array( 'class' => 'inputbox', 'size' => '1' ), $idtag = null, $allowAny = false, $title = 'Select Season' )
+    {
+        $list = array( );
+        if ( $allowAny )
+        {
+            $list[] = self::option( '', "- " . JText::_( $title ) . " -" );
+        }
+    
+        // TODO Keep these in descending order, but source them from somewhere else
+        $list[] = JHTML::_( 'select.option', '2012-13', "2012-13" );
+        $list[] = JHTML::_( 'select.option', '2011-12', "2011-12" );        
+        
         return self::genericlist( $list, $name, $attribs, 'value', 'text', $selected, $idtag );
     }
 }

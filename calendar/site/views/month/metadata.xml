@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<view title="COM_CALENDAR">
-        <message>
-            <![CDATA[COM_CALENDAR_DASHBOARD]]>
-        </message>
-    </view>
+	<view title="COM_CALENDAR"></view>
 </metadata>

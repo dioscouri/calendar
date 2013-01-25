@@ -1,17 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-    <layout title="COM_CALENDAR_EVENTS_DEFAULT_LAYOUT">
-        <message>
-            <![CDATA[COM_CALENDAR_EVENTS_DEFAULT_LAYOUT_DESC]]>
-        </message>
-    </layout>
-    <state>
-        <name>COM_CALENDAR_EVENTS_DEFAULT_LAYOUT</name>
-        <description>COM_CALENDAR_EVENTS_DEFAULT_LAYOUT_DESC</description>
-        <!-- <url addpath="/administrator/components/com_schools/elements"> <param 
-            name="filter_group" type="schoolsgroup" section="com_schools" default="" 
-            label="Select Group" description="A School Group" /> <param name="filter_district" 
-            type="schoolsdistrict" section="com_schools" default="" label="Select District" 
-            description="A School District" /> </url> -->
-    </state>
+	<layout title="COM_CALENDAR_EVENTS_DEFAULT_LAYOUT">
+		<message>
+			<![CDATA[COM_CALENDAR_EVENTS_DEFAULT_LAYOUT_DESC]]>
+		</message>
+	</layout>
+    
+    <fields name="request">
+        <fieldset name="request" addfieldpath="/administrator/components/com_calendar/elements">
+            <!-- <field name="reset" type="hidden" default="1" />  -->
+            
+            <field name="calendar_id" type="calendarcalendar"
+                label="COM_CALENDAR_ELEMENT_SELECT_CALENDAR_LABEL"
+                required="true"
+                description="COM_CALENDAR_ELEMENT_SELECT_CALENDAR_DESC"
+            />
+        </fieldset>
+    </fields>
+    
+    <!-- Add fields to the parameters object for the layout. -->
+    <fields name="params">
+        <fieldset name="params"
+            label="Basic Options"
+        >
+            <field name="reset"
+                type="radio"
+                description="Reset"
+                label="Reset"
+            >
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </field>
+        </fieldset>
+    </fields>
+    
+	<state>
+		<name>COM_CALENDAR_EVENTS_DEFAULT_LAYOUT</name>
+		<description>COM_CALENDAR_EVENTS_DEFAULT_LAYOUT_DESC</description>
+		<!-- <url addpath="/administrator/components/com_schools/elements"> <param 
+			name="filter_group" type="schoolsgroup" section="com_schools" default="" 
+			label="Select Group" description="A School Group" /> <param name="filter_district" 
+			type="schoolsdistrict" section="com_schools" default="" label="Select District" 
+			description="A School District" /> </url> -->
+	</state>
 </metadata>

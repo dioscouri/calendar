@@ -42,9 +42,10 @@ class CalendarTableCalendars extends CalendarTable
 		// check name unique 
 		if ( !empty( $this->calendar_name ) && empty($this->calendar_id))
 		{
-		    $key = strtolower( $this->calendar_name );
-		    $query = "SELECT * FROM #__calendar_calendars WHERE LOWER( calendar_name ) = '$key';";
 		    $db = $this->getDBO();
+		    $key = $db->Quote( strtolower( $this->calendar_name ) );
+		    $query = "SELECT * FROM #__calendar_calendars WHERE LOWER( `calendar_name` ) = " . $key;
+		    
 		    $db->setQuery( $query );
 		    $result = $db->loadResult();
 		    if ($result)

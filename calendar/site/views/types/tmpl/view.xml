@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_CALENDAR_TYPE_VIEW_LAYOUT">
+		<message>
+			<![CDATA[COM_CALENDAR_TYPE_VIEW_LAYOUT_DESC]]>
+		</message>
+	</layout>
+    
+    <fields name="request">
+        <fieldset name="request" addfieldpath="/administrator/components/com_calendar/elements">
+            <field name="task" type="hidden" default="view" />
+            <field name="id" type="calendartype"
+                label="COM_CALENDAR_ELEMENT_SELECT_TYPE_LABEL"
+                required="true"
+                description="COM_CALENDAR_ELEMENT_SELECT_TYPE_DESC"
+            />
+        </fieldset>
+    </fields>
+
+</metadata>

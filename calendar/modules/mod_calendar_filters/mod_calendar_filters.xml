@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0" method="upgrade" client="site">
+	<name>Calendar Filters</name>
+	<author>Dioscouri</author>
+	<authorEmail>info@dioscouri.com</authorEmail>
+	<authorUrl>http://www.dioscouri.com</authorUrl>
+	<version>1.0.0</version>
+	<creationDate>May 2011</creationDate>
+	<copyright>2011 Dioscouri.com</copyright>
+	<license>GNU General Public License</license>
+	<description>CALENDAR_MODULEDESC</description>
+	<files>
+		<filename module="mod_calendar_filters">mod_calendar_filters.php</filename>
+		<filename>index.html</filename>
+		<filename>helper.php</filename>
+		<folder>tmpl</folder>
+	</files>
+    
+	<languages>
+		<language tag="en-GB">languages/en-GB.mod_calendar_filters.ini
+		</language>
+	</languages>
+    
+    <!-- Joomla 1.6+ only -->
+    <config>
+        <fields name="params">
+            <fieldset name="basic" addfieldpath="/administrator/components/com_calendar/elements">
+                <field name="calendar_id" type="calendarcalendar"
+                    label="Select a Calendar"
+                    required="true"
+                    description="A valid Calendar ID"
+                />
+                <field name="item_id" type="text" default="" label="Item ID" required="true" description="Default Item ID" />
+                <field name="default_handler" type="list" default="month" label="DEFAULT HANDLER" description="DEFAULT HANDLER DESC">
+                    <option value="month">MONTH</option>
+                    <option value="week">WEEK</option>
+                    <option value="three">THREE DAYS</option>
+                    <option value="day">DAY</option>
+                </field>
+            </fieldset>
+            <fieldset name="advanced">
+                <field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+        
+                <field name="moduleclass_sfx" type="text" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+        
+                <field name="cache" type="list" default="1" label="COM_MODULES_FIELD_CACHING_LABEL" description="COM_MODULES_FIELD_CACHING_DESC">
+                    <option value="1">JGLOBAL_USE_GLOBAL</option>
+                    <option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+                </field>
+        
+                <field name="cache_time" type="text" default="900" label="COM_MODULES_FIELD_CACHE_TIME_LABEL" description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+                <field name="cachemode" type="hidden" default="static">
+                    <option value="static"></option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+    
+</install>

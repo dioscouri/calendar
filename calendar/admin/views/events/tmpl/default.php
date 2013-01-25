@@ -32,15 +32,16 @@
                    	<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( @$items ); ?>);" />
                 </th>
                 <th style="width: 50px;">
-                    <?php echo CalendarGrid::sort( 'ID', "tbl.event_id", @$state->direction, @$state->order ); ?>
-                </th>   
+                    <?php echo JText::_( "DS-ID" ); ?>
+                </th>
                 <th style="width: 50px;">
+                    <?php echo JText::_( "Joomla-ID" ); ?>
+                </th>
+                <th style="width: 50px;">
+                    
                 </th>             
                 <th style="text-align: left;">
                     <?php echo CalendarGrid::sort( 'Name', "tbl.event_short_title", @$state->direction, @$state->order ); ?>
-                </th>
-                <th style="width: 100px;">
-    	            <?php echo CalendarGrid::sort( 'Series', "tbl.event_published", @$state->direction, @$state->order ); ?>
                 </th>
                 <th style="width: 100px;">
     	            <?php echo JText::_( "Venue" ); ?>
@@ -49,23 +50,29 @@
     	            <?php echo JText::_( "Dates" ); ?>
                 </th>
                 <th style="width: 100px;">
-    	            <?php echo JText::_( "On Sale" ); ?>
+    	            <?php echo JText::_( "Event Types" ); ?>
+                </th>
+                <th style="width: 100px;">
+    	            <?php echo JText::_( "Published" ); ?>
                 </th>
             </tr>
             <tr class="filterline">
             	<th>
                 </th>                
                 <th colspan="2">
-                    <?php $attribs = array( 'class' => 'inputbox', 'size' => '1', 'onchange' => 'document.adminForm.submit();' );
-					?>
+                    <?php $attribs = array( 'class' => 'inputbox', 'size' => '1', 'onchange' => 'document.adminForm.submit();' ); ?>
                     <div class="range">
                         <div class="rangeline">
-                            <input type="text" placeholder="FROM" id="filter_id_from" name="filter_id_from" value="<?php echo @$state->filter_id_from; ?>" size="5" class="input input-tiny" />
+                            <input type="text" placeholder="DS-ID" id="filter_id_from" name="filter_id_from" value="<?php echo @$state->filter_id_from; ?>" size="5" class="input input-tiny" />
                         </div>
+                        <?php /* ?>
                         <div class="rangeline">
                             <input type="text" placeholder="TO" id="filter_id_to" name="filter_id_to" value="<?php echo @$state->filter_id_to; ?>" size="5" class="input input-tiny" />
                         </div>
+                        */ ?>
                     </div>
+                </th>
+                <th>
                 </th>
                 <th>
                 </th>
@@ -73,15 +80,24 @@
                     <input id="filter_name" type="text" name="filter_name" value="<?php echo @$state->filter_name; ?>" size="25" /><br>
                 </th>
                 <th>
-                    <?php echo CalendarSelect::series( @$state->filter_series, 'filter_series', $attribs, 'filter_series', true ); ?>
-                </th>
-                <th>
                     <?php echo CalendarSelect::venue( @$state->filter_venue_id, 'filter_venue_id', $attribs, 'filter_venue_id', true ); ?>
                 </th>
                 <th>
+                	<div class="range">
+	                	<div class="rangeline">
+	                		<span class="label"><?php echo JText::_("From"); ?>:</span>
+	                		<?php echo JHTML::calendar( @$state->filter_date_from, "filter_date_from", "filter_date_from", '%Y-%m-%d', array('size'=>'20') ); ?>
+	                	</div>
+	                	<div class="rangeline">
+	                		<span class="label"><?php echo JText::_("To"); ?>:</span>
+	                		<?php echo JHTML::calendar( @$state->filter_date_to, "filter_date_to", "filter_date_to", '%Y-%m-%d', array('size'=>'20') ); ?>
+	                	</div>
+                	</div>
                 </th>
                 <th>
-                    <?php echo CalendarSelect::booleans( @$state->filter_enabled, 'filter_enabled', $attribs, 'enabled', true ); ?>
+                    <?php echo CalendarSelect::type( @$state->filter_type, 'filter_type', $attribs, 'filter_type', true ); ?>
+                </th>
+                <th>
                 </th>
             </tr>
 			<tr>
@@ -110,35 +126,46 @@
                 </td>
                 <td style="text-align: center;">
                    	<?php echo CalendarGrid::checkedout( $item, $i, 'event_id' ); ?>
-                </td>                
+                </td>
+                <td style="text-align: center;">
+                    <a href="<?php echo $item->link; ?>">
+                        <?php echo $item->getDatasourceID(); ?>
+                    </a>
+                </td>
                 <td style="text-align: center;">
                     <a href="<?php echo $item->link; ?>">
                         <?php echo $item->event_id; ?>
                     </a>
-                </td>   
+                </td>
                 <td style="text-align: center;">
-                    <?php if ($full_image = $this->getModel()->getFullImage( $item )) { ?>
-                        <img src="<?php echo $full_image; ?>" style="max-width: 36px; max-height: 36px;" />
+                    <?php if (!empty($item->event_full_image)) { ?>
+                        <img src="<?php echo JURI::root() . $item->event_full_image; ?>" class="event-image small" style="width: 87px;" title="<?php echo $item->event_full_image; ?>" />
                     <?php } ?>
                 </td>
                 <td style="text-align: left;">
                     <a href="<?php echo $item->link; ?>">
-                        <?php echo $item->event_short_title; ?>
+                        <?php echo $item->title; ?>
                     </a>
+                    <?php if (!empty($item->avInternalTitle) && $item->avInternalTitle != $item->title) { ?>
+                        <p class="dsc-tip">&nbsp;&nbsp;&bull;&nbsp;&nbsp;<b>AV Internal Title:</b> <?php echo $item->avInternalTitle; ?></p>
+                    <?php } ?>
                 </td>
                 <td style="text-align: center;">
-					<?php echo $item->series_name; ?>
+					<?php echo @$item->getPrimaryVenue()->name; ?>
 				</td>
                 <td style="text-align: center;">
-					<?php echo $this->getModel()->getVenuesString( $item ); ?>
+                    <?php echo @$item->getFirstDate()->format('M j, Y'); ?>
+                    -<br/>
+                    <?php echo @$item->getLastDate()->format('M j, Y'); ?>
 				</td>
                 <td style="text-align: center;">
-                    <a href="index.php?option=com_calendar&view=eventinstances&filter_event=<?php echo $item->event_id; ?>&filter_order=tbl.eventinstance_date&filter_direction=DESC">
-                    <?php echo $this->getModel()->getDatesString( $item ); ?>
-                    </a>
+					<?php echo @$item->event_type->type_name; ?> *<br/>
+					<?php foreach (@$item->event_types_additional as $type) { ?>
+					    <?php echo $type->type_name; ?> <br/>
+					<?php } ?>
 				</td>
-                <td style="text-align: center;">
-					<?php echo CalendarGrid::boolean( $item->onSale ); ?>
+				<td style="text-align: center;">
+					<?php echo DSCGrid::boolean( $item->published ); ?>
 				</td>
             </tr>
             <?php $i = $i + 1;

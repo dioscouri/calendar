@@ -40,9 +40,10 @@ class CalendarTableTypes extends CalendarTable
 		
 		if ( !empty( $this->type_name ) && empty($this->type_id))
 		{
-		    $key = strtolower( $this->type_name );
-		    $query = "SELECT * FROM #__calendar_types WHERE LOWER( type_name ) = '$key';";
-		    $db = $this->getDBO();
+			$db = $this->getDBO();
+		    $key = $db->Quote( strtolower( $this->type_name ) );
+		    $query = "SELECT * FROM #__calendar_types WHERE LOWER( type_name ) = " . $key;
+		    
 		    $db->setQuery( $query );
 		    $result = $db->loadResult();
 		    if ($result)

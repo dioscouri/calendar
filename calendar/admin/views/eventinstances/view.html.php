@@ -36,15 +36,16 @@ class CalendarViewEventinstances extends CalendarViewBase
 				break;
 		}
 	}
-	
+
 	/**
 	 * The default toolbar for a list
 	 * @return unknown_type
 	 */
 	function _defaultToolbar( )
 	{
-		JToolBarHelper::editList( );
-		JToolBarHelper::deleteList( JText::_( 'VALIDDELETEITEMS' ) );
+	    $this->addClearCacheToolbarButton('eventinstances');
+		//JToolBarHelper::editList( );
+		//JToolBarHelper::deleteList( JText::_( 'VALIDDELETEITEMS' ) );
 	}
 	
 	function _formToolbar( $isNew = null )

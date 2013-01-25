@@ -12,128 +12,117 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 // Check the registry to see if our Calendar class has been overridden
-if ( !class_exists( 'Calendar' ) ) JLoader::register( "Calendar", JPATH_ADMINISTRATOR . DS . "components" . DS . "com_calendar" . DS . "defines.php" );
+if ( !class_exists( 'Calendar' ) ) { 
+    JLoader::register( "Calendar", JPATH_ADMINISTRATOR . DS . "components" . DS . "com_calendar" . DS . "defines.php" );
+}
+
+$parentPath = JPATH_ADMINISTRATOR . '/components/com_calendar/helpers';
+DSCLoader::discover('CalendarHelper', $parentPath, true);
+
+$parentPath = JPATH_ADMINISTRATOR . '/components/com_calendar/library';
+DSCLoader::discover('Calendar', $parentPath, true);
 
 require_once( dirname(__FILE__).DS.'helper.php' );
 $helper = new modCalendarCalendarHelper( $params );
 
 // include lang files
 $element = strtolower( 'com_Calendar' );
-$lang = &JFactory::getLanguage( );
+$lang = JFactory::getLanguage( );
 $lang->load( $element, JPATH_BASE );
 $lang->load( $element, JPATH_ADMINISTRATOR );
 
 $default_handler = $params->get( 'default_handler' );
 $link_handler = $default_handler;
 $item_id = $params->get( 'item_id', JRequest::getInt( 'Itemid' ) );
+$itemid_string = '';
+if ($item_id) {
+    $itemid_string = '&Itemid=' . $item_id;
+}
 
 Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 $event_helper = CalendarHelperBase::getInstance( 'event' );
 $state = $event_helper->getState();
-        
+
 $date = new JObject();
 $date->handler = '';
+$date->navigation = new JObject();
 
-$view = $state['view']; // JRequest::getVar( 'view' );
+$view = $state['view'];
 $v = JRequest::getVar( 'v' );
 if ($v == 2)
 {
     $view = JRequest::getVar( 'handler' );
 }
-$date->current = $state['current_date']; // JRequest::getVar( 'current_date' );
-$date->month = $state['month']; // JRequest::getInt( 'month' );
-$date->year = $state['year']; // JRequest::getInt( 'year' );
 
-if ( empty( $date->month ) )
-{
-    $date->month = '08'; // date( 'm' ); // default to august 2011, requested by Lucy
-}
-
-if ( empty( $date->year ) )
-{
-    $date->year = '2011'; // see above. date( 'Y' );
-}
-
-$date->nextmonthdate = date( 'Y-m-d', strtotime( $date->year . '-' . $date->month . ' +1 month' ) );
-$date->prevmonthdate = date( 'Y-m-d', strtotime( $date->year . '-' . $date->month . ' -1 month' ) );
-$date->nextweekdate = date( 'Y-m-d', strtotime( $date->current . ' +7 days' ) );
-$date->prevweekdate = date( 'Y-m-d', strtotime( $date->current . ' -7 days' ) );
-$date->nextdaydate = date( 'Y-m-d', strtotime( $date->current . ' +1 day' ) );
-$date->prevdaydate = date( 'Y-m-d', strtotime( $date->current . ' -1 day' ) );
-
-$date->weekdays = array( 'Sunday' => 'S', 'Monday' => 'M', 'Tuesday' => 'T', 'Wednesday' => 'W', 'Thursday' => 'T', 'Friday' => 'F', 'Saturday' => 'S' );
-$date->weekstart = 'Sunday';
-$date->weekend = 'Saturday';
-$date->numberofdays = date( 't', strtotime( $date->year . '-' . $date->month . '-01' ) );
-$date->monthstartday = date( 'l', strtotime( $date->year . '-' . $date->month . '-01' ) );
-$date->monthstartdayofweek = date( 'w', strtotime( $date->year . '-' . $date->month . '-01' ) );
-$date->monthenddayofweek = date( 'w', strtotime( $date->year . '-' . $date->month . '-' . $date->numberofdays ) );
-
-if ( $date->monthstartday == 'Friday' || $date->monthstartday == 'Saturday' )
-{
-    $date->numberofweeks = 6;
-}
-else
-{
-    $date->numberofweeks = 5;
-}
+$date->currentdate_month = date( 'Y-m-01', strtotime( $state['date'] ) );
+$date->currentdate_month_start = date( 'w', strtotime( $date->currentdate_month ) ); // 0 = Sunday, 6=Saturday
+$date->currentdate_month_next = date( 'Y-m-01', strtotime( $date->currentdate_month . ' +1 month' ) );
+$date->currentdate_month_prev = date( 'Y-m-01', strtotime( $date->currentdate_month . ' -1 month' ) );
+$date->currentdate_dayofweek_start = date( 'w', strtotime( $state['date'] ) ); // 0 = Sunday, 6=Saturday
+$date->minimum_number_of_weeks = 6;
 
 switch ( $view )
 {
-    case 'month':
-        $date->handler = 'month';
-        $date->prevdate = $date->prevmonthdate;
-        $date->nextdate = $date->nextmonthdate;
-        break;
     case 'week':
         $date->handler = 'week';
-        $date->prevdate = $date->prevweekdate;
-        $date->nextdate = $date->nextweekdate;
+        $date->currentdate_dayofweek_end = date( 'w', strtotime( $state['date'] . ' +7 days' ) );
+        $date->currentdate_end = date( 'Y-m-d', strtotime( $state['date'] . ' +7 days' ) );
+        $date->navigation->prev = date('Y-m-d', strtotime( $state['date'] . ' -8 days' ) );
+        $date->navigation->next = date('Y-m-d', strtotime( $state['date'] . ' +8 days' ) );
         break;
     case 'three':
         $date->handler = 'three';
+        $date->currentdate_dayofweek_end = date( 'w', strtotime( $state['date'] . ' +3 days' ) );
+        $date->currentdate_end = date( 'Y-m-d', strtotime( $state['date'] . ' +3 days' ) );
+        $date->navigation->prev = date('Y-m-d', strtotime( $state['date'] . ' -4 days' ) );
+        $date->navigation->next = date('Y-m-d', strtotime( $state['date'] . ' +4 days' ) );
+        
         break;
     case 'day':
         $date->handler = 'day';
-        $date->prevdate = $date->prevdaydate;
-        $date->nextdate = $date->nextdaydate;
+        $date->currentdate_dayofweek_end = date( 'w', strtotime( $state['date'] ) );
+        $date->currentdate_end = date( 'Y-m-d', strtotime( $state['date'] ) );
+        $date->navigation->prev = date('Y-m-d', strtotime( $state['date'] . ' -1 days' ) );
+        $date->navigation->next = date('Y-m-d', strtotime( $state['date'] . ' +1 days' ) );
+                
         break;
+    case 'month':
     default:
         $view = "month";
-        $date->handler = $default_handler;
-        $date->prevdate = $date->prevmonthdate;
-        $date->nextdate = $date->nextmonthdate;
+        $date->handler = "month";
+        $date->currentdate_dayofweek_end = date( 'w', strtotime( $state['date'] . ' +30 days' ) );
+        $date->currentdate_end = date( 'Y-m-d', strtotime( $state['date'] . ' +30 days' ) );
+        $date->navigation->prev = date('Y-m-d', strtotime( $state['date'] . ' -31 days' ) );
+        $date->navigation->next = date('Y-m-d', strtotime( $state['date'] . ' +31 days' ) );
+        
         break;
 }
 
-$date->prevyear = date( 'Y', strtotime( $date->prevdate ) );
-$date->prevmonth = date( 'm', strtotime( $date->prevdate ) );
-$date->nextyear = date( 'Y', strtotime( $date->nextdate ) );
-$date->nextmonth = date( 'm', strtotime( $date->nextdate ) );
-
-$date->range = array();
-switch ( $date->handler )
+if (JRequest::getVar('view') == 'event' || JRequest::getVar('view') == 'events') 
 {
-    case 'week':
-        for( $i=0; $i<7; $i++)
-        {
-            $date->range[] = date( 'Y-m-d', strtotime( $date->current . ' +' . $i . ' days' ) );
-        }
-        break;
-    case 'three':
-        for( $i=0; $i<3; $i++)
-        {
-            $date->range[] = date( 'Y-m-d', strtotime( $date->current . ' +' . $i . ' days' ) );
-        }
-        break;
-    default:
-        break;
+    // get the viewed item from the userState    
+    $app = JFactory::getApplication();
+    $context = "com_calendar.view.event";
+    $item = unserialize( $app->getUserState($context . '.item') );
+    $surrounding = array();
+
+    if (is_object($item) && is_a($item, 'JALC\EventsArtists\Entities\Performance') && method_exists($item, 'getDataSourceID')) 
+    {
+        $model = JModel::getInstance( 'Event', 'CalendarModel' );
+        $surrounding = $model->getSurrounding( $item->getDataSourceID() );
+    }
+    
+    /*
+	$id = JRequest::getVar('id');
+    $model = JModel::getInstance( 'Event', 'CalendarModel' );
+    $item = $model->getItem( $id );
+    $surrounding = $model->getSurrounding( $item->getDataSourceID() );
+    */
+    
+    require ( JModuleHelper::getLayoutPath( 'mod_calendar_calendar', 'event' ) );
+} 
+    else 
+{
+    require ( JModuleHelper::getLayoutPath( 'mod_calendar_calendar', $params->get('layout', 'default') ) );
 }
-
-$day_state = '';
-
-$header_title = date( 'F', strtotime( $date->year . '-' . $date->month . '-01' ) ) . ' ' . $date->year;
-
-require ( JModuleHelper::getLayoutPath( 'mod_calendar_calendar' ) );
-
 ?>

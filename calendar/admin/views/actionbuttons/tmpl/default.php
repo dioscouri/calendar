@@ -96,6 +96,9 @@
                     <a href="<?php echo $item->link; ?>">
                         <?php echo $item->actionbutton_name; ?>
                     </a>
+                    <p class="dsc-tip">
+                    <?php echo $item->actionbutton_notes; ?>
+                    </p>
                 </td>                   
                 <td style="text-align: left;">
                     <a href="<?php echo $item->actionbutton_url_default; ?>">

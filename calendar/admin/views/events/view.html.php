@@ -53,6 +53,7 @@ class CalendarViewEvents extends CalendarViewBase
 		foreach ( $items as $item )
 		{
 			$item->categories_list = '';
+			/*
 			$model = JModel::getInstance( 'Events', 'CalendarModel' );
 			$model->setState( 'filter_eventcategories', $item->event_id );
 			if ( $categories = $model->getList( ) )
@@ -60,12 +61,57 @@ class CalendarViewEvents extends CalendarViewBase
 				$cats = array( );
 				foreach ( $categories as $category )
 				{
-					$cats[] = JText::_( $category->secondarycat_name );
+					//$cats[] = JText::_( $category->secondarycat_name );
 				}
 				$item->categories_list = implode( ', ', $cats );
-			}
+			}*/
 		}
 		
 		$this->assign( 'items', $items );
+	}
+	
+	/**
+	 * The default toolbar for a list
+	 * @return unknown_type
+	 */
+	function _defaultToolbar()
+	{
+        $this->addClearCacheToolbarButton();
+        	    
+	    JToolBarHelper::editList();
+	    //JToolBarHelper::deleteList(JText::_('VALIDDELETEITEMS'));
+	    //JToolBarHelper::addnew();
+	}
+	
+	/**
+	 * The default toolbar for editing an item
+	 * @param $isNew
+	 * @return unknown_type
+	 */
+	function _formToolbar($isNew = null)
+	{
+	    $divider = false;
+	    $surrounding = (!empty($this->surrounding)) ? $this->surrounding : array();
+	    if (!empty($surrounding['prev'])) {
+	        $divider = true;
+	        JToolBarHelper::custom('saveprev', "saveprev", "saveprev", 'Save and Prev', false);
+	    }
+	    if (!empty($surrounding['next'])) {
+	        $divider = true;
+	        JToolBarHelper::custom('savenext', "savenext", "savenext", 'Save and Next', false);
+	    }
+	    if ($divider) {
+	        JToolBarHelper::divider();
+	    }
+	
+	    //JToolBarHelper::custom('savenew', "savenew", "savenew", 'Save and New', false);
+	    JToolBarHelper::save('save');
+	    JToolBarHelper::apply('apply');
+	
+	    if ($isNew) {
+	        JToolBarHelper::cancel();
+	    } else {
+	        JToolBarHelper::cancel('close', 'Close');
+	    }
 	}
 }

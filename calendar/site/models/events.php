@@ -11,3 +11,28 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 Calendar::load( 'CalendarModelEvents', 'models.events' );
+
+/*
+Calendar::load( 'CalendarModelEventinstances', 'models.eventinstances' );
+
+class CalendarModelEvents extends CalendarModelEventinstances
+{
+	function getTable( $name = 'eventinstances', $prefix = 'CalendarTable', $options = array( ) )
+	{
+		if ( empty( $name ) )
+		{
+			$name = $this->getName( );
+		}
+		
+		JTable::addIncludePath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_calendar' . DS . 'tables' );
+		if ( $table = $this->_createTable( $name, $prefix, $options ) )
+		{
+			return $table;
+		}
+		
+		JError::raiseError( 0, 'Table ' . $name . ' not supported. File not found.' );
+		$null = null;
+		return $null;
+	}
+}
+*/
