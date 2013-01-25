@@ -142,17 +142,17 @@
     <target name="build_plugins" description="packages any plugins">
         <!-- add all plugin directories here -->
         <!-- EX: <zip destfile="${cfg.buildDir}/plugins/${cfg.plgPrefix}report_ambrafields.zip" basedir="${cfg.comDir}/${cfg.plgPrefix}report_ambrafields" /> -->
-    	<zip destfile="${cfg.buildDir}/plugins/calendar_plugin_content_eventinstance.zip" basedir="${cfg.comDir}/calendar_plugin_content_eventinstance" />
-    	<zip destfile="${cfg.buildDir}/plugins/calendar_plugin_search.zip" basedir="${cfg.comDir}/calendar_plugin_search" />
+    	<zip destfile="${cfg.buildDir}/plugins/calendar_plugin_content_eventinstance.zip" basedir="${cfg.comDir}/plugins/calendar_plugin_content_eventinstance" />
+    	<zip destfile="${cfg.buildDir}/plugins/calendar_plugin_search.zip" basedir="${cfg.comDir}/plugins/calendar_plugin_search" />
     </target>
 
     <target name="build_modules" description="packages any modules">
         <!-- add all module directories here -->
     	<!-- EX: <zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}module.zip" basedir="${cfg.comDir}/${cfg.plgPrefix}module" /> -->
-    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}search.zip" basedir="${cfg.comDir}/${cfg.modPrefix}search" />
-    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}calendar.zip" basedir="${cfg.comDir}/${cfg.modPrefix}calendar" />
-    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}categories.zip" basedir="${cfg.comDir}/${cfg.modPrefix}categories" />
-    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}eventinstances.zip" basedir="${cfg.comDir}/${cfg.modPrefix}eventinstances" />
+    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}search.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}search" />
+    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}calendar.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}calendar" />
+    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}categories.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}categories" />
+    	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}eventinstances.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}eventinstances" />
     </target>
     
     <target name="build_languages" depends="init" description="packages any languages">
