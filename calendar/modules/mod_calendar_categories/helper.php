@@ -81,8 +81,8 @@ class modCalendarCategoriesHelper
 		$view = $state['view']; // JRequest::getVar( 'view', 'month' );
 		$year = $state['year']; // JRequest::getVar( 'year' );
 		$month = $state['month']; // JRequest::getVar( 'month' );
-		$current_date = $state['current_date']; // JRequest::getVar( 'current_date' );
-		$date_from = $current_date ? $current_date : $year . '-' . $month . '-01';
+		$date = $state['date']; // JRequest::getVar( 'date' );
+		$date_from = $date ? $date : $year . '-' . $month . '-01';
 		
 	    Calendar::load( 'CalendarHelperBase', 'helpers.base' );
 	    $helper = CalendarHelperBase::getInstance();

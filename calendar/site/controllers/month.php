@@ -39,12 +39,9 @@ class CalendarControllerMonth extends CalendarController
 		$state['filter_enabled'] = '1';
 	    $state['order'] = 'tbl.eventinstance_date';
 	    $state['direction'] = 'ASC';
-		$state['filter_date_from'] = $state['year'] . '-' . $state['month'] . '-01';
+		$state['filter_date_from'] = date( 'Y-m-01', strtotime( $state['date'] ) );
         $state['filter_datetype'] = 'month';
-
-	    $helper = CalendarHelperBase::getInstance();
-	    $datevars = $helper->setDateVariables( $state['filter_date_from'], null, 'monthly' );
-	    $state['filter_date_to'] = $datevars->nextdate;
+	    $state['filter_date_to'] = date( 'Y-m-d', strtotime( 'next month', strtotime( $state['filter_date_from'] ) ) - 1 );
                 
         JRequest::setVar('month', $state['month'] );
         JRequest::setVar('year', $state['year'] );
@@ -65,80 +62,21 @@ class CalendarControllerMonth extends CalendarController
 	    $this->_setModelState();
 	    $model = $this->getModel( $this->get( 'suffix' ) );
 	    $state = $model->getState();
-	    
-		// order data by time
-		$query = $model->getQuery( );
-		$query->order( 'tbl.eventinstance_start_time' );
-		$model->setQuery( $query );
-		
-		JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
-		$calendar = JTable::getInstance( 'Calendars', 'CalendarTable' );
-		$calendar->load( $state->calendar_id );
-		
+	    $view = $this->getView( $this->get( 'suffix' ), 'html' );
+	     
+	    JTable::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/tables' );
+	    $calendar = JTable::getInstance( 'Calendars', 'CalendarTable' );
+	    $calendar->load( $state->calendar_id );
+
 	    $list = $model->getList();
 	    
-		// make date and time variables
-		$date = new JObject();
-		$date->current = $state->filter_date_from;
-		$date->month = $state->month;
-		$date->year = $state->year;
-		$date->month_name = date( 'F', strtotime( $date->year . '-' . $date->month . '-01' ) );
-		
-		$date->nextmonth = date( 'm', strtotime( $date->year . '-' . $date->month . ' +1 month' ) );
-		$date->nextyear = date( 'Y', strtotime( $date->year . '-' . $date->month . ' +1 month' ) );
-		$date->prevmonth = date( 'm', strtotime( $date->year . '-' . $date->month . ' -1 month' ) );
-		$date->prevyear = date( 'Y', strtotime( $date->year . '-' . $date->month . ' -1 month' ) );
-		
-		$date->weekdays = array( 'Sunday' => 'SUN', 'Monday' => 'MON', 'Tuesday' => 'TUES', 'Wednesday' => 'WED', 'Thursday' => 'THU', 'Friday' => 'FRI', 'Saturday' => 'SAT' );
-		$date->weekstart = 'SUN';
-		$date->weekend = 'SAT';
-		$date->numberofdays = date( 't', strtotime( $date->year . '-' . $date->month . '-01' ) );
-		$date->monthstartday = date( 'l', strtotime( $date->year . '-' . $date->month . '-01' ) );
-		
-		if ( $date->monthstartday == 'Friday' || $date->monthstartday == 'Saturday' )
-		{
-			$date->numberofweeks = 6;
-		}
-		else
-		{
-			$date->numberofweeks = 5;
-		}
-
-		// affix the Closed Days to the end of the list array
-	    Calendar::load( 'CalendarHelperCalendar', 'helpers.calendar' );
-	    $helper = new CalendarHelperCalendar();
-		$config = Calendar::getInstance();
-		
-		$non_working_days = $calendar->non_working_days;
-		$closed_days = explode(',', $non_working_days);
-		
-		if (empty($state->type)) {
-    		$closed_days_array = array();
-    		foreach( $closed_days as $day_of_week )
-    		{
-    		    $closed_days_array[] = $helper->getDaysOfMonth($date->month, $date->year, trim( $day_of_week ) );
-    		}
-    		
-    		foreach ($closed_days_array as $closed_days_of_month)
-    		{
-    		    foreach ($closed_days_of_month as $closed_day)
-    		    {
-    		        $instance = JTable::getInstance( 'EventInstances', 'CalendarTable' );
-    		        $instance->eventinstance_date = $closed_day;
-    		        $instance->isClosedDay = true;
-    		        $list[] = $instance;
-    		        
-    		    }
-    		}
-		}
-		
 		$instance = JTable::getInstance( 'EventInstances', 'CalendarTable' );		
 		$days = array();
 		$count = 0;
 		$offsite_count = 0;
 		foreach ($list as $item)
 		{
-		    $day = $item->eventinstance_date;
+		    $day = $item->date;
 		    if (empty($days[$day]))
 		    {
 		        $days[$day] = new JObject();
@@ -155,7 +93,7 @@ class CalendarControllerMonth extends CalendarController
 		    } 
 		        else 
 		    {
-    		    $instance->event_full_image = $item->event_full_image;
+    		    $instance->primary_image = $item->primary_image;
     		    $item->image_src = $instance->getImage('src');
     		    if (!empty($state->type) && !empty($item->event_offsite)) {
     		        $days[$day]->offsite[] = $item;
@@ -169,7 +107,7 @@ class CalendarControllerMonth extends CalendarController
 		
 		ksort($days);
 		$view = $this->getView( $this->get( 'suffix' ), 'html' );
-		$view->assign( 'date', $date );
+
 		$view->assign( 'days', $days );
 		$view->assign( 'count', $count );
 		$view->assign( 'offsite_count', $offsite_count );
@@ -197,6 +135,17 @@ class CalendarControllerMonth extends CalendarController
 		    JRequest::setvar( 'layout', $layout );
 		    $view->setLayout( $layout );
 		}
+		
+		$date_navigation = new JObject();
+		$date_navigation->current = $state->filter_date_from;
+		$date_navigation->prev = date('Y-m-d', strtotime( $state->filter_date_from . ' -1 month' ) );
+		$date_navigation->next = date('Y-m-d', strtotime( $state->filter_date_from . ' +1 month' ) );
+		
+		$count = count($list);
+		
+		$view->assign( 'date_navigation', $date_navigation );
+		$view->assign( 'count', $count );
+		$view->assign( 'calendar', $calendar );
 		
 		parent::display($cachable, $urlparams);
 	}
@@ -274,7 +223,7 @@ class CalendarControllerMonth extends CalendarController
 		$days = array();
 		foreach ($list as $item)
 		{
-		    $day = $item->eventinstance_date;
+		    $day = $item->date;
 		    if (empty($days[$day]))
 		    {
 		        $days[$day] = new JObject();
@@ -283,7 +232,7 @@ class CalendarControllerMonth extends CalendarController
 		        $days[$day]->events = array();
 		    }
 		    
-		    $instance->event_full_image = $item->event_full_image;
+		    $instance->primary_image = $item->primary_image;
 		    $item->image_src = $instance->getImage('src');
 		    $days[$day]->events[] = $item;
 		}
@@ -375,7 +324,7 @@ class CalendarControllerMonth extends CalendarController
 		$days = array();
 		foreach ($list as $item)
 		{
-		    $day = $item->eventinstance_date;
+		    $day = $item->date;
 		    if (empty($days[$day]))
 		    {
 		        $days[$day] = new JObject();
@@ -384,7 +333,7 @@ class CalendarControllerMonth extends CalendarController
 		        $days[$day]->events = array();
 		    }
 		    
-		    $instance->event_full_image = $item->event_full_image;
+		    $instance->primary_image = $item->primary_image;
 		    $item->image_src = $instance->getImage('src');
 		    $days[$day]->events[] = $item;
 		}

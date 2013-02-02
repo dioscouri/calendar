@@ -153,6 +153,7 @@
     	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}calendar.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}calendar" />
     	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}categories.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}categories" />
     	<zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}eventinstances.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}eventinstances" />
+        <zip destfile="${cfg.buildDir}/modules/${cfg.modPrefix}exchangecredentials.zip" basedir="${cfg.comDir}/modules/${cfg.modPrefix}exchangecredentials" />
     </target>
     
     <target name="build_languages" depends="init" description="packages any languages">

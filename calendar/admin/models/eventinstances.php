@@ -323,22 +323,62 @@ class CalendarModelEventinstances extends CalendarModelBase
 		$query->select( $fields );
 	}
 	
-	public function getList( $refresh=false )
+	/**
+	 * Set basic properties for the item, whether in a list or a singleton
+	 *
+	 * @param unknown_type $item
+	 * @param unknown_type $key
+	 * @param unknown_type $refresh
+	 */
+	protected function prepareItem( &$item, $key=0, $refresh=false )
 	{
-		$list = parent::getList( $refresh );
-		foreach ( $list as $item )
-		{
-			$item->link = 'index.php?option=com_calendar&view=eventinstances&task=edit&id=' . $item->eventinstance_id;
-			$item->link_view = 'index.php?option=com_calendar&view=events&task=view&id=' . $item->event_id . '&instance_id=' . $item->eventinstance_id;
-		}
-		return $list;
+	    parent::prepareItem( $item, $key, $refresh );
+
+	    /*
+	    $item->link = 'index.php?option=com_calendar&view=eventinstances&task=edit&id=' . $item->eventinstance_id;
+	    $item->link_view = 'index.php?option=com_calendar&view=events&task=view&id=' . $item->event_id . '&instance_id=' . $item->eventinstance_id;
+	    */
+	}
+	
+	public function getList($refresh = false)
+	{
+	    $this->refresh = $refresh;
+	    
+	    return parent::getList( $refresh );
+	}
+	
+	/**
+	 * Gets an array of objects from the results of database query.
+	 *
+	 * @param   string   $query       The query.
+	 * @param   integer  $limitstart  Offset.
+	 * @param   integer  $limit       The number of records.
+	 *
+	 * @return  array  An array of results.
+	 *
+	 * @since   11.1
+	 */
+	protected function _getList($query, $limitstart = 0, $limit = 0)
+	{
+        $model = Calendar::getClass( 'CalendarModelSources', 'models.sources' );
+        if ($state = $this->getState()) 
+        {
+            foreach ($state as $key=>$value) 
+            {
+                $model->setState( $key, $value );
+            }
+        }
+        
+        $result = $model->getSourceItems( $this->refresh );
+        
+	    return $result;
 	}
 	
 	function getUsedPrimaryCategories( $calendar_id=null )
 	{
 	    JModel::addIncludePath( JPATH_ADMINISTRATOR . '/components/com_calendar/models' );
 	    $model = JModel::getInstance( 'Eventinstances', 'CalendarModel' );
-	    $query = new CalendarQuery();
+	    $query = new DSCQuery();
 	    $query->join( 'LEFT', '#__calendar_events AS events ON tbl.event_id = events.event_id' );
 	    $query->join( 'LEFT', '#__calendar_categories AS pcategory ON events.event_primary_category_id = pcategory.category_id' );
         $query->order( 'pcategory.ordering' );

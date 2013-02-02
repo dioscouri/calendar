@@ -29,7 +29,7 @@ $secondary_categories = $helper->getSecondaryCategories( $params->get('calendar_
 $view = $state['view'] ? $state['view'] : 'month';
 $month = $state['month'];
 $year = $state['year'];
-$current_date = $state['current_date'];
+$date = $state['date'];
 
 $item_id = $params->get('item_id', JRequest::getInt('Itemid') );
 $calendar_id = $params->get('calendar_id', JRequest::getInt('calendar_id', $state['calendar_id'] ) );
@@ -37,14 +37,17 @@ $calendar_id = $params->get('calendar_id', JRequest::getInt('calendar_id', $stat
 $v = JRequest::getVar( 'v' );
 
 $updating_calendar = JText::_( "Updating Calendar" );
-$onclick_primary = "calendarUpdateCategories( 'calendar-content', document.calendarCategories, '$month', '$year', '$current_date', '$view', '$module->id', 'event-filter', '$updating_calendar', true );";
+$onclick_primary = "calendarUpdateCategories( 'calendar-content', document.calendarCategories, '$month', '$year', '$date', '$view', '$module->id', 'event-filter', '$updating_calendar', true );";
 $onclick_secondary = $onclick_primary;
 
-// $url_primary = "index.php?option=com_calendar&format=raw&controller=" . $view . "&task=filterprimary&month=" . $month . "&year=" . $year . "&current_date=" . $current_date;
-// $url_secondary = "index.php?option=com_calendar&format=raw&controller=" . $view . "&task=filtersecondary&month=" . $month . "&year=" . $year . "&current_date=" . $current_date;
-// $onclick_primary = "calendarDoTask('$url_primary', 'calendar_content', document.calendarCategories, '" . JText::_('Updating Calendar') . "' ); calendarUpdateCategoriesModule( '$module->id', 'event-filter', document.calendarCategories, '$month', '$year', '$current_date', '$view' );";
-// $onclick_secondary = "calendarDoTask('$url_secondary', 'calendar_content', document.calendarCategories, '" . JText::_('Updating Calendar') . "' ); calendarUpdateCategoriesModule( '$module->id', 'event-filter', document.calendarCategories, '$month', '$year', '$current_date', '$view' );";
- 
-require ( JModuleHelper::getLayoutPath( 'mod_calendar_categories' ) );
+// $url_primary = "index.php?option=com_calendar&format=raw&controller=" . $view . "&task=filterprimary&month=" . $month . "&year=" . $year . "&date=" . $date;
+// $url_secondary = "index.php?option=com_calendar&format=raw&controller=" . $view . "&task=filtersecondary&month=" . $month . "&year=" . $year . "&date=" . $date;
+// $onclick_primary = "calendarDoTask('$url_primary', 'calendar_content', document.calendarCategories, '" . JText::_('Updating Calendar') . "' ); calendarUpdateCategoriesModule( '$module->id', 'event-filter', document.calendarCategories, '$month', '$year', '$date', '$view' );";
+// $onclick_secondary = "calendarDoTask('$url_secondary', 'calendar_content', document.calendarCategories, '" . JText::_('Updating Calendar') . "' ); calendarUpdateCategoriesModule( '$module->id', 'event-filter', document.calendarCategories, '$month', '$year', '$date', '$view' );";
+
+$model = Calendar::getClass( 'CalendarModelSources', 'models.sources' );
+$sourcepresets = $model->getSourcePresets();
+
+require ( JModuleHelper::getLayoutPath( 'mod_calendar_categories', 'sourcepresets' ) );
 
 ?>

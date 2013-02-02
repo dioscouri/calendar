@@ -41,6 +41,8 @@ class CalendarHelperEvent extends CalendarHelperBase
 	{
 	    if (empty($this->state))
 	    {
+	        $request = JRequest::get('request');
+	        
 	        $db = JFactory::getDBO();
 	        $session = JFactory::getSession();
 	        $app = JFactory::getApplication();
@@ -52,10 +54,11 @@ class CalendarHelperEvent extends CalendarHelperBase
     	    // $state['view'] = string of the last viewed view other than 'events'
     	    // $state['month'] = int
     	    // $state['year'] = int
-    	    // $state['current_date'] = string (can be null)
+    	    // $state['date'] = string (can be null)
     	    // $state['calendar_id'] = int (default set in config)
     	    // $state['layout'] = string (can be null)
     	    // $state['type'] = int (can be null)
+    	    // $state['filter_sourcepresets'] = array() of IDs
     	    
     	    $default_date = date('Y-m-01');
     	    $config = Calendar::getInstance();
@@ -91,15 +94,29 @@ class CalendarHelperEvent extends CalendarHelperBase
                     $filter_types[] = $exploded_item;
                 }
             }
-                
-    	    $view = JRequest::getVar( 'view' );
+            
+            $filter_sourcepresets = array();
+            $filter_sourcepresets[] = "artsvision.filter_dizzys";
+            // TODO Set it based on settings from the calendar definition
+            
+            $date = $session->get( $ns . '.date', $default_date );
+            $view = JRequest::getVar( 'view' );
+            $day = $app->getUserStateFromRequest( $ns . 'day', 'day', date('d'), '' );
             $month = $app->getUserStateFromRequest( $ns . 'month', 'month', date('m'), '' );
             $year = $app->getUserStateFromRequest( $ns . 'year', 'year', date('Y'), '' );
-            $current_date = $default_date;
-            if ($view != 'month')
-            {
-            	$current_date = JRequest::getVar( 'current_date', $default_date );
+            $request_date = JRequest::getVar( 'date', $default_date );
+            if (!empty($request_date)) {
+                $day = date('d', strtotime( $date ) );
+                $month = date('m', strtotime( $date ) );
+                $year = date('Y', strtotime( $date ) );
+                $session->set( $ns . '.date', $request_date );
+                $date = $request_date;
             }
+            
+            /**
+             *
+             * Ok, defaults are all set, now lets check the user state
+             */
             
             $v = JRequest::getVar('v');
             $reset = JRequest::getVar('reset');
@@ -116,15 +133,20 @@ class CalendarHelperEvent extends CalendarHelperBase
                     $view = $calendar->calendar_default_view;
                 }
                 
+                $day = date('d', strtotime( $default_date ) );
                 $month = date('m', strtotime( $default_date ) );
                 $year = date('Y', strtotime( $default_date ) );
-                $current_date = date('Y-m-01', strtotime( $default_date ) );
+                $date = date('Y-m-d', strtotime( $default_date ) );
                 if ($view == 'week')
                 {
                     $given_day = date("w", strtotime( $default_date ) );
                     $diff = ($given_day - 1);
                     $string = "$default_date -$diff days";
-                    $current_date = date( "Y-m-d", strtotime( $string ) );
+                    $date = date( "Y-m-d", strtotime( $string ) );
+                }
+                
+                if (!empty($request_date)) {
+                	$date = $request_date;
                 }
                 
                 // by default, all used categories are checked
@@ -143,11 +165,12 @@ class CalendarHelperEvent extends CalendarHelperBase
                 $session->set( $ns . '.view', $view );
                 $session->set( $ns . '.month', $month );
                 $session->set( $ns . '.year', $year );
-                $session->set( $ns . '.current_date', $current_date );
+                $session->set( $ns . '.date', $date );
                 $session->set( $ns . '.calendar_id', $calendar_id );
                 $session->set( $ns . '.default_date', $default_date );
                 $session->set( $ns . '.type', $type );
                 $session->set( $ns . '.filter_types', $filter_types );
+                $session->set( $ns . '.filter_sourcepresets', $filter_sourcepresets );
             }
             elseif (!empty($v) && $v == '2')
             {
@@ -169,17 +192,18 @@ class CalendarHelperEvent extends CalendarHelperBase
                 $session->set( $ns . '.view', $view );
                 $session->set( $ns . '.month', $month );
                 $session->set( $ns . '.year', $year );
-                $session->set( $ns . '.current_date', $current_date );
+                $session->set( $ns . '.date', $date );
                 $session->set( $ns . '.calendar_id', $calendar_id );
                 $session->set( $ns . '.default_date', $default_date );
                 $session->set( $ns . '.type', $type );
                 $session->set( $ns . '.filter_types', $filter_types );
+                $session->set( $ns . '.filter_sourcepresets', $filter_sourcepresets );
             }
             elseif ($view == "events")
             {
                 $month = date('m', strtotime( $default_date ) );
                 $year = date('Y', strtotime( $default_date ) );
-                $current_date = date('Y-m-01', strtotime( $default_date ) );
+                $date = date('Y-m-01', strtotime( $default_date ) );
                 // by default, all used categories are checked
         		JModel::addIncludePath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_calendar' . DS . 'models' );
         		$model = JModel::getInstance( 'Eventinstances', 'CalendarModel' );
@@ -197,25 +221,30 @@ class CalendarHelperEvent extends CalendarHelperBase
                 $view = $session->get( $ns . '.view', 'month' );
                 $month = $session->get( $ns . '.month', $month );
                 $year = $session->get( $ns . '.year', $year );
-                $current_date = $session->get( $ns . '.current_date', $current_date );
+                $date = $session->get( $ns . '.date', $date );
                 $calendar_id = $session->get( $ns . '.calendar_id', $calendar_id );
                 $default_date = $session->get( $ns . '.default_date', $default_date );
                 $type = $session->get( $ns . '.type', $type );
                 $filter_types = $session->get( $ns . '.filter_types', $filter_types );
+                $filter_sourcepresets = $session->get( $ns . '.filter_sourcepresets', $filter_sourcepresets );
             }
             else
             {
-                // just browsing the calendar, use the state of selected categories, not anything else
+                // browsing the calendar, update the dynamic filter states, not anything else
+                $date = $session->get( $ns . '.date', $date );
+                
                 $primary_categories = $session->get( $ns . '.primary_categories' );
                 $secondary_category = $session->get( $ns . '.secondary_category' );
                 $session->set( $ns . '.view', $view );
+                $session->set( $ns . '.day', $day );
                 $session->set( $ns . '.month', $month );
                 $session->set( $ns . '.year', $year );
-                $session->set( $ns . '.current_date', $current_date );
+                $session->set( $ns . '.date', $date );
                 $session->set( $ns . '.calendar_id', $calendar_id );
                 $session->set( $ns . '.default_date', $default_date );
                 $session->set( $ns . '.type', $type );
                 $session->set( $ns . '.filter_types', $filter_types );
+                $session->set( $ns . '.filter_sourcepresets', $filter_sourcepresets );
             }
             
             if (empty($primary_categories))
@@ -241,12 +270,13 @@ class CalendarHelperEvent extends CalendarHelperBase
     	    $state['view'] = $view;
     	    $state['month'] = $month;
     	    $state['year'] = $year;
-    	    $state['current_date'] = $current_date;
+    	    $state['date'] = $date;
     	    $state['calendar_id'] = $calendar_id;
     	    $state['default_date'] = $default_date;
     	    $state['type'] = $type;
     	    $state['filter_types'] = $filter_types;
-
+    	    $state['filter_sourcepresets'] = $filter_sourcepresets;
+    	    
     	    $this->state = $state;
 	    }
 
@@ -270,8 +300,8 @@ class CalendarHelperEvent extends CalendarHelperBase
         $view = $state["view"];
         $year = $state["year"]; // date( 'Y', strtotime( $instance->eventinstance_date ) );
         $month = $state["month"]; // date( 'm', strtotime( $instance->eventinstance_date ) );
-        $current_date = $state["current_date"]; // $instance->eventinstance_date;
-        $url = "index.php?option=com_calendar&view=" . $view . "&year=". $year . "&month=" . $month . "&current_date=" . $current_date . "&reset=0";
+        $date = $state["date"]; // $instance->eventinstance_date;
+        $url = "index.php?option=com_calendar&view=" . $view . "&year=". $year . "&month=" . $month . "&date=" . $date . "&reset=0";
         return $url;
     }
     

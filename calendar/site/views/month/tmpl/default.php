@@ -5,6 +5,7 @@ $state = @$this->state;
 $form = @$this->form;
 $items = @$this->items;
 $date = @$this->date;
+
 Calendar::load( 'CalendarHelperCategory', 'helpers.category' );
 if( empty($state) )
 	$state = @$vars->state;
@@ -42,16 +43,15 @@ if (!empty($vars->item_id))
     }
     ?>
     
-    <div id="date-navigation" class="wrap">
-        <ul class="horiz">
-    		<li><a class="prev" href="<?php echo JRoute::_( 'index.php?option=com_calendar&view=month&reset=0&month=' . $date->prevmonth . '&year=' . $date->prevyear . $itemid_string ); ?>"><?php echo JText::_( "Previous" ); ?></a></li>
-            <li class="date-range"><?php echo JText::_( $date->month_name ) . " 1-" . $date->numberofdays; ?></li>
-    		<li><a class="next" href="<?php echo JRoute::_( 'index.php?option=com_calendar&view=month&reset=0&month=' . $date->nextmonth . '&year=' . $date->nextyear . $itemid_string ); ?>"><?php echo JText::_( "Next" ); ?></a></li>
+    <div id="date-navigation" class="wrap right">
+        <ul class="controls controls-medium flat">
+    		<li class="prev"><a href="<?php echo JRoute::_( 'index.php?option=com_calendar&view=month&date=' . $this->date_navigation->prev . $itemid_string ); ?>"><?php echo JText::_( "Previous" ); ?></a></li>
+    		<li class="next"><a href="<?php echo JRoute::_( 'index.php?option=com_calendar&view=month&date=' . $this->date_navigation->next . $itemid_string ); ?>"><?php echo JText::_( "Next" ); ?></a></li>
         </ul>    
     </div>
 
     <div id="event-views" class="wrap">
-        <ul class="horiz">
+        <ul class="dsc-flat">
             <li class="week-view">
 	            <form name="calendarForm" id="calendarForm" method="post" action="<?php echo JRoute::_( "index.php?option=com_calendar" . $itemid_string ) ?>" >
 	            <input name="submit" type="submit" value="<?php echo JText::_( "Week" ); ?>" class="week-button" />
@@ -68,20 +68,11 @@ if (!empty($vars->item_id))
         </ul>
     </div>
 
-    <div id="event-types" class="wrap">
-        <ul class="horiz">
-            <li class="events-view"><?php echo JText::_( "Events" ); ?></li>
-            <?php foreach ( $this->tabbed_types as $type ) { ?>
-                <li class="<?php echo $type->type_name; ?>-view"><a href="<?php echo JRoute::_( "index.php?option=com_calendar&view=month&reset=0&layout=tab&type=" . $type->type_id . "&current_date=" . $date->current . $itemid_string ); ?>"><?php echo JText::_( $type->type_name ); ?></a></li>
-            <?php } ?>
-        </ul>
-    </div>
-	
 	<div class="event-dates wrap">
 		<?php if ( !empty($this->days) ) { ?>
-            <ol class="events-month wrap">
+            <ul class="events-list month-list wrap">
             <?php if (!empty($this->workingday->text) || !empty($this->workingday->url)) { ?>
-                <li class="working-day wrap">
+                <li class="day-working wrap">
                     <div>
                         <?php if (!empty($this->workingday->text)) { echo JText::_( $this->workingday->text ); } ?>
                         
@@ -99,7 +90,7 @@ if (!empty($vars->item_id))
             
 	        <?php foreach ( @$this->days as $day ) : ?>
                 <?php if (!empty($day->isClosed)) { ?>
-                    <li class="closed wrap">
+                    <li class="day-closed wrap">
                         <h3>
                            <?php echo date('j', $day->dateTime); ?><span class="end"><?php echo date('S', $day->dateTime); ?></span>
                            <span class="day"> <?php echo date('D', $day->dateTime); ?></span>
@@ -108,26 +99,25 @@ if (!empty($vars->item_id))
                             <?php echo $day->text; ?>
                         </p>                        
                     </li>
-                <?php } elseif (!empty($day->events)) { ?>
-        	        <li class="wrap">
+                <?php } elseif (!empty($day->events)) { FB::log($day->dateMySQL); FB::log($day->events); ?>
+        	        <li class="day wrap" data-date="<?php echo $day->dateMySQL; ?>">
                         <h3>
         	               <?php echo date('j', $day->dateTime); ?><span class="end"><?php echo date('S', $day->dateTime); ?></span>
                            <span class="day"> <?php echo date('D', $day->dateTime); ?></span>
                         </h3>
                         
-                        <ul class="horiz">
+                        <ul class="day-events dsc-flat">
         	                <?php foreach ( $day->events as $event ) : ?>
-        	                <?php $eventCategory = CalendarHelperCategory::getCategoryName( $event->event_primary_category_id ); ?>
-                            <li>
+                            <li class="day-event" data-id="<?php echo $event->datasource_id; ?>">
             					<div class="image">
             						<a href="<?php echo JRoute::_( $event->link_view . $itemid_string ); ?>">
-            						<img src="<?php echo $event->image_src; ?>" alt="event" width="159" height="89">
+            						<img src="<?php echo $event->image_src; ?>" class="event-image">
             						</a>
             					</div>
-                                <p class="date cat <?php echo $event->primary_category_class; ?>"><?php echo (date('i', strtotime( $event->eventinstance_start_time ) ) == '00') ? date( 'g a', strtotime( $event->eventinstance_start_time ) ) : date( 'g:i a', strtotime( $event->eventinstance_start_time ) ); ?></p>
+                                <p class="time"><?php echo (date('i', strtotime( $event->start_time ) ) == '00') ? date( 'g a', strtotime( $event->start_time ) ) : date( 'g:i a', strtotime( $event->start_time ) ); ?></p>
             					<p>
             						<a href="<?php echo JRoute::_( $event->link_view . $itemid_string ); ?>">
-                                	<?php echo $event->event_short_title; ?>
+                                	<?php echo $event->title_short; ?>
                                 	</a>
                                 </p>
                                 <?php if (!empty($event->actionbutton_url)) { ?>
@@ -144,7 +134,7 @@ if (!empty($vars->item_id))
         	        </li>
                 <?php } ?>
 	        <?php endforeach; ?>
-            </ol>
+            </ul>
         <?php } else { ?>
         
             <div class="month_event">

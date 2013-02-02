@@ -295,6 +295,8 @@ class CalendarController extends DSCControllerSite
 		$date->year = $state->year;
 		$date->month_name = date( 'F', strtotime( $date->year . '-' . $date->month . '-01' ) );
 
+		$closed_days_of_month = array();
+		
 		// affix the Closed Days to the end of the list array
 	    Calendar::load( 'CalendarHelperCalendar', 'helpers.calendar' );
 	    $helper = CalendarHelperBase::getInstance( 'calendar' );
